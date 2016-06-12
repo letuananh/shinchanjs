@@ -1,0 +1,230 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+                    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Layers demo</title>
+  <script src="js/jquery-1.8.2.js"></script>
+  <script src="js/raphael-min.js"></script>
+  <script src="js/kajika.js"></script>
+  <script src="js/testutil.js"></script>
+  <script src="js/visualisation.js"></script>
+  <script src="js/shinchan.js"></script>
+  <script>
+	var console;
+	var paper1;
+	var paper2;
+	
+	function initialise(){
+		// Create a console
+		console = new Console("console");
+		console.writeline("- Test Console -");
+	}
+	
+	$(document).ready(function(){		
+		initialise();
+		testConstructor();
+		testTable();
+		testGeometryLib();
+		testIDGenerator();
+		testOOP();
+		testPointDimension();
+		testStaticMethod();
+		
+		console.writeline("DONE!");
+		
+	});
+	
+	University = function(){
+		this.students = [];
+	}
+	
+	function testConstructor(){
+		console.header("CONSTRUCTOR");
+		var u1 = new University();
+		var u2 = new University();
+		u1.students.push("123");
+		console.writeline("Uni 1" + dump_array(u1.students));
+		console.writeline("Uni 2" + dump_array(u2.students));
+	}
+	
+	function testTable(){
+		console.header("TEST TABLE");
+		table = new ChibiJS.Table();
+		for(i = 0; i < 3; i++){
+			for(j = 0; j < 3; j++){
+				table.setCell(i, j, i+j);	
+			}
+		}
+
+		table.expandColumnWidth(0, 10);		
+		table.expandColumnWidth(0, 20);
+		table.expandColumnWidth(0, 8);		
+		table.expandColumnWidth(1, 30);		
+		table.expandColumnWidth(2, 40);
+		table.expandRowHeight(0, 20);
+		table.expandRowHeight(0, 40);
+		table.expandRowHeight(0, 10);
+		table.expandRowHeight(1, 10);
+		table.expandRowHeight(2, 10);
+		
+		console.writeline(dump_array(table.table_data));
+		console.writeline(dump_array(table.column_width));
+		console.writeline(dump_array(table.row_height));
+				
+	}
+	
+	StaticLibrary = new function() {
+		this.staticMethod = function(){
+			return "FROM STATIC";
+		}
+	}
+	
+	function testGeometryLib(){
+		p1 = new Point(100,100);
+		p2 = new Point(200, 200);
+		d = ChibiJS.Geometry.distance(p1, p2);
+		console.writeline("Distance between " + p1.str() + " and " + p2.str() + " = " + d);
+	}
+	
+	function testIDGenerator(){
+		console.header("Test ChibiJS.IDGenerator");
+		console.setColor("white");
+		console.writeline(ChibiJS.IDGenerator.generate());
+		console.writeline(ChibiJS.IDGenerator.generate());
+		console.writeline(ChibiJS.IDGenerator.generate());
+		console.writeline(ChibiJS.IDGenerator.generate());
+		console.writeline(ChibiJS.IDGenerator.generate());
+		console.writeline(ChibiJS.IDGenerator.generate());
+		console.setColor();
+	}	
+	
+	function testStaticMethod(){
+		s = StaticLibrary.staticMethod();
+		console.writeline(s);
+	}
+	
+	function testOOP(){
+		console.header("** Test OOP **");
+		stu1 = Student("Student One");
+		stu2 = Student("Student Two");
+		stu1.say();
+		stu2.say();
+		
+		console.writeline("So, new keyword is important, lol :P", "red");
+		
+		var stu3 = new Student("Student Three");
+		var stu4 = new Student("Student Four");
+		stu1.say("Student 1 says: ", " <--- Oops, something is wrong");
+		stu2.say("Student 2 says: ");
+		stu3.say("Student 3 says: ");
+		stu4.say("Student 4 says: ");
+		
+		console.writeline(dump_object(stu1));
+		console.writeline(dump_object(stu2));
+		console.writeline(dump_object(stu3));
+		console.writeline(dump_object(stu4));
+		
+		console.writeline(dump_array([stu1, stu2, stu3, stu4]));
+	
+		a1 = new Artist("Mozart");
+		a1.perform();
+		a1.sing();
+		
+		beethoven = new Artist("Beethoven");
+		vivaldi = new Artist("Vivaldi");
+		liszt = new Artist("Liszt");
+		chopin = new Artist("Chopin");
+		takaji = new Artist("Takaji");
+		
+		artists = [beethoven, vivaldi, chopin, liszt];
+
+		console.writeline(dump_array(artists));
+		artists.splice(artists.indexOf(chopin), 1);
+		console.writeline(artists.indexOf(takaji));
+		artists.splice(artists.indexOf(takaji), 1);
+		console.writeline(dump_array(artists));
+		
+		console.header("Test array");
+		test_array = [];
+		test_array.push(1);
+		test_array.push(2);
+		test_array.push(3);
+		test_array.push(4);
+		test_array[6] = 10;
+		console.writeline(dump_array(test_array));
+		if(test_array[5] == undefined){
+			console.writeline("EMPTY");
+		}
+		else{
+			console.writeline("something");			
+		}
+		
+		table = []
+		table[1] = []
+		table[1][2] = 'A';
+		table[3] = []
+		table[3][4] = "B";
+		console.writeline(dump_array(table));
+	}
+	
+	function testPointDimension(){
+		console.header("Test Point & Dimension");
+		// Test Point object
+		console.writeline("Use full names");
+		p = new ChibiJS.ShinChan.Point(12,22);
+		d = new ChibiJS.ShinChan.Dimension(10,20);
+		console.writeline(p);
+		console.writeline(d);
+		
+		console.writeline("Use short names");
+		p2 = new Point(12,22);
+		d2 = new Dimension(100,200);
+		console.writeline(p2);
+		console.writeline(d2);
+		
+		console.writeline("(p == p2) is " + p.equals(p2));
+	}
+	
+	function Artist(name){
+		var name = name;
+		
+		this.perform = function(){
+			console.writeline("My name is " + name);
+		}
+		
+		this.getName = function(){
+			return name;
+		}
+		
+		this.str = function(){
+			return "[ " + name + " ]";
+		}
+	}
+	
+	Artist.prototype.sing = function(){
+		console.writeline("La la la " + name);
+		console.writeline("La la la " + this.getName());
+	}
+	
+	function Student(name){
+		var name = name;
+		
+		this.say = function(prefix, postfix){
+			if(prefix == undefined){ prefix = ""; }
+			if(postfix == undefined){ postfix = ""; }
+			console.writeline(prefix + "My name is " + name + postfix);
+		}
+		
+		this.str = function(){
+			return name;
+		}
+		
+		return this;
+	}
+  </script>
+</head>
+<body>
+	<input type="button" id="btn1" name="btn1" value="Button 1"/>
+	<div id="console"></div>
+</body>
+</html>

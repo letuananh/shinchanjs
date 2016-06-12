@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+                    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Console demo</title>
+	<script src="js/jquery-1.8.2.js"></script>
+	<script src="js/raphael-min.js"></script>
+	<script src="js/kajika.js"></script>
+	<script src="js/testutil.js"></script>
+	<script src="js/shinchan.js"></script>
+	<script src="js/shinchan.debug.js"></script>
+	<script src="js/visualisation_v2.js"></script>
+	<script src="js/jikan.js"></script>
+	<script>
+	var console;
+	var canvas;
+
+	function initialise(){
+		// Create a console
+		console = new Console("console");
+		console.writeline("- Test Console -");
+		
+		canvas = new Canvas("main_canvas", 320, 240, "MainCanvas");
+		
+		$("#btnStart").click(function(){
+			start();
+		});
+		$("#btnClear").click(function(){
+			console.clear("- Cleared -");
+		});
+	}
+
+	$(document).ready(function(){		
+		initialise();
+		
+		// Draw DRMS sentences
+		sentence_text = "I show that these models derive from opposing assumptions about the nature of the software-debugging task.";
+		words = sentence_text.split(" ");
+		layer_nodes = canvas.addLayer("nodes");
+		layer_links = canvas.addLayer("links");
+		layer_tooltip = canvas.addLayer("tooltip");
+		
+		var x = 20;
+		var y = 20;
+		var NODE_SPACE = 20;
+		
+		var explanation = { };
+		
+		for(var i = 0; i < words.length; i++){
+			var a_word_node = layer_nodes.draw_label(x, y, words[i], 10, 10, words[i]);
+			a_word_node.moveTo(x,y); // hang to top-left
+			
+			// Create label
+			(function(){
+				var word_label = layer_tooltip.draw_label(x, y+100, "Explanation: "+ words[i], 10, 10, words[i] + "EXP");
+				word_label.hide();
+				word_label.Permanent = false;
+				a_word_node.click(function(){
+					word_label.Permanent = !word_label.Permanent;
+				});
+				a_word_node.hover(
+					function(){ word_label.show(); }
+					,function(){ 
+						if(!(word_label.Permanent)) {
+							word_label.hide(); 
+						}
+					}
+				);
+			})();
+			x = layer_nodes.getMainGroup().location.x + layer_nodes.getMainGroup().size.width + NODE_SPACE; 
+		}
+		
+		nodes = layer_nodes.getMainGroup().getElements();
+		for(var i = 0; i < nodes.length - 1; i++){
+			from_node = nodes[i];
+			to_node = nodes[i+1];
+			points = VisualKopasu.connect(from_node, to_node);
+			layer_links.draw_arrow(points[0].x, points[0].y, points[1].x, points[1].y);
+			
+			linkFrom = VisualKopasu.getTopMiddle(from_node);
+			linkTo = VisualKopasu.getTopMiddle(to_node);
+			height = 30;
+			layer_links.draw_link_u(linkFrom.x, linkFrom.y, linkTo.x, linkTo.y - height);
+			linkFrom = VisualKopasu.getBottomMiddle(from_node);
+			linkTo = VisualKopasu.getBottomMiddle(to_node);
+			layer_links.draw_link_u(linkFrom.x, linkFrom.y, linkTo.x, linkTo.y + height);
+		}
+		
+		canvas.pack(5);
+	});
+
+	function start(){
+		displayInformation();	
+	}
+	</script>
+</head>
+<body>
+	<h1>Kajika Demo</h1>
+	<div id="main_canvas"></div>
+	<input type="button" id="btnStart" name="btnStart" value="Information"/>
+	<input type="button" id="btnClear" name="btnClear" value="Clear"/>
+	<div id="console" style="overflow: auto; max-height: 300px;"></div>
+</body>
+</html>

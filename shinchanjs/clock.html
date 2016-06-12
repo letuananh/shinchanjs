@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+                    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Console demo</title>
+  <script src="js/jquery-1.8.2.js"></script>
+  <script src="js/raphael-min.js"></script>
+  <script src="js/kajika.js"></script>
+  <script src="js/testutil.js"></script>
+  <script src="js/shinchan.js"></script>
+  <script src="js/shinchan.debug.js"></script>
+  <script src="js/jikan.js"></script>
+  <script>
+	var console;
+	var canvas;
+	var clockFace;
+	
+	function initialise(){
+		// Create a console
+		console = new Console("console");
+		console.writeline("- Test Console -");
+		
+		canvas = new Canvas("main_canvas", 320, 240, "MainCanvas");
+		clockFace = canvas.addLayer("clock-face");
+		$("#btnStart").click(function(){
+			start();
+		});
+		$("#btnClear").click(function(){
+			console.clear("- Cleared -");
+		});
+	}
+	
+	$(document).ready(function(){		
+		initialise();
+		prepareClock();
+	});
+	
+	var CLOCK_RADIUS = 100;
+	var CLOCK_CENTRE = new Point(110, 110);
+	var NUM_SPACE = CLOCK_RADIUS - 10;
+	var HAND_LENGTH = CLOCK_RADIUS - 25;
+	var deg = 0;
+	var sec_hand;
+	
+	function prepareClock(){
+		CLOCK_RADIUS = 100;
+		
+		// Draw face
+		c = clockFace.draw_circle(CLOCK_CENTRE.x, CLOCK_CENTRE.y, CLOCK_RADIUS).fill("none");
+		clockFace.draw_circle(CLOCK_CENTRE.x, CLOCK_CENTRE.y, 2).fill("black"); // Centre point
+		
+		// Draw numbers
+		num_12_location = new Point(CLOCK_CENTRE.x,CLOCK_CENTRE.y - NUM_SPACE);
+		for(i = 1; i <= 12; i++){
+			p1 = ChibiJS.Geometry.rotate(i*30, num_12_location, CLOCK_CENTRE);
+			clockFace.draw_text(p1.x, p1.y, i, i);
+		}
+		
+		// Draw hands
+		sec_hand = clockFace.draw_arrow(CLOCK_CENTRE.x, CLOCK_CENTRE.y, CLOCK_CENTRE.x, CLOCK_CENTRE.y - HAND_LENGTH,
+		"sec_hand", 15, 6);
+		canvas.pack();
+		timer1.start();
+	}
+	
+	var timer1 = new JiTimer(50, function(){
+		sec_hand.getObject().rotate(6,CLOCK_CENTRE.x,CLOCK_CENTRE.y);
+		deg += 6;
+		if(deg >= 360){
+			deg = 0;
+			//timer1.stop();
+		}
+		//console.writeline(deg);;
+	});
+	
+	function start(){
+		console.writeline("Started ...");
+	}
+  </script>
+</head>
+<body>
+	<h1>A simple clock</h1>
+	<div id="main_canvas"></div>
+	<input type="button" id="btnStart" name="btnStart" value="Information"/>
+	<input type="button" id="btnClear" name="btnClear" value="Clear"/>
+	<div id="console" style="overflow: auto; max-height: 300px;"></div>
+</body>
+</html>

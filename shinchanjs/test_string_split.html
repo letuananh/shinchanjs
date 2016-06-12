@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+                    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <script src="js/jquery-1.8.2.js"></script>
+  <script src="js/raphael-min.js"></script>
+  <script src="js/kajika.js"></script>
+  <script src="js/testutil.js"></script>
+  <script>
+  $(document).ready(function(){
+	var console = new Console('console');
+	console.writeline("- Test Console -");
+	console.writeline("");
+
+	console.header("Initialisation");
+
+	console.exec("typeof ''", 'Testing: ');
+	console.writeline(typeof []);
+	console.writeline(typeof {});
+	console.writeline(typeof {});
+
+	var my_raw_text = 'This is a text string created for testing purpose only!';
+	console.writeline(my_raw_text);
+	console.writeline('012345678901234567890123456789012345678901234567890123456789');
+
+	console.header("Testing: string_split(my_raw_text, 0, my_raw_text.length)");
+	arr = string_split(my_raw_text, 0, my_raw_text.length);
+	console.writeline(dump_array(arr));
+	
+	console.header("Testing: string_split(my_raw_text, 15, my_raw_text.length)");
+	arr = string_split(my_raw_text, 15, my_raw_text.length);
+	console.writeline(dump_array(arr));
+
+	console.header("Testing: string_split(my_raw_text, 15, 0)");
+	arr = string_split(my_raw_text, 15, 0);
+	console.writeline(dump_array(arr));
+	
+	console.header("Testing: string_split(my_raw_text, 10, 22)");
+	arr = string_split(my_raw_text, 10, 22);
+	console.writeline(dump_array(arr));
+
+	console.header("Testing: string_split(my_raw_text, 22, 10)");
+	arr = string_split(my_raw_text, 22, 10);
+	console.writeline(dump_array(arr));
+
+	console.header("Testing: string_split(my_raw_text, 22, 22)");
+	arr = string_split(my_raw_text, 22, 22);
+	console.writeline(dump_array(arr));
+
+	console.header("Testing: string_split(my_raw_text, -1, 22)");
+	arr = string_split(my_raw_text, -1, 22);
+	console.writeline(dump_array(arr));
+
+	console.header("Testing: string_split(my_raw_text, 99, 22)");
+	arr = string_split(my_raw_text, 99, 22);
+	console.writeline(dump_array(arr));
+
+	console.header("Testing: string_split(my_raw_text, 10, 99)");
+	arr = string_split(my_raw_text, 10, 99);
+	console.writeline(dump_array(arr));
+
+	console.header("Testing: string_split(my_raw_text, 10, -10)");
+	arr = string_split(my_raw_text, 10, -10);
+	console.writeline(dump_array(arr));
+
+	var nothing;
+	console.header("Testing: string_split(nothing, 10, 20)");
+	arr = string_split(nothing, 10, 20);
+	console.writeline(dump_array(arr));		
+  });
+  </script>
+  <style>
+  p { margin:8px; font-size:20px; color:blue; 
+      cursor:pointer; }
+  b { text-decoration:underline; }
+  button { cursor:pointer; }
+  </style>
+</head>
+<body>
+	<div style="width: 800px; padding: 10px;" id = "console"></div>
+	<div style="font-family: monospace;"></div>
+	<div id="holder"></div>
+</body>
+</html>

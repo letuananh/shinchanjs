@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+                    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Shinchan-Animation demo</title>
+  <script src="js/jquery-1.8.2.js"></script>
+  <script src="js/raphael-min.js"></script>
+  <script src="js/kajika.js"></script>
+  <script src="js/testutil.js"></script>
+  <script src="js/shinchan.js"></script>
+  <script src="js/jikan.js"></script>
+  <script>
+	var console;
+	var canvas;
+	var layer1;
+	
+	function getSpeed(){
+		_speed = parseInt($("#txtSpeed").val());
+		return _speed;
+	}
+	
+	function initialise(){
+		// Create a console
+		console = new Console("console");
+		console.writeline("- Test Console -");
+	
+		// Create canvas
+		canvas = new Canvas("main_canvas", 320, 240);	
+		layer1 = canvas.addLayer("MainLayer");
+		
+		// Register event handlers
+		$('[name="btnInfo"]').click(function(){
+			//console.clear("- Test Console -");
+			displayInformation();
+		});
+		$("#btnClear").click(function(){ console.clear("- Test Console -"); });
+		$("#btnStep").click(function(){ on_timer_tick(); });
+		$("#btnStart").click(function(){ timer1.start(); });
+	}
+	
+	// For testing only
+	function dump_element(element){
+		console.write(element);
+		info = '';
+		if(element.size){ info += ' Size=' + element.size.str(); }
+		if(element.centre){ info += ' Centre=' + element.centre.str(); }
+		if(element.location){ info += ' TopLeft=' + element.location.str(); }
+		console.writeline(info);
+	}
+	
+	function displayInformation(){
+		// console.clear("- Test Console -");
+		console.writeline(dump_object(canvas));
+		var layers = canvas.getLayers();
+		$.each(layers, function(idx,layer){
+			console.writeline("-- " + dump_object(layer), "yellow");
+			// Display all children tree
+			travelStack = [[layer.getMainGroup(),1]]
+			while(travelStack.length > 0){
+				stackItem = travelStack.pop();
+				element = stackItem[0];
+				level = stackItem[1];
+				prefix = "";
+				for(i=0;i <= level;i++){ prefix += "--"; }
+				console.write(prefix + " " + dump_object(element));
+				
+				info = '';
+				if(element.size){ info += ' Size=' + element.size.str(); }
+				if(element.centre){ info += ' Centre=' + element.centre.str(); }
+				if(element.location){ info += ' TopLeft=' + element.location.str(); }
+				console.writeline(info);
+				
+				if(typeof element.getElements === "function"){
+					$.each(element.getElements(), function(idx, child){
+						item = [child, level+1];
+						travelStack.push(item);
+					});
+				}
+			}
+		// End each layer
+		});
+	}
+	
+	var timer1 = new JiTimer(100, on_timer_tick, on_stop, on_start);
+	var text;
+	var word_objects = [];
+	var step = -1;
+	var string_group;
+	var margin = 20;
+	
+	function on_timer_tick(){
+		if(text.length > 0){
+			word = text.pop();
+			word_object = layer1.draw_label(0, 0, word, 10, 10, word);
+			//dump_element(word_object);
+			word_object.moveTo(margin, 20);
+			// Shift objects to get space
+			$.each(word_objects, function(idx, elem){
+				elem.translate(word_object.size.width + margin, 0);
+			});
+			word_objects.push(word_object);
+			//dump_element(word_object);
+			//displayInformation();
+			//canvas.pack();
+			//displayInformation();
+			//dump_element(word_object);
+		}
+		//else if(step == -1){
+			//word_objects.reverse();
+			//step++;
+		//}
+		else if(step < word_objects.length - 1){
+			if(step == -1){
+				word_objects.reverse();
+				step++;
+			}
+			if(step % 2 == 1){
+				// Move current word to under of the next word
+				this_word = word_objects[step];
+				next_word = word_objects[step+1];
+				if(this_word.text && next_word.text){
+					//console.writeline("Moving " + this_word.text + " beneath " + next_word.text);
+				}
+				// CanvasUtil.alignLeft([this_word, next_word]);
+				this_word.translate(0, next_word.size.height + margin);
+				//console.writeline(dump_array(word_objects));
+				for(var i = step+1; i < word_objects.length; i++){
+					word_objects[i].translate(-(this_word.size.width+margin), 0);
+				}
+				// Shift all words objects to 
+			}
+			step++;
+		}
+		else{
+			timer1.stop();
+		}
+		canvas.pack();
+		//canvas.pack();
+	}
+
+	function on_stop() {
+		console.writeline("Stopped");
+		canvas.pack(20);
+		displayInformation();
+	}
+	
+	function on_start(){
+		text = "The quick brown fox jumps over the lazy dog".split(" ");
+		console.writeline(dump_array(text));
+		console.writeline("Started");
+	}
+	
+	$(document).ready(function(){		
+		initialise();
+		//text = "The quick brown fox jumps over the lazy dog".split(" ");
+		text = "The quick brown".split(" ");
+		//x = 0;
+		//y = 50;
+		$.each(text, function(idx, elem){
+			//x = x + 50;
+			//layer1.draw_label(x, 100, elem, 10, 10, elem);
+		});
+		//layer1.draw_label(50, 100, "HELLO", 10, 10, "TEXT");
+		//timer1.start();
+		
+	});
+  </script>
+</head>
+<body>
+	<h1>Test Animation with ShinChan library</h1>
+	<div id="main_canvas"></div>
+	<input type="button" id="btnInfo" name="btnInfo" value="Information"/>
+	<input type="button" id="btnStart" name="btnStart" value="Start"/>
+	<input type="button" id="btnClear" name="btnClear" value="Clear"/>
+	<input type="button" id="btnStep" name="btnStep" value="Step"/>
+	<br/>
+	 Speed: <input type="text" id="txtSpeed" name="txtSpeed" value="10"/>
+	
+	<!--<div id="console" style="overflow: auto; max-height: 300px;"></div>-->
+	<div id="console"></div>
+</body>
+</html>

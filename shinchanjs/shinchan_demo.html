@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+                    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Layers demo</title>
+  <script src="js/jquery-1.8.2.js"></script>
+  <script src="js/raphael-min.js"></script>
+  <script src="js/kajika.js"></script>
+  <script src="js/testutil.js"></script>
+  <script src="js/shinchan.js"></script>
+  <script src="js/shinchan.debug.js"></script>
+  <script>
+	var console;
+	var canvas;
+	var paper1;
+	var paper2;
+	var layer1;
+	
+	function getSpeed(){
+		_speed = parseInt($("#txtSpeed").val());
+		//console.writeline("Speed: " + _speed);
+		return _speed;
+	}
+	
+	function initialise(){
+		// Create a console
+		console = new Console("console");
+		console.writeline("- Test Console -");
+	
+		// Create canvas
+		canvas = new ChibiJS.ShinChan.Canvas("main_canvas", 320, 240);	
+		paper1 = new ChibiJS.ShinChan.Canvas("holder1", 50, 25);
+		paper2 = new ChibiJS.ShinChan.Canvas("holder2", 25, 50);
+		
+		layer1 = canvas.addLayer("MainLayer");
+		line1 = new Path().moveTo(20,60).lineTo(80,60).drawTo(layer1, "Hand-Path");//layer1.draw_path("M20,60L,80,60", "Hand");
+		line2=layer1.draw_line(50,50, 50,90, "Body");
+		label=layer1.draw_label(50,40, "(^o^)", 10, 10, "Face");
+		link1=layer1.draw_link(30,120,70,90, "Feet");
+		stickman = layer1.group([line1, line2, label, link1],"Stickman");
+		stickman.moveTo(100,100);
+		
+		var flowlayer = canvas.addLayer("flowlayer");
+		hflow = new HorizontalFlow(layer1); 
+		l1 = flowlayer.draw_label(300, 20, "Diagonals", 2, 2, "diagonal-box", 0, "diagonals");
+		hflow.addElement(l1);
+		l2 = flowlayer.draw_label(300, 20, "Rounded", 2, 2, "rounded-box", 0, "rounded");
+		hflow.addElement(l2);
+		l3 = flowlayer.draw_label(300, 20, "Normal Rectangle", 2, 2, "rect-box", 0, "rect");
+		hflow.addElement(l3);
+		l4 = flowlayer.draw_label(300, 20, "Parallelogram", 2, 2, "parl-box", 0, "parallelogram");
+		hflow.addElement(l4);
+		l5 = flowlayer.draw_label(300, 20, "hexagon pro", 2, 2, "parl-box", 0, "hexagon");
+		hflow.addElement(l5);
+		hflow.rearrange();
+		
+				
+		layer2 = canvas.addLayer("Ad");
+		banner = layer2.draw_label(200, 40, "SHINCHAN ENGINE TEST", 20, 20, "Test banner");
+		dump_element(banner);
+		banner.moveTo(2, 2);
+		//console.writeline("Shift X = :1 Y = :2".replace(":1", shift_x).replace(":2", shift_y));
+		//dump_element(banner);
+		console.writeline();
+		
+		// Register event handlers
+		$(document).keypress(function(e){
+			if (e.keyCode == 37) {  layer1.translate(-getSpeed(),0); return false; } // Left
+			else if(e.keyCode == 38) { layer1.translate(0,-getSpeed()); return false; } // Up
+			else if(e.keyCode == 39) { layer1.translate(getSpeed(),0); return false; } // Right
+			else if(e.keyCode == 40) { layer1.translate(0,getSpeed()); return false; } // Down
+		});
+
+		$('[name="btnLeft"]').click(function(){ layer1.translate(-getSpeed(),0); return false; });
+		$('[name="btnRight"]').click(function(){ layer1.translate(getSpeed(),0); return false; });
+		$('[name="btnUp"]').click(function(){ layer1.translate(0,-getSpeed()); return false; });
+		$('[name="btnDown"]').click(function(){ layer1.translate(0,getSpeed()); return false; });		
+		$('[name="btnStart"]').click(function(){
+			console.clear("- Test Console -");
+			displayInformation();
+		});
+		
+		// Test resize canvas
+		$("#btn1").click(function(){
+			paper1.resize(100,25);
+			paper2.resize(25,100);
+			
+		});
+		$("#btn2").click(function(){
+			paper1.resize(25,50);
+			paper2.resize(50,25);
+		});
+		$("#btnClear").click(function(){ console.clear("- Test Console -"); });
+	}
+	
+	$(document).ready(function(){		
+		initialise();
+		background = canvas.addLayer("Background");
+		c = background.draw_circle(50,50, 20, "BALL").fill("yellow").toBack().stroke("- ");
+		r = background.draw_rect(10,20, 100, 200, "BOX").fill("cyan").stroke("-.").toBack();
+		lblClickMe = background.draw_label(200, 100, "Click this!!!");
+		arrow = background.draw_arrow(
+			lblClickMe.location.x, lblClickMe.centre.y, 
+			c.location.x + c.size.width, c.centre.y
+			, "pointer", 20, 10);
+
+		do1 = function(){ console.writeline("OOPS"); };
+		do2 = function(){ console.writeline("ARRRGS!!!"); };
+		do3 = function(){ console.writeline("CRACKED!!!"); };
+		
+		c.click(do1);
+		//c.getObject().unclick(do1);
+		c.click(do2);
+		c.click(do3);
+		c.hover(function(){ // in
+			arrow.hide();
+			lblClickMe.hide();
+		}
+		, function(){ // out
+			arrow.show();
+			lblClickMe.show();
+		});
+		
+		// Test draw arrow
+		arr_layer = canvas.addLayer("ARROW");
+		from = new Point(350, 150);
+		to = new Point(350, 50);		
+		arrow_length = 20;
+		arrow_count = 36;
+		for(i = 1; i <= arrow_count; i++){
+			new_to = ChibiJS.Geometry.rotate(i*360 / arrow_count, to, from);
+			arr_layer.draw_arrow(from.x, from.y, new_to.x, new_to.y, "ARRRR", 20, 10);
+		}
+		
+		canvas.pack(20);
+		displayInformation();
+	});
+  </script>
+</head>
+<body>
+	<h1>Test ShinChan library</h1>
+	<div id="main_canvas"></div>
+	<input type="button" id="btnStart" name="btnStart" value="Information"/>
+	<input type="button" id="btnClear" name="btnClear" value="Clear"/>
+	<br/>
+	<input type="button" id="btnLeft" name="btnLeft" value="Left"/>
+	<input type="button" id="btnUp" name="btnUp" value="Up"/>
+	<input type="button" id="btnDown" name="btnDown" value="Down"/>
+	<input type="button" id="btnRight" name="btnRight" value="Right"/>
+	 - Speed: <input type="text" id="txtSpeed" name="txtSpeed" value="10"/>
+	
+	<div id="holder1"></div>
+	<div id="holder2"></div>
+	
+	<input type="button" id="btn1" name="btn1" value="Expand"/>
+	<input type="button" id="btn2" name="btn2" value="Collapse"/>
+	
+	
+	<div id="console"></div>
+</body>
+</html>

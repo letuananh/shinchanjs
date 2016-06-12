@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+                    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <script src="js/jquery-1.8.2.js"></script>
+  <script src="js/raphael-min.js"></script>
+  <script src="js/kajika.js"></script>
+  <script>
+  $(document).ready(function(){
+		var paper = Raphael("holder", 320, 200);
+
+		//paper.fill("#FF0000");
+
+		var a_box = paper.rect(10, 10, 13, 13);
+		a_box.attr("fill", "#0066CC");
+		a_box.attr("stroke", "blue");
+		a_box.attr("stroke-width", "1px");
+		
+		var page_border = paper.rect(1,1, 318,198);
+		page_border.attr("stroke", "red");
+		page_border.attr("stroke-width", "1px");
+		
+		//var font1 = paper.getFont("samarkan normal");
+		//var t = paper.print(100, 100, "The Cathedral and the Bazaar!", font1, 48);
+		sample_text = "The Cathedral and the Bazaar!";
+		var t = paper.text(100, 100, sample_text);
+		t.attr({'font-family': '"Courier New", Courier, "Nimbus Mono L", monospace'
+				,'text-anchor': 'start'
+				,'font-size': '14px'
+		});
+		font_size = 14;
+		for(i = 0; i < sample_text.length; i++){
+			//r = paper.rect(100 + i*font_size, 100 - 7, font_size, 14)
+			//r.attr("fill", "#0066CC");
+			//r.attr("stroke", "blue");
+			//r.attr("stroke-width", "1px");
+		}
+		
+		bbox = t.getBBox();
+		paper.text(100, 50, "B-box: w=" + bbox.width + " - h=" + bbox.height);
+		
+		r = paper.rect(100, 100 - bbox.height / 2, bbox.width, bbox.height);
+		r.attr("stroke", "red");
+		r.attr("stroke-width", "1px");
+		//var center_circle = paper.circle(100, 100, 10);
+		a_node = draw_box(paper, 15, 15, 150, 30, 'he he he');
+		a_node.click(function(){
+			alert("Why did you click me?");
+			});
+		
+  });
+  </script>
+  <style>
+  p { margin:8px; font-size:20px; color:blue; 
+      cursor:pointer; }
+  b { text-decoration:underline; }
+  button { cursor:pointer; }
+  </style>
+</head>
+<body>
+	<script>
+		var x = { 'name': 'Takaji', 'age' : 30, 'latest_job' : 'Student' };
+		document.write("Name: " + x.name + "<br />");
+		document.write("Age: " + x.age + "<br />");
+		document.write("Job: " + x.latest_job + "<br />");
+	</script>
+	<div id="holder"></div>
+</body>
+</html>
