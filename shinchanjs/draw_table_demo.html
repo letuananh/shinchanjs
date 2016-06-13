@@ -79,12 +79,12 @@
 				my_table.setCell(i, j, "Cell [" + i + ", " + j +"]");
 			}
 		}
-		table2 = [ ['ko', 'takaji', 'iss', 'aaa'], ['datamining', 'textmining', 'something-else', 'nus', 'son', 'guess'] ];	
+		table2 = [ ['ko', 'takaji', 'iss', 'aaa',new ChibiJS.URL('google.com', 'http://google.com')], ['datamining', 'textmining', 'something-else', 'nus', 'son', 'guess'] ];	
 		table3 = [['a', 'b'], ['c', 'd', 'e', 'takaji', 'blob'],[1, 2, 3, 1], ['x', 'y', 'nus']];
 		table4 = [['pos:a','RP.sense:for','cvarsort:event'], ['sf:prop','tense:untensed','mood:indicative']];
 		table5 = [['pos:n','RP.sense:1','cvarsort:individual'], ['number:singular','pers:3','ind:plus']];
 		table6 = [['pos:p','cvarsort:event','sf:prop']];
-		table7 = [['pos:p']];
+		table7 = [['pos:p', '<a href="#">foo</a>']];
 		table8 = [["pos:v","RP.sense:id","cvarsort:event"], ["sf:prop","tense:pres","mood:indicative"], ["prog:minus","perf:minus", "a"]];
 		
 		console.header("DRAW TABLES");

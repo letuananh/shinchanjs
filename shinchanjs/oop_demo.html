@@ -38,13 +38,50 @@
 		this.students = [];
 	}
 	
+	URL = function(text, url){
+		this._text = text;
+		this._url = url;
+	}
+	
+	URL.prototype = {
+		text : function(){ return this._text; }
+		,url : function(){ return this._url; }
+		,str : function(){
+			return '<a target="_blank" href="' + this._url + '">' + this._text + '</a>';
+		}
+	}
+	
 	function testConstructor(){
 		console.header("CONSTRUCTOR");
 		var u1 = new University();
 		var u2 = new University();
-		u1.students.push("123");
+		stu1 = new Student('Midori');
+		stu2 = new Student('Maruko');
+		u1.students.push(stu1);
 		console.writeline("Uni 1" + dump_array(u1.students));
 		console.writeline("Uni 2" + dump_array(u2.students));
+		
+		url1 = new URL('google', 'http://google.com');
+		url2 = new URL('ntu', 'http://ntu.edu.sg');
+		console.write("URL1: ");
+		console.writeline(url1);
+		
+		if (url1.url()){
+			console.write("URL is exposed via a function >>> ");
+			console.writeline(url1.url());
+		}
+		
+		console.write("URL2: ");
+		console.writeline(url2);
+
+		// Can I access undefined.undefined?
+		var obj = "a";
+		if (obj.url == undefined){
+			console.writeline("obj doesn't have url field");
+		}
+		if (url1.url != undefined){
+			console.writeline("but url1 have url field");
+		}
 	}
 	
 	function testTable(){

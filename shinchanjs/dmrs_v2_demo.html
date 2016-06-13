@@ -108,6 +108,29 @@
 	
 				this.sentence_text = 'The Cathedral and the Bazaar';
 			};	
+			
+            var dmrs3 = new function(){
+                
+                var node_10000 = { 'text' : 'some', 'from' : 0, 'to' : 4, 'type' : 'realpred', 'pos': 'q', 'link_count' : 1, 'tooltip' : [['pos:q']] };
+				var node_10001 = { 'text' : 'generic_entity', 'from' : 0, 'to' : 4, 'type' : 'gpred', 'pos': '', 'link_count' : 2, 'tooltip' : [['cvarsort:individual','number:singular','pers:3']] };
+				var node_10002 = { 'text' : 'dog', 'from' : 5, 'to' : 9, 'type' : 'realpred', 'pos': 'v', 'link_count' : 2, 'tooltip' : [[new ChibiJS.URL("02001858-v: dog", "http://compling.hss.ntu.edu.sg/omw/cgi-bin/wn-gridx.cgi?synset=02001858-v"),'pos:v','RP.sense:1'], ['cvarsort:event','sf:prop','tense:pres'], ['mood:indicative','prog:-','perf:-']] };
+				var node_10003 = { 'text' : 'udef_q', 'from' : 10, 'to' : 15, 'type' : 'gpred', 'pos': '', 'link_count' : 1, 'tooltip' : [] };
+				var node_10004 = { 'text' : 'bark', 'from' : 10, 'to' : 15, 'type' : 'realpred', 'pos': 'n', 'link_count' : 2, 'tooltip' : [[new ChibiJS.URL("13162297-n: bark", "http://compling.hss.ntu.edu.sg/omw/cgi-bin/wn-gridx.cgi?synset=13162297-n"),'pos:n','RP.sense:1'], ['cvarsort:individual','number:singular','pers:3']] };
+				
+    
+                
+                var link_1 = { 'from': node_10000, 'to': node_10001, 'post' : 'H', 'rargname' : 'RSTR' }; 
+				var link_2 = { 'from': node_10002, 'to': node_10001, 'post' : 'NEQ', 'rargname' : '1' }; 
+				var link_3 = { 'from': node_10002, 'to': node_10004, 'post' : 'NEQ', 'rargname' : '2' }; 
+				var link_4 = { 'from': node_10003, 'to': node_10004, 'post' : 'H', 'rargname' : 'RSTR' }; 
+				
+    
+                
+                this.nodes = [ node_10000, node_10001, node_10002, node_10003, node_10004 ];
+                this.links = [ link_1, link_2, link_3, link_4 ];
+    
+                this.sentence_text = 'Some dogs bark.';
+            };			
 	</script>
 
   <script>
@@ -147,6 +170,11 @@
         var dmrs2_text_holder = new VisualKopasu.SentenceText("dmrs2_text_holder", dmrs2.sentence_text);
         var visual_dmrs2 = new VisualKopasu.DMRSCanvas(dmrs2, dmrs2_canvas, dmrs2_text_holder);
         visual_dmrs2.visualise(); 		
+        
+        dmrs3_canvas = new Canvas("dmrs3_canvas", 320, 240, "dmrs3_canvas");
+        var dmrs3_text_holder = new VisualKopasu.SentenceText("dmrs3_text_holder", dmrs3.sentence_text);
+        var visual_dmrs3 = new VisualKopasu.DMRSCanvas(dmrs3, dmrs3_canvas, dmrs3_text_holder);
+        visual_dmrs3.visualise(); 		
 	}
 	
 	function toggleConsole(){
@@ -171,6 +199,9 @@
 	
 	<div id="dmrs2_canvas"></div>
 	<div id="dmrs2_text_holder" class="dmrs_sentence_text"></div>
+	
+	<div id="dmrs3_canvas"></div>
+	<div id="dmrs3_text_holder" class="dmrs_sentence_text"></div>
 
 	<div id="toolbar" class="ui-corner-all">
 		<input type="button" id="btnStart" name="btnStart" value="Information"/>
