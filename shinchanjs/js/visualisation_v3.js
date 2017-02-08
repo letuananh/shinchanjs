@@ -216,6 +216,8 @@ VisualKopasu.SentenceText = function(holder_id, text){
     this.text = text;
     
     this.highlight = function(from,to){
+        from = (from == undefined) ? 0 : from;
+        to = (to == undefined) ? 0 : to;
         var text_pieces = this.string_split(from, to);
         this.holder.html('');
         if(text_pieces[0].length > 0){
@@ -261,8 +263,8 @@ VisualKopasu.DMRSCanvas = function(dmrs, canvas, text_holder, theme){
     var nodes = dmrs.nodes;
     var links = dmrs.links;
     var sentence_text = dmrs.sentence_text;
-    var canvas = canvas;
-    var text_holder = text_holder;
+    var canvas = (typeof canvas == 'string') ? new Canvas(canvas) : canvas;
+    var text_holder = (typeof text_holder == 'string') ? new VisualKopasu.SentenceText(text_holder, dmrs.sentence_text) : text_holder;
     var theme = (theme == undefined) ? new VisualKopasu.DMRSTheme() : theme;
     // layers
     var layer_nodes = canvas.addLayer("Nodes layer");

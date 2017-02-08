@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+          "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Console demo</title>
+    
+    <link rel="stylesheet" href="css/redmond/jquery-ui-1.9.0.custom.min.css" />
+    <link rel="stylesheet" href="css/visualkopasu.css" />
+    
+    <style>
+     #toolbar {
+       /* T-R-B-L */
+       margin: 5px 5px 5px 0px;
+       padding: 4px;
+       display: inline-block;
+     }
+     /* support: IE7 */
+     *+html #toolbar {
+       display: inline;
+     }
+    </style>    
+  </head>
+  <body>
+    <div id="banner" class="ui-widget-header ui-corner-all">DMRS demo (Version 0.3)</div>
+    <div id="dmrs1_canvas"></div>
+    <div id="dmrs1_sentence_text" class="dmrs_sentence_text"></div>
+    
+    <div id="dmrs2_canvas"></div>
+    <div id="dmrs2_text_holder" class="dmrs_sentence_text"></div>
+    
+    <div id="dmrs3_canvas"></div>
+    <div id="dmrs3_text_holder" class="dmrs_sentence_text"></div>
+
+    <div id="dmrs4_canvas"></div>
+    <div id="dmrs4_text_holder" class="dmrs_sentence_text"></div>
+
+    <div id="toolbar" class="ui-corner-all">
+      <input type="button" id="btnStart" name="btnStart" value="Information"/>
+      <input type="button" id="btnClear" name="btnClear" value="Clear Console"/>
+      <span class="toolbar_label">A label</span>
+      <input type="button" id="btnHide" name="btnHide" value="Hide Console"/>
+    </div>
+
+    <div id="console" style="overflow: auto; max-height: 300px;"></div>
+
+    <!-- Script -->
+    <script src="js/jquery-1.8.2.js"></script>
+    <script src="js/jquery-ui-1.9.0.custom.min.js"></script>
+    <script src="js/raphael.js"></script>
+    <script src="js/kajika.js"></script>
+    <script src="js/testutil.js"></script>
+    <script src="js/shinchan.js"></script>
+    <script src="js/shinchan.debug.js"></script>
+    <script src="js/visualisation_v3.js"></script>
+    
+    <script type="text/javascript">
+     var dmrs3 = new function(){
+       var node_10000 = { 'text' : 'some', 'from' : 0, 'to' : 4, 'type' : 'realpred', 'pos': 'q', 'link_count' : 1, 'tooltip' : [['pos:q']] };
+       var node_10001 = { 'text' : 'generic_entity', 'from' : 0, 'to' : 4, 'type' : 'gpred', 'pos': '', 'link_count' : 2, 'tooltip' : [['cvarsort:individual','number:singular','pers:3']] };
+       var node_10002 = { 'text' : 'dog', 'from' : 5, 'to' : 9, 'type' : 'realpred', 'pos': 'v', 'link_count' : 2, 'tooltip' : [[new ChibiJS.URL("02001858-v: dog", "http://compling.hss.ntu.edu.sg/omw/cgi-bin/wn-gridx.cgi?synset=02001858-v"),'pos:v','RP.sense:1'], ['cvarsort:event','sf:prop','tense:pres'], ['mood:indicative','prog:-','perf:-']] };
+       var node_10003 = { 'text' : 'udef_q', 'from' : 10, 'to' : 15, 'type' : 'gpred', 'pos': '', 'link_count' : 1, 'tooltip' : [] };
+       var node_10004 = { 'text' : 'bark', 'from' : 10, 'to' : 15, 'type' : 'realpred', 'pos': 'n', 'link_count' : 2, 'tooltip' : [[new ChibiJS.URL("13162297-n: bark", "http://compling.hss.ntu.edu.sg/omw/cgi-bin/wn-gridx.cgi?synset=13162297-n"),'pos:n','RP.sense:1'], ['cvarsort:individual','number:singular','pers:3']] };
+       
+       var link_1 = { 'from': node_10000, 'to': node_10001, 'post' : 'H', 'rargname' : 'RSTR' }; 
+       var link_2 = { 'from': node_10002, 'to': node_10001, 'post' : 'NEQ', 'rargname' : '1' }; 
+       var link_3 = { 'from': node_10002, 'to': node_10004, 'post' : 'NEQ', 'rargname' : '2' }; 
+       var link_4 = { 'from': node_10003, 'to': node_10004, 'post' : 'H', 'rargname' : 'RSTR' }; 
+       
+       this.nodes = [ node_10000, node_10001, node_10002, node_10003, node_10004 ];
+       this.links = [ link_1, link_2, link_3, link_4 ];
+       
+       this.sentence_text = 'Some dogs bark.';
+     };
+
+     dmrs4_text = 'Some dogs chases a cat.';
+     dmrs4_json = {"nodes": [{"pos": "q", "type": "realpred", "lnk": {"from": 0, "to": 4}, "predicate": "_some_q", "nodeid": 10000}, {"type": "gpred", "lnk": {"from": 0, "to": 4}, "sortinfo": {"NUM": "sg", "cvarsort": "x", "PERS": "3"}, "predicate": "generic_entity", "nodeid": 10001}, {"pos": "v", "type": "realpred", "lnk": {"from": 5, "to": 9}, "predicate": "_dog_v_1", "sortinfo": {"TENSE": "pres", "SF": "prop", "MOOD": "indicative", "PERF": "-", "cvarsort": "e", "PROG": "-"}, "senses": [{"synsetid": 202001858, "type": "isf", "lemma": "dog"}], "nodeid": 10002}, {"pos": "q", "type": "gpred", "lnk": {"from": 10, "to": 23}, "predicate": "udef_q", "nodeid": 10003}, {"pos": "n", "type": "realpred", "lnk": {"from": 10, "to": 16}, "predicate": "_chase_n_1", "sortinfo": {"NUM": "pl", "IND": "+", "cvarsort": "x", "PERS": "3"}, "senses": [{"synsetid": 100319939, "type": "isf", "lemma": "chase"}], "nodeid": 10004}, {"pos": "p", "type": "realpred", "lnk": {"from": 17, "to": 18}, "predicate": "_a_p_per", "sortinfo": {"TENSE": "untensed", "SF": "prop", "MOOD": "indicative", "PERF": "-", "cvarsort": "e", "PROG": "-"}, "senses": [{"synsetid": 113658027, "type": "isf", "lemma": "a"}], "nodeid": 10005}, {"pos": "q", "type": "gpred", "lnk": {"from": 17, "to": 18}, "predicate": "udef_q", "nodeid": 10006}, {"pos": "n", "type": "realpred", "lnk": {"from": 19, "to": 23}, "predicate": "_cat_n_1", "sortinfo": {"NUM": "sg", "IND": "+", "cvarsort": "x", "PERS": "3"}, "senses": [{"synsetid": 102121620, "type": "isf", "lemma": "cat"}], "nodeid": 10007}], "links": [{"from": 0, "rargname": null, "post": "H", "to": 10002}, {"from": 10000, "rargname": "RSTR", "post": "H", "to": 10001}, {"from": 10002, "rargname": "ARG1", "post": "NEQ", "to": 10001}, {"from": 10002, "rargname": "ARG2", "post": "NEQ", "to": 10004}, {"from": 10003, "rargname": "RSTR", "post": "H", "to": 10004}, {"from": 10005, "rargname": "ARG1", "post": "EQ", "to": 10004}, {"from": 10005, "rargname": "ARG2", "post": "NEQ", "to": 10007}, {"from": 10006, "rargname": "RSTR", "post": "H", "to": 10007}]};
+     mrs4_json = {"variables": {"x14": {"properties": {"pers": "3", "num": "sg"}, "type": "x"}, "h22": {"type": "h"}, "h3": {"type": "h"}, "h24": {"type": "h"}, "h6": {"type": "h"}, "e16": {"properties": {"prog": "-", "mood": "indicative", "tense": "untensed", "perf": "-", "sf": "prop"}, "type": "e"}, "h10": {"type": "h"}, "h4": {"type": "h"}, "h1": {"type": "h"}, "e17": {"properties": {"prog": "-", "mood": "indicative", "tense": "untensed", "perf": "-", "sf": "prop"}, "type": "e"}, "h2": {"type": "h"}, "x19": {"properties": {"pt": "notpro", "num": "sg", "gend": "n", "pers": "3"}, "type": "x"}, "x20": {"properties": {"ind": "+", "pers": "3", "num": "sg"}, "type": "x"}, "h7": {"type": "h"}, "x11": {"properties": {"ind": "+", "pt": "std", "gend": "f", "num": "sg", "pers": "3"}, "type": "x"}, "h8": {"type": "h"}, "e15": {"properties": {"prog": "-", "mood": "indicative", "tense": "untensed", "perf": "-", "sf": "prop"}, "type": "e"}, "e12": {"properties": {"prog": "+", "mood": "indicative", "tense": "pres", "perf": "-", "sf": "prop"}, "type": "e"}, "h21": {"type": "h"}, "h5": {"type": "h"}, "e18": {"properties": {"prog": "+", "mood": "indicative", "tense": "untensed", "perf": "-", "sf": "prop"}, "type": "e"}, "e13": {"properties": {"prog": "-", "mood": "indicative", "tense": "untensed", "perf": "-", "sf": "prop"}, "type": "e"}, "h0": {"type": "h"}, "h9": {"type": "h"}, "h23": {"type": "h"}}, "constraints": [{"relation": "qeq", "low": "h10", "high": "h24"}, {"relation": "qeq", "low": "h3", "high": "h0"}, {"relation": "qeq", "low": "h4", "high": "h22"}, {"relation": "qeq", "low": "h1", "high": "h21"}, {"relation": "qeq", "low": "h7", "high": "h23"}], "top": "h0", "relations": [{"predicate": "pron", "label": "h1", "lnk": {"from": 0, "to": 3}, "arguments": {"ARG0": "x11"}}, {"predicate": "pronoun_q", "label": "h2", "lnk": {"from": 0, "to": 3}, "arguments": {"ARG0": "x11", "RSTR": "h21"}}, {"predicate": "_wait_v_1", "label": "h3", "lnk": {"from": 7, "to": 14}, "arguments": {"ARG0": "e12", "ARG1": "x11"}}, {"predicate": "loc_nonsp", "label": "h3", "lnk": {"from": 15, "to": 18}, "arguments": {"ARG0": "e13", "ARG2": "x14", "ARG1": "e12"}}, {"predicate": "time_n", "label": "h4", "lnk": {"from": 15, "to": 18}, "arguments": {"ARG0": "x14"}}, {"predicate": "def_implicit_q", "label": "h5", "lnk": {"from": 15, "to": 18}, "arguments": {"ARG0": "x14", "RSTR": "h22"}}, {"predicate": "_now_a_1", "label": "h4", "lnk": {"from": 15, "to": 18}, "arguments": {"ARG0": "e15", "ARG1": "x14"}}, {"predicate": "_in_p_state", "label": "h3", "lnk": {"from": 19, "to": 21}, "arguments": {"ARG0": "e16", "ARG2": "x20", "ARG1": "e12"}}, {"predicate": "_the_q", "label": "h6", "lnk": {"from": 22, "to": 25}, "arguments": {"ARG0": "x20", "RSTR": "h23"}}, {"predicate": "compound", "label": "h7", "lnk": {"from": 26, "to": 39}, "arguments": {"ARG0": "e17", "ARG2": "x19", "ARG1": "x20"}}, {"predicate": "udef_q", "label": "h8", "lnk": {"from": 26, "to": 34}, "arguments": {"ARG0": "x19", "RSTR": "h24"}}, {"predicate": "_sit_v_1", "label": "h9", "lnk": {"from": 26, "to": 34}, "arguments": {"ARG0": "e18"}}, {"predicate": "nominalization", "label": "h10", "lnk": {"from": 26, "to": 34}, "arguments": {"ARG0": "x19", "ARG1": "h9"}}, {"predicate": "_room_n_unit", "label": "h7", "lnk": {"from": 34, "to": 39}, "arguments": {"ARG0": "x20"}}]};
+     
+    </script>
+
+    <script>
+     var console;
+     var dmrs1_canvas;
+     
+     function initialise(){
+       // Create a console
+       console = new Console("console");
+       console.writeline("- Test Console -");
+       
+       $("#btnStart").button().click(function(){
+         displayInformation(dmrs1_canvas);
+       });
+       $("#btnClear").button().click(function(){
+         console.clear("- Cleared -");
+       });
+       $("#btnHide").button().click(function(){
+         toggleConsole();
+       });
+     }
+     
+     $(document).ready(function(){       
+       initialise();   
+       draw_dmrs();
+     });
+     
+     function json2visko(json, text){
+         // node -> text, from, to, type, pos, linkcount
+         // node-map
+         var node_map = {};
+         var nodes = [];
+         // convert nodes
+         $(json.nodes).each(function(idx, elem){
+             var node = {'text': elem.predicate, 'from': elem.lnk.from, 'to': elem.lnk.to, 'type': elem.type, 'pos': elem.pos, linkcount: 0, 'nodeid': elem.nodeid, 'tooltip': []};
+             
+             // build tooltip
+             max_length = 3;
+            colcount = 0;
+            row = [];
+             // get senses
+             if (elem.senses != undefined && elem.senses.length > 0){
+                 console.writeline("Sense: " + elem.senses);
+                 sense = elem.senses[0];
+                 var sense_text = sense.synsetid + ": " + sense.lemma;
+                 var sense_url = (sense.url == undefined) ? "http://compling.hss.ntu.edu.sg/omw/cgi-bin/wn-gridx.cgi?synset=" + sense.synsetid : sense.url;
+                 colcount = 1;
+                 row = [new ChibiJS.URL(sense_text, sense_url)]
+                 node.tooltip.push(row);
+                 }
+                 
+             if (elem.sortinfo != undefined && Object.keys(elem.sortinfo).length > 0){
+                 if (node.tooltip.length == 0){
+                    node.tooltip.push(row);
+                }
+                for (k in elem.sortinfo){
+                     colcount++;
+                     if (colcount == 3){
+                         colcount = 1;
+                         row = [];
+                         node.tooltip.push(row)
+                         }
+                     row.push(k + ":" + elem.sortinfo[k])
+                     }
+                 console.writeline("Tooltip: " + node.tooltip + " | len: " + node.tooltip.length);
+            }
+             node_map[elem.nodeid] = node;
+             nodes.push(node);
+             });
+         // convert links
+         var links = [];
+         $(json.links).each(function(idx, l){
+             // create TOP node (id=0) if needed
+            if (l.from == 0 || l.to == 0){
+                 if (node_map[0] == undefined){
+                     node_map[0] = {'text': 'TOP', 'from': 0, 'to': 0, 'type': 'realpred', 'pos': 'TOP', linkcount: 0, 'nodeid': 0, 'tooltip': []};
+                     nodes.unshift(node_map[0]);
+                 }
+             }
+             var fnode = node_map[l.from];
+             fnode.linkcount++;
+             var tonode = node_map[l.to];
+             tonode.linkcount++;
+             var lnk = {'from': fnode, 'to': tonode, 'post': l.post, 'rargname': (l.rargname != undefined) ? l.rargname : ''};
+
+             links.push(lnk);
+         });
+         visko = { 'sentence_text': text, 'nodes': nodes, 'links': links };
+         return visko;
+     }
+     
+     function draw_dmrs(){
+       var visual_dmrs3 = new VisualKopasu.DMRSCanvas(dmrs3, "dmrs3_canvas", "dmrs3_text_holder");
+       visual_dmrs3.visualise();
+
+       // Transform DMRS JSON into Visko JS format
+       dmrs4 = json2visko(dmrs4_json, dmrs4_text);
+       var visual_dmrs4 = new VisualKopasu.DMRSCanvas(dmrs4, "dmrs4_canvas", "dmrs4_text_holder");
+       visual_dmrs4.visualise();
+       console.writeline("DMRS 4: " + dmrs4.sentence_text);       
+       console.writeline("DMRS 4 length: " + dmrs4_json['nodes'].length);
+       console.writeline("DMRS 4's type: " + typeof dmrs4_json);
+       console.writeline("DMRS 4's nodes: " + dmrs4_json.nodes);
+       console.writeline("DMRS 3's type: " + typeof dmrs3);
+       console.writeline("DMRS 3's nodes: " + dmrs3.nodes);
+     }
+     
+     function toggleConsole(){
+       $("#console").toggle();
+       if($("#console").is(":visible")){
+         $("#btnHide").prop('value', "Hide Console");                
+       } 
+       else{
+         $("#btnHide").prop('value', "Show Console");
+       }
+     }
+     
+     function start(){
+       // nothing
+     }
+    </script>    
+  </body>
+</html>
