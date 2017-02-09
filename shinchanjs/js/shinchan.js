@@ -553,6 +553,7 @@ ChibiJS.ShinChan.Canvas = function(holder_name, width, height, canvasName){
     var height = (height == undefined) ? 240 : height; // Default canvas height
     var paper = Raphael(holder_name, width, height);
     var border = undefined;
+    this.holder_name = holder_name;
     
     this.layers = [];
     
@@ -619,29 +620,41 @@ ChibiJS.ShinChan.Canvas = function(holder_name, width, height, canvasName){
     this.pack = function(margin){
         if(margin == undefined){ margin = 20; } // TODO: Default margin
 
-        canvasInfo = this.findShapeInfo();
-        result = this.resize(canvasInfo.size.width + 2 * margin, canvasInfo.size.height + 2 * margin);
-        // If resize is performed
-        if(result){
-            // canvasInfo = this.findShapeInfo(); // update canvas info
-        }
-        // new size
-        var shift_x = -(canvasInfo.location.x) + margin;
-        var shift_y = -(canvasInfo.location.y) + margin;
+        var canvasInfo = this.findShapeInfo();
+        var result;
+        if (canvasInfo != undefined){
+            result = this.resize(canvasInfo.size.width + 2 * margin, canvasInfo.size.height + 2 * margin);
+            // If resize is performed
+            if(result != undefined){
+                // canvasInfo = this.findShapeInfo(); // update canvas info
+            }
+            // new size
+            var shift_x = -(canvasInfo.location.x) + margin;
+            var shift_y = -(canvasInfo.location.y) + margin;
 
-        if(shift_x != 0 || shift_y != 0){
-            $.each(this.layers, function(idx, layer){
-                //layer.getMainGroup().findShapeInfo(true); 
-                layer.translate(shift_x, shift_y);
-                //layer.getMainGroup().findShapeInfo(true);
-            });
-        } // end if shift's needed
+            if(shift_x != 0 || shift_y != 0){
+                $.each(this.layers, function(idx, layer){
+                    //layer.getMainGroup().findShapeInfo(true); 
+                    layer.translate(shift_x, shift_y);
+                    //layer.getMainGroup().findShapeInfo(true);
+                });
+            } // end if shift's needed
+        }   
     }
     
     this.addLayer = function(name){
         _layer = new Layer(paper, this, name);
         this.layers.push(_layer);
         return _layer;
+    }
+    
+    this.clear = function(){
+        $(this.getLayers()).each(function(idx, layer){
+            // Delete layer's children
+            layer.getMainGroup().deleteChildren();
+            });
+        // clear all layers
+        this.layers = [];
     }
     
     this.getLayers = function(){

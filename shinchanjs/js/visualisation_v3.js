@@ -275,7 +275,16 @@ VisualKopasu.DMRSCanvas = function(dmrs, canvas, text_holder, theme){
     var node_flow = new ChibiJS.ShinChan.HorizontalFlow(layer_nodes); // Reflow node after draw
     var node_vflow = []; // Vertical flow for nodes linked by RSTR
 
+    this.clear = function(){
+        var holder = $("#" + canvas.holder_name);
+        if (holder.has('svg') && canvas.getLayers().length > 0){
+            $("#" + canvas.holder_name).empty();
+        }
+        // canvas = new Canvas(canvas.holder_name);
+    }
+
     this.visualise = function(){
+        // this.clear();
         // Map links
         $.each(links, function(idx, a_link){
             if(a_link.from.linkTo == undefined){
