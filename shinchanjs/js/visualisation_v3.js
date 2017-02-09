@@ -538,3 +538,69 @@ VisualKopasu.DMRSCanvas = function(dmrs, canvas, text_holder, theme){
     }   
     
 }
+
+
+ function json2visko(json, text){
+     // node -> text, from, to, type, pos, linkcount
+     // node-map
+     var node_map = {};
+     var nodes = [];
+     // convert nodes
+     $(json.nodes).each(function(idx, elem){
+         var node = {'text': elem.predicate, 'from': elem.lnk.from, 'to': elem.lnk.to, 'type': elem.type, 'pos': elem.pos, linkcount: 0, 'nodeid': elem.nodeid, 'tooltip': []};
+         
+         // build tooltip
+         max_length = 3;
+        colcount = 0;
+        row = [];
+         // get senses
+         if (elem.senses != undefined && elem.senses.length > 0){
+             console.writeline("Sense: " + elem.senses);
+             sense = elem.senses[0];
+             var sense_text = sense.synsetid + ": " + sense.lemma;
+             var sense_url = (sense.url == undefined) ? "http://compling.hss.ntu.edu.sg/omw/cgi-bin/wn-gridx.cgi?synset=" + sense.synsetid : sense.url;
+             colcount = 1;
+             row = [new ChibiJS.URL(sense_text, sense_url)]
+             node.tooltip.push(row);
+             }
+             
+         if (elem.sortinfo != undefined && Object.keys(elem.sortinfo).length > 0){
+             if (node.tooltip.length == 0){
+                node.tooltip.push(row);
+            }
+            for (k in elem.sortinfo){
+                 colcount++;
+                 if (colcount == 3){
+                     colcount = 1;
+                     row = [];
+                     node.tooltip.push(row)
+                     }
+                 row.push(k + ":" + elem.sortinfo[k])
+                 }
+             console.writeline("Tooltip: " + node.tooltip + " | len: " + node.tooltip.length);
+        }
+         node_map[elem.nodeid] = node;
+         nodes.push(node);
+         });
+     // convert links
+     var links = [];
+     $(json.links).each(function(idx, l){
+         // create TOP node (id=0) if needed
+        if (l.from == 0 || l.to == 0){
+             if (node_map[0] == undefined){
+                 node_map[0] = {'text': 'TOP', 'from': 0, 'to': 0, 'type': 'realpred', 'pos': 'TOP', linkcount: 0, 'nodeid': 0, 'tooltip': []};
+                 nodes.unshift(node_map[0]);
+             }
+         }
+         var fnode = node_map[l.from];
+         fnode.linkcount++;
+         var tonode = node_map[l.to];
+         tonode.linkcount++;
+         var lnk = {'from': fnode, 'to': tonode, 'post': l.post, 'rargname': (l.rargname != undefined) ? l.rargname : ''};
+
+         links.push(lnk);
+     });
+     visko = { 'sentence_text': text, 'nodes': nodes, 'links': links };
+     return visko;
+ }
+     
