@@ -1,116 +1,115 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
-                    "http://www.w3.org/TR/html4/loose.dtd">
+          "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-	<title>Console demo</title>
-	
-	<link rel="stylesheet" href="css/redmond/jquery-ui-1.9.0.custom.min.css" />
-	<link rel="stylesheet" href="css/visualkopasu.css" />
-	
-	<style>
- 		#toolbar {
- 			/* T-R-B-L */
- 			margin: 5px 5px 5px 0px;
-			padding: 4px;
-			display: inline-block;
-		}
-		/* support: IE7 */
-		*+html #toolbar {
-			display: inline;
-		}
-	</style>
-	
+  <head>
+    <title>Test horizontal flow demo API</title>
+    
+    <link rel="stylesheet" href="css/redmond/jquery-ui-1.9.0.custom.min.css" />
+    <link rel="stylesheet" href="css/visualkopasu.css" />
+    
+    <style>
+     #toolbar {
+       /* T-R-B-L */
+       margin: 5px 5px 5px 0px;
+       padding: 4px;
+       display: inline-block;
+     }
+     /* support: IE7 */
+     *+html #toolbar {
+       display: inline;
+     }
+    </style>
+  </head>
+  <body>
+    <div id="banner" class="ui-widget-header ui-corner-all">Text Flow Demo</div>
+    <div id="main_canvas"></div>
+    
+    <div id="toolbar" class="ui-corner-all">
+      <input type="button" id="btnStart" name="btnStart" value="Information"/>
+      <input type="button" id="btnClear" name="btnClear" value="Clear Console"/>
+      <span class="toolbar_label">A label</span>
+      <input type="button" id="btnHide" name="btnHide" value="Hide Console"/>
+    </div>
+    
+    <div id="console" style="overflow: auto; max-height: 300px;"></div>
+  </body>
   <script src="js/jquery-1.8.2.js"></script>
   <script src="js/jquery-ui-1.9.0.custom.min.js"></script>
   <script src="js/raphael-min.js"></script>
   <script src="js/kajika.js"></script>
-  <script src="js/testutil.js"></script>
+  <script src="js/console.js"></script>
   <script src="js/shinchan.js"></script>
   <script src="js/shinchan.debug.js"></script>
   <script src="js/jikan.js"></script>
   <script>
-	var console;
-	var canvas;
-	
-	function initialise(){
-		// Create a console
-		console = new Console("console");
-		console.writeline("- Test Console -");
-		
-		canvas = new Canvas("main_canvas", 320, 240, "MainCanvas");
-		
-		$("#btnStart").button().click(function(){
-			start();
-		});
-		$("#btnClear").button().click(function(){
-			console.clear("- Cleared -");
-		});
-		$("#btnHide").button().click(function(){
-			toggleConsole();
-		});
-	}
-	
-	$(document).ready(function(){		
-		initialise();	
-		drawFlow();
-	});
-	
-	function drawFlow(){
-			flow_layer = canvas.addLayer("Flow layer");
-			var a_flow = new HorizontalFlow(flow_layer);
-			var v_flow = new VerticalFlow(flow_layer);
-			
-			for(var i = 0; i < 10; i++){
-				lbl = flow_layer.draw_label(40, 40, "Item " + i);
-				if(i == 4){
-					v_flow.addElement(lbl);
-				}
-				if(i == 5){
-					v_flow.addElement(lbl);
-				}
-				else{
-					a_flow.addElement(lbl);
-				}
-			}
-			
-			CanvasUtil.moveDown(v_flow.elements[0], v_flow.elements[1], 20);
-			console.writeline(dump_array(a_flow.getElements()));
-			console.writeline(dump_array(v_flow.getElements()));
-			a_flow.rearrange(20);
-			v_flow.rearrange(20);
-			$.each(v_flow.getElements(), function(idx, element){
-				dump_element(element);
-			});
-			
-			canvas.pack(20);
-	}
-	
-	function toggleConsole(){
-		$("#console").toggle();
-		if($("#console").is(":visible")){
-			$("#btnHide").prop('value', "Hide Console");				
-		} 
-		else{
-			$("#btnHide").prop('value', "Show Console");
-		}
-	}
-	
-	function start(){
-		displayInformation();
-	}
+   var console;
+   var canvas;
+   
+   function initialise(){
+     // Create a console
+     console = new Console("console");
+     console.writeline("- Test Console -");
+     
+     canvas = new Canvas("main_canvas", 320, 240, "MainCanvas");
+     
+     $("#btnStart").button().click(function(){
+       start();
+     });
+     $("#btnClear").button().click(function(){
+       console.clear("- Cleared -");
+     });
+     $("#btnHide").button().click(function(){
+       toggleConsole();
+     });
+   }
+   
+   $(document).ready(function(){		
+     initialise();	
+     drawFlow();
+   });
+   
+   function drawFlow(){
+     flow_layer = canvas.addLayer("Flow layer");
+     var a_flow = new HorizontalFlow(flow_layer);
+     var v_flow = new VerticalFlow(flow_layer);
+     
+     for(var i = 0; i < 10; i++){
+       lbl = flow_layer.draw_label(40, 40, "Item " + i);
+       if(i == 4){
+         v_flow.addElement(lbl);
+       }
+       if(i == 5){
+         v_flow.addElement(lbl);
+       }
+       else{
+         a_flow.addElement(lbl);
+       }
+     }
+     
+     CanvasUtil.moveDown(v_flow.elements[0], v_flow.elements[1], 20);
+     console.writeline(dump_array(a_flow.getElements()));
+     console.writeline(dump_array(v_flow.getElements()));
+     a_flow.rearrange(20);
+     v_flow.rearrange(20);
+     $.each(v_flow.getElements(), function(idx, element){
+       dump_element(element);
+     });
+     
+     canvas.pack(20);
+   }
+   
+   function toggleConsole(){
+     $("#console").toggle();
+     if($("#console").is(":visible")){
+       $("#btnHide").prop('value', "Hide Console");				
+     } 
+     else{
+       $("#btnHide").prop('value', "Show Console");
+     }
+   }
+   
+   function start(){
+     displayInformation();
+   }
   </script>
-</head>
-<body>
-	<div id="banner" class="ui-widget-header ui-corner-all">Text Flow Demo</div>
-	<div id="main_canvas"></div>
-
-	<div id="toolbar" class="ui-corner-all">
-		<input type="button" id="btnStart" name="btnStart" value="Information"/>
-		<input type="button" id="btnClear" name="btnClear" value="Clear Console"/>
-		<span class="toolbar_label">A label</span>
-		<input type="button" id="btnHide" name="btnHide" value="Hide Console"/>
-	</div>
-
-	<div id="console" style="overflow: auto; max-height: 300px;"></div>
-</body>
 </html>

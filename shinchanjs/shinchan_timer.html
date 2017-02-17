@@ -1,91 +1,91 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
-                    "http://www.w3.org/TR/html4/loose.dtd">
+          "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-	<title>Shinchan-Animation demo</title>
+  <head>
+    <title>Shinchan-Animation demo</title>
+  </head>
+  <body>
+    <h1>Test Timer with ShinChan library</h1>
+    <div id="main_canvas"></div>
+    <input type="button" id="btnStart" name="btnStart" value="Information"/>
+    <input type="button" id="btnClear" name="btnClear" value="Clear"/>
+    <br/>
+    Speed: <input type="text" id="txtSpeed" name="txtSpeed" value="10"/>
+    
+    <div id="console"></div>
+  </body>
   <script src="js/jquery-1.8.2.js"></script>
   <script src="js/raphael-min.js"></script>
   <script src="js/kajika.js"></script>
-  <script src="js/testutil.js"></script>
+  <script src="js/console.js"></script>
   <script src="js/shinchan.js"></script>
   <script src="js/shinchan.debug.js"></script>
   <script src="js/jikan.js"></script>
   <script>
-	var console;
-	var canvas;
-	var layer1;
-	
-	function getSpeed(){
-		_speed = parseInt($("#txtSpeed").val());
-		return _speed;
-	}
-	
-	function initialise(){
-		// Create a console
-		console = new Console("console");
-		console.writeline("- Test Console -");
-	
-		// Create canvas
-		canvas = new Canvas("main_canvas", 320, 240);	
-		layer1 = canvas.addLayer("MainLayer");
-		
-		// Register event handlers
-		$('[name="btnStart"]').click(function(){
-			console.clear("- Test Console -");
-			displayInformation();
-		});
-		$("#btnClear").click(function(){ console.clear("- Test Console -"); });
-	}
-	
-	var timer1 = new JiTimer(500, on_timer_tick, on_stop, on_start);
-	var x = 1;
-	var lines = [];
-	last = new Point(10, 10);
-	function on_timer_tick(){
-		
-		// do something
-		if(x <= 5){
-			console.writeline("TICK " + x + " ...");
-			l = layer1.draw_line(last.x+10, last.y, last.x+10, last.y + 100);
-			lines.push(l);
-			canvas.pack();
-			last = l.location;
-			x++;
-		}
-		else if(lines.length > 0){
-			layer1.remove(lines.pop());
-			canvas.pack();
-		}
-		else{
-			timer1.stop();
-		}
-		
-	}
-
-	function on_stop() {
-		console.writeline("Stopped");
-		displayInformation();
-		//clearTimeout(timer1);
-	}
-	
-	function on_start(){
-		console.writeline("Started");
-	}
-	
-	$(document).ready(function(){		
-		initialise();
-		timer1.start();
-	});
+   var console;
+   var canvas;
+   var layer1;
+   
+   function getSpeed(){
+     _speed = parseInt($("#txtSpeed").val());
+     return _speed;
+   }
+   
+   function initialise(){
+     // Create a console
+     console = new Console("console");
+     console.writeline("- Test Console -");
+     
+     // Create canvas
+     canvas = new Canvas("main_canvas", 320, 240);	
+     layer1 = canvas.addLayer("MainLayer");
+     
+     // Register event handlers
+     $('[name="btnStart"]').click(function(){
+       console.clear("- Test Console -");
+       displayInformation();
+     });
+     $("#btnClear").click(function(){ console.clear("- Test Console -"); });
+   }
+   
+   var timer1 = new JiTimer(500, on_timer_tick, on_stop, on_start);
+   var x = 1;
+   var lines = [];
+   last = new Point(10, 10);
+   function on_timer_tick(){
+     
+     // do something
+     if(x <= 5){
+       console.writeline("TICK " + x + " ...");
+       l = layer1.draw_line(last.x+10, last.y, last.x+10, last.y + 100);
+       lines.push(l);
+       canvas.pack();
+       last = l.location;
+       x++;
+     }
+     else if(lines.length > 0){
+       layer1.remove(lines.pop());
+       canvas.pack();
+     }
+     else{
+       timer1.stop();
+     }
+     
+   }
+   
+   function on_stop() {
+     console.writeline("Stopped");
+     displayInformation();
+     //clearTimeout(timer1);
+   }
+   
+   function on_start(){
+     console.writeline("Started");
+   }
+   
+   $(document).ready(function(){		
+     initialise();
+     timer1.start();
+   });
   </script>
-</head>
-<body>
-	<h1>Test Timer with ShinChan library</h1>
-	<div id="main_canvas"></div>
-	<input type="button" id="btnStart" name="btnStart" value="Information"/>
-	<input type="button" id="btnClear" name="btnClear" value="Clear"/>
-	<br/>
-	 Speed: <input type="text" id="txtSpeed" name="txtSpeed" value="10"/>
-	
-	<div id="console"></div>
-</body>
 </html>

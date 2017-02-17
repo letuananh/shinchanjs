@@ -2,73 +2,73 @@
                     "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <script src="js/jquery-1.8.2.js"></script>
-  <script src="js/raphael-min.js"></script>
-  <script src="js/kajika.js"></script>
-  <script src="js/testutil.js"></script>
-  <script src="js/visualisation.js"></script>
-  <script>
-	var console;
-	  
-  $(document).ready(function(){
-		// Create a console
-		console = new Console("console");
-		console.writeline("- Test Console -");
-		
-		// Create a canvas with solid black border
-		var pp_w = 320;
-		var pp_h = 200;
-		var paper = Raphael("holder", pp_w, pp_h);
-		paper_border = paper.rect(1,1, pp_w - 2, pp_h -2, 2);
-		paper_border.attr({"fill" : "#FFFFFF"
-				,"stroke" : "black"
-				,"stroke-width" : "1px"});
-		
-		// Test channel allocator
-		var a_linknote = new ChannelAllocator();
-		lines = [
-			 [20,50]
-			,[10,25]
-			,[45,60]
-			,[30,40]
-			,[5 ,80]
-		];
-		var baseline = 190;
-		var space = 10; 
-		$.each(lines, function(idx, value){
-			var line=a_linknote.allocate(value[0], value[1]);
-			//draw_line(paper, value[0], baseline-line*space, value[1], baseline-line*space);
-			draw_link(paper, value[0], baseline, value[1], baseline-line*space);
-			console.writeline("Allocated: " + line);
-		});
-		console.writeline(dump_dict(a_linknote.allocated_slots));
-		
-		console.writeline("test 2");
-		a = new A();
-		a.do_something();
-		a.do_something2();
-  });
-  
-  function A(){
-  	var a = 5;
-  	this.do_something = do_something; 
-  	this.do_something2 = do_something2; 
-  	function do_something(){
-  		var a = 7;
-  		console.writeline("a = " + a);  		
-  	}
-  	
-  	function do_something2(){
-  		console.writeline("a = " + a);
-  	}
-  	
-  	return this;
-  }
-  
-  </script>
 </head>
 <body>
-	<div id="holder"></div>
-	<div id="console"></div>
+  <div id="holder"></div>
+  <div id="console"></div>
 </body>
+<script src="js/jquery-1.8.2.js"></script>
+<script src="js/raphael-min.js"></script>
+<script src="js/kajika.js"></script>
+<script src="js/console.js"></script>
+<script src="js/visualisation.js"></script>
+<script>
+ var console;
+ 
+ $(document).ready(function(){
+   // Create a console
+   console = new Console("console");
+   console.writeline("- Test Console -");
+   
+   // Create a canvas with solid black border
+   var pp_w = 320;
+   var pp_h = 200;
+   var paper = Raphael("holder", pp_w, pp_h);
+   paper_border = paper.rect(1,1, pp_w - 2, pp_h -2, 2);
+   paper_border.attr({"fill" : "#FFFFFF"
+		     ,"stroke" : "black"
+		     ,"stroke-width" : "1px"});
+   
+   // Test channel allocator
+   var a_linknote = new ChannelAllocator();
+   lines = [
+     [20,50]
+     ,[10,25]
+     ,[45,60]
+     ,[30,40]
+     ,[5 ,80]
+   ];
+   var baseline = 190;
+   var space = 10; 
+   $.each(lines, function(idx, value){
+     var line=a_linknote.allocate(value[0], value[1]);
+     //draw_line(paper, value[0], baseline-line*space, value[1], baseline-line*space);
+     draw_link(paper, value[0], baseline, value[1], baseline-line*space);
+     console.writeline("Allocated: " + line);
+   });
+   console.writeline(dump_dict(a_linknote.allocated_slots));
+   
+   console.writeline("test 2");
+   a = new A();
+   a.do_something();
+   a.do_something2();
+ });
+ 
+ function A(){
+   var a = 5;
+   this.do_something = do_something; 
+   this.do_something2 = do_something2; 
+   function do_something(){
+     var a = 7;
+     console.writeline("a = " + a);  		
+   }
+   
+   function do_something2(){
+     console.writeline("a = " + a);
+   }
+   
+   return this;
+ }
+</script>
+
 </html>

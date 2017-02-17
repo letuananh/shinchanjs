@@ -1,68 +1,72 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
                     "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-	<title>Console demo</title>
+  <head>
+    <title>Console demo</title>
+  </head>
+  <body>
+    <h1>Test Console</h1>
+    <div id="main_canvas"></div>
+    <div style="padding-bottom: 20px;">
+      <input type="button" id="btnStart" name="btnStart" value="Information"/>
+      <input type="button" id="btnClear" name="btnClear" value="Clear"/>
+    </div>
+    <div id="console" style="overflow: auto; max-height: 300px;"></div>
+  </body>
+
+  <!-- Keep script at the end of page for better performance -->
   <script src="js/jquery-1.8.2.js"></script>
   <script src="js/raphael-min.js"></script>
   <script src="js/kajika.js"></script>
-  <script src="js/testutil.js"></script>
+  <script src="js/console.js"></script>
   <script src="js/shinchan.js"></script>
   <script src="js/jikan.js"></script>
   <script>
-	var console;
-	var canvas;
-	
-	function initialise(){
-		// Create a console
-		console = new Console("console");
-		console.writeline("- Test Console -");
-		
-		$("#btnStart").click(function(){
-			testConsole();
-		});
-		$("#btnClear").click(function(){
-			console.clear("- Cleared -");
-		});
-	}
-	
-	$(document).ready(function(){		
-		initialise();	
-		testConsole();
-	});
-	
-	function testConsole(){
-		console.header("This is a header");
-		console.writeline("This is a text");
-		console.writeline("This is a text");
-		console.writeline("This is a text");
-		console.writeline("This is a yellow text", "yellow");
-		console.write("Segment 1 ... ");
-		console.write("Segment 2 ... ");
-		console.write("Segment 3 ... ");
-		console.writeline("Segment 4");
-		console.writeline("Can you click clear now?");
-		console.writeline();
-		console.exec("doSomething()", " | ");
-		obj = new function(){ 
-			this.str = function(){
-				return "This is content from AN OBJECT";
-			}
-		};
-		console.writeline(obj);
-		console.write(obj);
-	}
-	
-	function doSomething(){
-		return "from inside function";
-	}
-  </script>
-</head>
-<body>
-	<h1>Test Console</h1>
-	<div id="main_canvas"></div>
-	<input type="button" id="btnStart" name="btnStart" value="Information"/>
-	<input type="button" id="btnClear" name="btnClear" value="Clear"/>
-	<div id="console" style="overflow: auto; max-height: 300px;"></div>
-</body>
+   var console;
+   var canvas;
+   
+   function initialise(){
+     // Create a console
+     console = new Console("console");
+     console.writeline("- Test Console -");
+     
+     $("#btnStart").click(function(){
+       testConsole();
+     });
+     $("#btnClear").click(function(){
+       console.clear("- Cleared -");
+     });
+   }
+   
+   $(document).ready(function(){		
+     initialise();	
+     testConsole();
+   });
+   
+   function testConsole(){
+     console.header("This is a header");
+     console.writeline("This is a text");
+     console.writeline("This is a text");
+     console.writeline("This is a text");
+     console.writeline("This is a yellow text", "yellow");
+     console.write("Segment 1 ... ");
+     console.write("Segment 2 ... ");
+     console.write("Segment 3 ... ");
+     console.writeline("Segment 4");
+     console.writeline("Can you click clear now?");
+     console.writeline();
+     console.exec("doSomething()", " | ");
+     obj = new function(){ 
+       this.str = function(){
+	 return "This is content from AN OBJECT";
+       }
+     };
+     console.writeline(obj);
+     console.write(obj);
+   }
+   
+   function doSomething(){
+     return "from inside function";
+   }
+  </script>  
 </html>

@@ -1,146 +1,152 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
-                    "http://www.w3.org/TR/html4/loose.dtd">
+          "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-	<title>Console demo</title>
-	
-	<link rel="stylesheet" href="css/redmond/jquery-ui-1.9.0.custom.min.css" />
-	<link rel="stylesheet" href="css/visualkopasu.css" />
-	
-	<style>
- 		#toolbar {
- 			/* T-R-B-L */
- 			margin: 5px 5px 5px 0px;
-			padding: 4px;
-			display: inline-block;
-		}
-		/* support: IE7 */
-		*+html #toolbar {
-			display: inline;
-		}
-	</style>
-	
-  <script src="js/jquery-1.8.2.js"></script>
-  <script src="js/jquery-ui-1.9.0.custom.min.js"></script>
-  <script src="js/raphael.js"></script>
-  <!--<script src="js/kajika.js"></script>-->
-  <script src="js/testutil.js"></script>
-  <script src="js/shinchan.js"></script>
-  <script src="js/shinchan.debug.js"></script>
-  <script src="js/jikan.js"></script>
-  <script>
-	var console;
-	var canvas;
-	
-	function initialise(){
-		// Create a console
-		console = new Console("console");
-		console.writeline("- Test Console -");
-		
-		canvas = new Canvas("main_canvas", 800, 600, "MainCanvas");
-		
-		$("#btnStart").button().click(function(){
-			start();
-		});
-		$("#btnClear").button().click(function(){
-			console.clear("- Cleared -");
-		});
-		$("#btnHide").button().click(function(){
-			toggleConsole();
-		});
-	}
-	
-	$(document).ready(function(){		
-		initialise();	
-		//toggleConsole();
-		draw_table();
-	});
-	
-	function toggleConsole(){
-		$("#console").toggle();
-		if($("#console").is(":visible")){
-			$("#btnHide").prop('value', "Hide Console");				
-		} 
-		else{
-			$("#btnHide").prop('value', "Show Console");
-		}
-	}
-	
-	function start(){
-		displayInformation();
-	}
-	
-	function draw_table(){
-		var tbl_layer = canvas.addLayer("tbl_layer");
-		
-		var my_table = new ChibiJS.Table();
-		for(i = 0; i < 4; i++){
-			for(j = 0; j < 2; j++){
-				my_table.setCell(i, j, "Cell [" + i + ", " + j +"]");
-			}
-		}
-		table2 = [ ['ko', 'takaji', 'iss', 'aaa',new ChibiJS.URL('google.com', 'http://google.com')], ['datamining', 'textmining', 'something-else', 'nus', 'son', 'guess'] ];	
-		table3 = [['a', 'b'], ['c', 'd', 'e', 'takaji', 'blob'],[1, 2, 3, 1], ['x', 'y', 'nus']];
-		table4 = [['pos:a','RP.sense:for','cvarsort:event'], ['sf:prop','tense:untensed','mood:indicative']];
-		table5 = [['pos:n','RP.sense:1','cvarsort:individual'], ['number:singular','pers:3','ind:plus']];
-		table6 = [['pos:p','cvarsort:event','sf:prop']];
-		table7 = [['pos:p', '<a href="#">foo</a>']];
-		table8 = [["pos:v","RP.sense:id","cvarsort:event"], ["sf:prop","tense:pres","mood:indicative"], ["prog:minus","perf:minus", "a"]];
-		
-		console.header("DRAW TABLES");
-		
-		visual_table1 = tbl_layer.draw_table(50, 50, my_table.getData(), "a_table1");
-		visual_table2 = tbl_layer.draw_table(20, 100, table2, "a_table2");	
-		visual_table3 = tbl_layer.draw_table(120, 150, table3, "a_table3");	
-		visual_table4 = tbl_layer.draw_table(10, 250, table4, 'tbl-4');
-		visual_table5 = tbl_layer.draw_table(10, 400, table5, 'tbl-5');
-		visual_table6 = tbl_layer.draw_table(10, 300, table6, 'tbl-6');
-		visual_table7 = tbl_layer.draw_table(10, 300, table7, 'tbl-7');
-		visual_table8 = tbl_layer.draw_table(10, 300, table8, 'tbl-8');
+  <head>
+    <title>Console demo</title>
+    
+    <link rel="stylesheet" href="css/redmond/jquery-ui-1.9.0.custom.min.css" />
+    <link rel="stylesheet" href="css/visualkopasu.css" />
+    
+    <style>
+     #toolbar {
+       /* T-R-B-L */
+       margin: 5px 5px 5px 0px;
+       padding: 4px;
+       display: inline-block;
+     }
+     /* support: IE7 */
+     *+html #toolbar {
+       display: inline;
+     }
+    </style>
+    
+    <script src="js/jquery-1.8.2.js"></script>
+    <script src="js/jquery-ui-1.9.0.custom.min.js"></script>
+    <script src="js/raphael.js"></script>
+    <!--<script src="js/kajika.js"></script>-->
+    <script src="js/console.js"></script>
+    <script src="js/shinchan.js"></script>
+    <script src="js/shinchan.debug.js"></script>
+    <script src="js/jikan.js"></script>
+    <script>
+     var console;
+     var canvas;
+     
+     function initialise(){
+       // Create a console
+       console = new Console("console");
+       console.writeline("- Test Console -");
+       
+       canvas = new Canvas("main_canvas", 800, 600, "MainCanvas");
+       
+       $("#btnStart").button().click(function(){
+	 start();
+       });
+       $("#btnClear").button().click(function(){
+	 console.clear("- Cleared -");
+       });
+       $("#btnHide").button().click(function(){
+	 toggleConsole();
+       });
+     }
+     
+     $(document).ready(function(){		
+       initialise();	
+       //toggleConsole();
+       draw_table();
+     });
+     
+     function toggleConsole(){
+       $("#console").toggle();
+       if($("#console").is(":visible")){
+	 $("#btnHide").prop('value', "Hide Console");				
+       } 
+       else{
+	 $("#btnHide").prop('value', "Show Console");
+       }
+     }
+     
+     function start(){
+       displayInformation();
+     }
+     
+     function draw_table(){
+       var tbl_layer = canvas.addLayer("tbl_layer");
+       
+       var my_table = new ChibiJS.Table();
+       for(i = 0; i < 4; i++){
+	 for(j = 0; j < 2; j++){
+	   my_table.setCell(i, j, "Cell [" + i + ", " + j +"]");
+	 }
+       }
+       table2 = [
+         ['KE', 'ISS', 'AI', 'test',new ChibiJS.URL('>>CLICK ME<<', 'https://github.com/letuananh')],
+         ['datamining', 'textmining', 'something-else', 'nus', 'singapore', 'guess'],
+         [new ChibiJS.URL('EASTER EGG', function(){console.clear();console.writeline("SUPPLY");})]
+       ];	
+       table3 = [['a', 'b'], ['c', 'd', 'e', 'takaji', 'blob'],[1, 2, 3, 1], ['x', 'y', 'nus']];
+       table4 = [['pos:a','RP.sense:for','cvarsort:event'], ['sf:prop','tense:untensed','mood:indicative']];
+       table5 = [['pos:n','RP.sense:1','cvarsort:individual'], ['number:singular','pers:3','ind:plus']];
+       table6 = [['pos:p','cvarsort:event','sf:prop']];
+       table7 = [['pos:p', '<a href="#">foo</a>']];
+       table8 = [["pos:v","RP.sense:id","cvarsort:event"], ["sf:prop","tense:pres","mood:indicative"], ["prog:minus","perf:minus", "a"]];
+       
+       console.header("DRAW TABLES");
+       
+       visual_table1 = tbl_layer.draw_table(50, 50, my_table.getData(), "a_table1");
+       visual_table2 = tbl_layer.draw_table(20, 100, table2, "a_table2");	
+       visual_table3 = tbl_layer.draw_table(120, 150, table3, "a_table3");	
+       visual_table4 = tbl_layer.draw_table(10, 250, table4, 'tbl-4');
+       visual_table5 = tbl_layer.draw_table(10, 400, table5, 'tbl-5');
+       visual_table6 = tbl_layer.draw_table(10, 300, table6, 'tbl-6');
+       visual_table7 = tbl_layer.draw_table(10, 300, table7, 'tbl-7');
+       visual_table8 = tbl_layer.draw_table(10, 300, table8, 'tbl-8');
 
-		console.header("REMOVE TABLES");
-		//if(typeof visual_table1 != "undefined") { tbl_layer.remove(visual_table1); visual_table1 = undefined; }
-		//if(typeof visual_table2 != "undefined") { tbl_layer.remove(visual_table2); visual_table2 = undefined; }
-		//if(typeof visual_table3 != "undefined") { tbl_layer.remove(visual_table3); visual_table3 = undefined; }
-		//if(typeof visual_table4 != "undefined") { tbl_layer.remove(visual_table4); visual_table4 = undefined; }
-		//if(typeof visual_table5 != "undefined") { tbl_layer.remove(visual_table5); visual_table5 = undefined; }
-		//if(typeof visual_table6 != "undefined") { tbl_layer.remove(visual_table6); visual_table6 = undefined; }
-		//if(typeof visual_table7 != "undefined") { tbl_layer.remove(visual_table7); visual_table7 = undefined; }
-		//if(typeof visual_table8 != "undefined") { tbl_layer.remove(visual_table8); visual_table8 = undefined; }
+       console.writeline("Type of tbl2 ee = " + typeof table2[2][0].url());
+       
+       console.header("REMOVE TABLES");
+       //if(typeof visual_table1 != "undefined") { tbl_layer.remove(visual_table1); visual_table1 = undefined; }
+       //if(typeof visual_table2 != "undefined") { tbl_layer.remove(visual_table2); visual_table2 = undefined; }
+       //if(typeof visual_table3 != "undefined") { tbl_layer.remove(visual_table3); visual_table3 = undefined; }
+       //if(typeof visual_table4 != "undefined") { tbl_layer.remove(visual_table4); visual_table4 = undefined; }
+       //if(typeof visual_table5 != "undefined") { tbl_layer.remove(visual_table5); visual_table5 = undefined; }
+       //if(typeof visual_table6 != "undefined") { tbl_layer.remove(visual_table6); visual_table6 = undefined; }
+       //if(typeof visual_table7 != "undefined") { tbl_layer.remove(visual_table7); visual_table7 = undefined; }
+       //if(typeof visual_table8 != "undefined") { tbl_layer.remove(visual_table8); visual_table8 = undefined; }
 
 
-		console.header("REFLOW TABLES");
-		//v_flow = new VerticalFlow();
-		v_flow = new HorizontalFlow();
-		
-		if(typeof visual_table1 != "undefined") { v_flow.addElement(visual_table1); } else { console.writeline("visual_table1 === " + typeof visual_table1); }
-		if(typeof visual_table2 != "undefined") { v_flow.addElement(visual_table2); } else { console.writeline("visual_table2 ===>" + typeof visual_table2); }
-		if(typeof visual_table3 != "undefined") { v_flow.addElement(visual_table3); } else { console.writeline("visual_table3 ===>" + typeof visual_table3); }
-		if(typeof visual_table4 != "undefined") { v_flow.addElement(visual_table4); } else { console.writeline("visual_table4 ===>" + typeof visual_table4); }
-		if(typeof visual_table5 != "undefined") { v_flow.addElement(visual_table5); } else { console.writeline("visual_table5 ===>" + typeof visual_table5); }
-		if(typeof visual_table6 != "undefined") { v_flow.addElement(visual_table6); } else { console.writeline("visual_table6 ===>" + typeof visual_table6); }
-		if(typeof visual_table7 != "undefined") { v_flow.addElement(visual_table7); } else { console.writeline("visual_table7 ===>" + typeof visual_table7); }
-		if(typeof visual_table8 != "undefined") { v_flow.addElement(visual_table8); } else { console.writeline("visual_table8 ===>" + typeof visual_table8); }
-		
-		CanvasUtil.alignTop(v_flow.getElements());
-		v_flow.rearrange(10);
+       console.header("REFLOW TABLES");
+       //v_flow = new VerticalFlow();
+       v_flow = new HorizontalFlow();
+       
+       if(typeof visual_table1 != "undefined") { v_flow.addElement(visual_table1); } else { console.writeline("visual_table1 === " + typeof visual_table1); }
+       if(typeof visual_table2 != "undefined") { v_flow.addElement(visual_table2); } else { console.writeline("visual_table2 ===>" + typeof visual_table2); }
+       if(typeof visual_table3 != "undefined") { v_flow.addElement(visual_table3); } else { console.writeline("visual_table3 ===>" + typeof visual_table3); }
+       if(typeof visual_table4 != "undefined") { v_flow.addElement(visual_table4); } else { console.writeline("visual_table4 ===>" + typeof visual_table4); }
+       if(typeof visual_table5 != "undefined") { v_flow.addElement(visual_table5); } else { console.writeline("visual_table5 ===>" + typeof visual_table5); }
+       if(typeof visual_table6 != "undefined") { v_flow.addElement(visual_table6); } else { console.writeline("visual_table6 ===>" + typeof visual_table6); }
+       if(typeof visual_table7 != "undefined") { v_flow.addElement(visual_table7); } else { console.writeline("visual_table7 ===>" + typeof visual_table7); }
+       if(typeof visual_table8 != "undefined") { v_flow.addElement(visual_table8); } else { console.writeline("visual_table8 ===>" + typeof visual_table8); }
+       
+       CanvasUtil.alignTop(v_flow.getElements());
+       v_flow.rearrange(10);
 
-		console.header("PACKING ...");
-		canvas.pack(20);	
-	}
-  </script>
-</head>
-<body>
-	<div id="banner" class="ui-widget-header ui-corner-all">Draw Table</div>
-	<div id="main_canvas"></div>
+       console.header("PACKING ...");
+       canvas.pack(20);	
+     }
+    </script>
+  </head>
+  <body>
+    <div id="banner" class="ui-widget-header ui-corner-all">Draw Table</div>
+    <div id="main_canvas"></div>
 
-	<div id="toolbar" class="ui-corner-all">
-		<input type="button" id="btnStart" name="btnStart" value="Information"/>
-		<input type="button" id="btnClear" name="btnClear" value="Clear Console"/>
-		<span class="toolbar_label">A label</span>
-		<input type="button" id="btnHide" name="btnHide" value="Hide Console"/>
-	</div>
+    <div id="toolbar" class="ui-corner-all">
+      <input type="button" id="btnStart" name="btnStart" value="Information"/>
+      <input type="button" id="btnClear" name="btnClear" value="Clear Console"/>
+      <span class="toolbar_label">A label</span>
+      <input type="button" id="btnHide" name="btnHide" value="Hide Console"/>
+    </div>
 
-	<div id="console" style="overflow: auto; max-height: 300px;"></div>
-</body>
+    <div id="console" style="overflow: auto; max-height: 300px;"></div>
+  </body>
 </html>

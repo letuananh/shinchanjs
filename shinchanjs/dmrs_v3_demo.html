@@ -6,7 +6,6 @@
     
     <link rel="stylesheet" href="css/redmond/jquery-ui-1.9.0.custom.min.css" />
     <link rel="stylesheet" href="css/visualkopasu.css" />
-    
     <style>
      #toolbar {
        /* T-R-B-L */
@@ -20,23 +19,19 @@
      }
     </style>    
   </head>
+  
   <body>
     <div id="banner" class="ui-widget-header ui-corner-all">DMRS demo (Version 0.3)</div>
+    <h1>DMRS #1</h1>
     <div id="dmrs1_canvas"></div>
     <div id="dmrs1_sentence_text" class="dmrs_sentence_text"></div>
-    
+    <h1>DMRS #2</h1>
     <div id="dmrs2_canvas"></div>
     <div id="dmrs2_text_holder" class="dmrs_sentence_text"></div>
-    
+    <h1>DMRS #3</h1>
     <div id="dmrs3_canvas"></div>
     <div id="dmrs3_text_holder" class="dmrs_sentence_text"></div>
-
-    <div id="dmrs4_canvas"></div>
-    <div id="dmrs4_text_holder" class="dmrs_sentence_text"></div>
-
-    <div id="dmrs5_canvas"></div>
-    <div id="dmrs5_text_holder" class="dmrs_sentence_text"></div>
-
+    
     <div id="toolbar" class="ui-corner-all">
       <input type="button" id="btnClearCanvas" name="btnClearCanvas" value="Clear Canvas"/>
       <input type="button" id="btnVisualise" name="btnVisualise" value="Diplay DMRS3"/>
@@ -45,21 +40,21 @@
       <span class="toolbar_label">A label</span>
       <input type="button" id="btnHide" name="btnHide" value="Hide Console"/>
     </div>
-
+    
     <div id="console" style="overflow: auto; max-height: 300px;"></div>
-
+    
     <!-- Script -->
     <script src="js/jquery-1.8.2.js"></script>
     <script src="js/jquery-ui-1.9.0.custom.min.js"></script>
     <script src="js/raphael.js"></script>
     <script src="js/kajika.js"></script>
-    <script src="js/testutil.js"></script>
+    <script src="js/console.js"></script>
     <script src="js/shinchan.js"></script>
     <script src="js/shinchan.debug.js"></script>
     <script src="js/visualisation_v3.js"></script>
     
-    <script type="text/javascript"><!-- DMRS 3: Some dogs bark -->
-     var dmrs3 = new function(){
+    <script type="text/javascript"><!-- DMRS #1: Some dogs bark -->
+     var dmrs1 = new function(){
        var node_10000 = { 'text' : 'some', 'from' : 0, 'to' : 4, 'type' : 'realpred', 'pos': 'q', 'link_count' : 1, 'tooltip' : [['pos:q']] };
        var node_10001 = { 'text' : 'generic_entity', 'from' : 0, 'to' : 4, 'type' : 'gpred', 'pos': '', 'link_count' : 2, 'tooltip' : [['cvarsort:individual','number:singular','pers:3']] };
        var node_10002 = { 'text' : 'dog', 'from' : 5, 'to' : 9, 'type' : 'realpred', 'pos': 'v', 'link_count' : 2, 'tooltip' : [[new ChibiJS.URL("02001858-v: dog", "http://compling.hss.ntu.edu.sg/omw/cgi-bin/wn-gridx.cgi?synset=02001858-v"),'pos:v','RP.sense:1'], ['cvarsort:event','sf:prop','tense:pres'], ['mood:indicative','prog:-','perf:-']] };
@@ -77,19 +72,18 @@
        this.sentence_text = 'Some dogs bark.';
      };
     </script>
-    <script><!-- DMRS 4: Some dogs chase a cat. -->
-     dmrs4_text = 'Some dogs chase a cat.';
-     mrs4_json = {"top": "h0", "relations": [{"predicate": "_some_q", "arguments": {"ARG0": "x3", "RSTR": "h5", "BODY": "h6"}, "label": "h4", "lnk": {"to": 4, "from": 0}}, {"predicate": "_dog_n_1", "arguments": {"ARG0": "x3"}, "label": "h7", "lnk": {"to": 9, "from": 5}}, {"predicate": "_chase_v_1", "arguments": {"ARG0": "e2", "ARG1": "x3", "ARG2": "x8"}, "label": "h1", "lnk": {"to": 15, "from": 10}}, {"predicate": "_a_q", "arguments": {"ARG0": "x8", "RSTR": "h10", "BODY": "h11"}, "label": "h9", "lnk": {"to": 17, "from": 16}}, {"predicate": "_cat_n_1", "arguments": {"ARG0": "x8"}, "label": "h12", "lnk": {"to": 22, "from": 18}}], "index": "e2", "constraints": [{"high": "h5", "low": "h7", "relation": "qeq"}, {"high": "h0", "low": "h1", "relation": "qeq"}, {"high": "h10", "low": "h12", "relation": "qeq"}], "variables": {"e2": {"type": "e", "properties": {"PERF": "-", "PROG": "-", "MOOD": "indicative", "SF": "prop", "TENSE": "pres"}}, "h4": {"type": "h"}, "h1": {"type": "h"}, "h11": {"type": "h"}, "h5": {"type": "h"}, "x3": {"type": "x", "properties": {"PERS": "3", "IND": "+", "NUM": "pl"}}, "h0": {"type": "h"}, "h10": {"type": "h"}, "h6": {"type": "h"}, "h9": {"type": "h"}, "h7": {"type": "h"}, "h12": {"type": "h"}, "x8": {"type": "x", "properties": {"PERS": "3", "IND": "+", "NUM": "sg"}}}};
-     dmrs4_json = {"links": [{"rargname": null, "to": 10002, "from": 0, "post": "H"}, {"rargname": "RSTR", "to": 10001, "from": 10000, "post": "H"}, {"rargname": "ARG1", "to": 10001, "from": 10002, "post": "NEQ"}, {"rargname": "ARG2", "to": 10004, "from": 10002, "post": "NEQ"}, {"rargname": "RSTR", "to": 10004, "from": 10003, "post": "H"}], "nodes": [{"predicate": "_some_q", "type": "realpred", "lnk": {"to": 4, "from": 0}, "pos": "q", "nodeid": 10000}, {"type": "realpred", "pos": "n", "sortinfo": {"PERS": "3", "IND": "+", "NUM": "pl", "cvarsort": "x"}, "predicate": "_dog_n_1", "nodeid": 10001, "lnk": {"to": 9, "from": 5}}, {"type": "realpred", "pos": "v", "sortinfo": {"PERF": "-", "PROG": "-", "SF": "prop", "cvarsort": "e", "MOOD": "indicative", "TENSE": "pres"}, "predicate": "_chase_v_1", "nodeid": 10002, "lnk": {"to": 15, "from": 10}}, {"predicate": "_a_q", "type": "realpred", "lnk": {"to": 17, "from": 16}, "pos": "q", "nodeid": 10003}, {"type": "realpred", "pos": "n", "sortinfo": {"PERS": "3", "IND": "+", "NUM": "sg", "cvarsort": "x"}, "predicate": "_cat_n_1", "nodeid": 10004, "lnk": {"to": 22, "from": 18}}]};
+    <script><!-- DMRS 2: Some dogs chase a cat. -->
+     dmrs2_text = 'Some dogs chase a cat.';
+     mrs2_json = {"top": "h0", "relations": [{"predicate": "_some_q", "arguments": {"ARG0": "x3", "RSTR": "h5", "BODY": "h6"}, "label": "h4", "lnk": {"to": 4, "from": 0}}, {"predicate": "_dog_n_1", "arguments": {"ARG0": "x3"}, "label": "h7", "lnk": {"to": 9, "from": 5}}, {"predicate": "_chase_v_1", "arguments": {"ARG0": "e2", "ARG1": "x3", "ARG2": "x8"}, "label": "h1", "lnk": {"to": 15, "from": 10}}, {"predicate": "_a_q", "arguments": {"ARG0": "x8", "RSTR": "h10", "BODY": "h11"}, "label": "h9", "lnk": {"to": 17, "from": 16}}, {"predicate": "_cat_n_1", "arguments": {"ARG0": "x8"}, "label": "h12", "lnk": {"to": 22, "from": 18}}], "index": "e2", "constraints": [{"high": "h5", "low": "h7", "relation": "qeq"}, {"high": "h0", "low": "h1", "relation": "qeq"}, {"high": "h10", "low": "h12", "relation": "qeq"}], "variables": {"e2": {"type": "e", "properties": {"PERF": "-", "PROG": "-", "MOOD": "indicative", "SF": "prop", "TENSE": "pres"}}, "h4": {"type": "h"}, "h1": {"type": "h"}, "h11": {"type": "h"}, "h5": {"type": "h"}, "x3": {"type": "x", "properties": {"PERS": "3", "IND": "+", "NUM": "pl"}}, "h0": {"type": "h"}, "h10": {"type": "h"}, "h6": {"type": "h"}, "h9": {"type": "h"}, "h7": {"type": "h"}, "h12": {"type": "h"}, "x8": {"type": "x", "properties": {"PERS": "3", "IND": "+", "NUM": "sg"}}}};
+     dmrs2_json = {"links": [{"rargname": null, "to": 10002, "from": 0, "post": "H"}, {"rargname": "RSTR", "to": 10001, "from": 10000, "post": "H"}, {"rargname": "ARG1", "to": 10001, "from": 10002, "post": "NEQ"}, {"rargname": "ARG2", "to": 10004, "from": 10002, "post": "NEQ"}, {"rargname": "RSTR", "to": 10004, "from": 10003, "post": "H"}], "nodes": [{"predicate": "_some_q", "type": "realpred", "lnk": {"to": 4, "from": 0}, "pos": "q", "nodeid": 10000}, {"type": "realpred", "pos": "n", "sortinfo": {"PERS": "3", "IND": "+", "NUM": "pl", "cvarsort": "x"}, "predicate": "_dog_n_1", "nodeid": 10001, "lnk": {"to": 9, "from": 5}}, {"type": "realpred", "pos": "v", "sortinfo": {"PERF": "-", "PROG": "-", "SF": "prop", "cvarsort": "e", "MOOD": "indicative", "TENSE": "pres"}, "predicate": "_chase_v_1", "nodeid": 10002, "lnk": {"to": 15, "from": 10}}, {"predicate": "_a_q", "type": "realpred", "lnk": {"to": 17, "from": 16}, "pos": "q", "nodeid": 10003}, {"type": "realpred", "pos": "n", "sortinfo": {"PERS": "3", "IND": "+", "NUM": "sg", "cvarsort": "x"}, "predicate": "_cat_n_1", "nodeid": 10004, "lnk": {"to": 22, "from": 18}}]};
+    </script>
+    <script><!-- DMRS 3: It rains -->
+     dmrs3_text = "It rained.";
+     mrs3_json = {"top": "h0", "relations": [{"arguments": {"ARG0": "e2"}, "predicate": "_rain_v_1", "label": "h1", "lnk": {"from": 3, "to": 10}}], "constraints": [{"low": "h1", "relation": "qeq", "high": "h0"}], "variables": {"h0": {"type": "h"}, "e2": {"properties": {"TENSE": "past", "PROG": "-", "SF": "prop", "PERF": "-", "MOOD": "indicative"}, "type": "e"}, "h1": {"type": "h"}}};
+     dmrs3_json = {"nodes": [{"nodeid": 10000, "predicate": "_rain_v_1", "senses": [{"type": "isf", "synsetid": "11501381-n", "lemma": "rain"}], "pos": "v", "type": "realpred", "sortinfo": {"mood": "indicative", "cvarsort": "e", "tense": "past", "perf": "-", "prog": "-", "sf": "prop"}, "lnk": {"from": 3, "to": 10}}], "links": [{"from": 0, "rargname": null, "post": "H", "to": 10000}], "lnk": {"from": -1, "to": -1}};
      
     </script>
-    <script><!-- DMRS 5: It rains -->
-        dmrs5_text = "It rains";
-        mrs5_json = {"top": "h0", "relations": [{"predicate": "_rain_v_1", "arguments": {"ARG0": "e2"}, "label": "h1", "lnk": {"to": 9, "from": 3}}], "index": "e2", "constraints": [{"high": "h0", "low": "h1", "relation": "qeq"}], "variables": {"e2": {"type": "e", "properties": {"PERF": "-", "PROG": "-", "MOOD": "indicative", "SF": "prop", "TENSE": "pres"}}, "h0": {"type": "h"}, "h1": {"type": "h"}}};
-        dmrs5_json = {"links": [{"rargname": null, "to": 10000, "from": 0, "post": "H"}], "nodes": [{"type": "realpred", "pos": "v", "sortinfo": {"PERF": "-", "PROG": "-", "SF": "prop", "cvarsort": "e", "MOOD": "indicative", "TENSE": "pres"}, "predicate": "_rain_v_1", "nodeid": 10000, "lnk": {"to": 9, "from": 3}}]};
-        
-    </script>
-
+    
     <script>
      var console;
      var dmrs1_canvas;
@@ -121,39 +115,58 @@
        draw_dmrs();
      });
      
-     var dmrs3_canvas;
-     var visual_dmrs3;
+     var dmrs1_canvas;
+     var visual_dmrs1;
      
-     function clearDMRS3(){
-        visual_dmrs3.clear();
-    }
-     function showDMRS3(){
-         dmrs3_canvas = new Canvas('dmrs3_canvas');
-       visual_dmrs3 = new VisualKopasu.DMRSCanvas(dmrs3, dmrs3_canvas, "dmrs3_text_holder");
-       visual_dmrs3.visualise();
-    }
-
+     function clearDMRS1(){
+       visual_dmrs1.clear();
+     }
+     function showDMRS1(){
+       dmrs1_canvas = new Canvas('dmrs1_canvas');
+       visual_dmrs1 = new VisualKopasu.DMRSCanvas(dmrs1, dmrs1_canvas, "dmrs1_text_holder");
+       visual_dmrs1.visualise();
+     }
+     
      function draw_dmrs(){
-         dmrs3_canvas = new Canvas('dmrs3_canvas');
-       visual_dmrs3 = new VisualKopasu.DMRSCanvas(dmrs3, dmrs3_canvas, "dmrs3_text_holder");
-       // visual_dmrs3.clear();
-       visual_dmrs3.visualise();
-
-       // Transform DMRS JSON into Visko JS format
-       dmrs4 = json2visko(dmrs4_json, dmrs4_text);
-       var visual_dmrs4 = new VisualKopasu.DMRSCanvas(dmrs4, "dmrs4_canvas", "dmrs4_text_holder");
-       visual_dmrs4.visualise();
-       console.writeline("DMRS 4: " + dmrs4.sentence_text);       
-       console.writeline("DMRS 4 length: " + dmrs4_json['nodes'].length);
-       console.writeline("DMRS 4's type: " + typeof dmrs4_json);
-       console.writeline("DMRS 4's nodes: " + dmrs4_json.nodes);
-       console.writeline("DMRS 3's type: " + typeof dmrs3);
-       console.writeline("DMRS 3's nodes: " + dmrs3.nodes);
+       dmrs1_canvas = new Canvas('dmrs1_canvas');
+       visual_dmrs1 = new VisualKopasu.DMRSCanvas(dmrs1, dmrs1_canvas, "dmrs1_text_holder");
+       // visual_dmrs1.clear();
+       visual_dmrs1.visualise();
        
-       // DMRS 5
-      dmrs5 = json2visko(dmrs5_json, dmrs5_text);
-       var visual_dmrs5 = new VisualKopasu.DMRSCanvas(dmrs5, "dmrs5_canvas", "dmrs5_text_holder");
-       visual_dmrs5.visualise();
+       // Transform DMRS JSON into Visko JS format
+       dmrs2 = json2visko(dmrs2_json, dmrs2_text);
+       var visual_dmrs2 = new VisualKopasu.DMRSCanvas(dmrs2, "dmrs2_canvas", "dmrs2_text_holder");
+       visual_dmrs2.visualise();
+       console.writeline("DMRS2: " + dmrs2.sentence_text);       
+       console.writeline("DMRS2 length: " + dmrs2_json['nodes'].length);
+       console.writeline("JSON/DMRS 4's nodes: " + dmrs2_json.nodes);
+       console.writeline("DMRS2's nodes: " + dmrs2.nodes);
+       // Test get node by ID => get visual element => bind an event
+       var n = dmrs2.node_map['10001'];
+       console.write("Node info: " + n.nodeid + " | text: " + n.text);
+       console.write(" | Visual elem: " + n.visual_element);
+       n.visual_element.click(function(){alert('I am fabulous!')});
+       console.writeline(" => Now click it");
+       
+       // DMRS3
+       dmrs3 = json2visko(dmrs3_json, dmrs3_text);
+       // Override sense link event before rendering ...
+       $.each(dmrs3.nodes, function (i, n){
+         if (n.senses != undefined && n.senses.length > 0){
+           $.each(n.senses, function(idx, s){
+             s._url = function(){ alert(s.text()); };
+           });
+           console.writeline("Sense node: " + n.nodeid + " | value = " + n.senses[0].text());
+         }
+       });
+       var visual_dmrs3 = new VisualKopasu.DMRSCanvas(dmrs3, "dmrs3_canvas", "dmrs3_text_holder");
+       visual_dmrs3.visualise();
+       
+       boo = function(){alert('boo');};
+       var nothing;
+       console.writeline("type of 'abc' is " + typeof "abc");
+       console.writeline("type of boo is " + typeof boo);
+       console.writeline("type of nothing is " + typeof nothing);
      }
      
      function toggleConsole(){

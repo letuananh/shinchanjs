@@ -15,18 +15,18 @@
 var VisualKopasu;
 if(VisualKopasu == undefined){
     VisualKopasu = new function(){
-    
+        
         /** Get connectible points of a shape (top, bottom, left, right) **/
         this.findConnectPoints = function(shape){
             if(shape == undefined){ return undefined; }
             return [
-                 new Point(shape.location.x, shape.location.y + shape.size.height / 2)
+                new Point(shape.location.x, shape.location.y + shape.size.height / 2)
                 ,new Point(shape.location.x + shape.size.width, shape.location.y + shape.size.height / 2)
                 ,this.getTopMiddle(shape)
                 ,this.getBottomMiddle(shape)
             ];
         }
-
+        
         /**
          * Find shortest line to connect two shapes
          **/
@@ -55,13 +55,13 @@ if(VisualKopasu == undefined){
         this.getTopMiddle = function(shape){
             return new Point(shape.location.x + shape.size.width / 2, shape.location.y);
         }
-
+        
         /** get bottom-middle point of a shape (x + width / 2, y + height) **/
         this.getBottomMiddle = function(shape){
             return new Point(shape.location.x + shape.size.width / 2, shape.location.y + shape.size.height);
         }
         // VisualKopasu static
-
+        
     }
 }
 
@@ -69,11 +69,11 @@ if(VisualKopasu == undefined){
 VisualKopasu.ChannelAllocator = function(){
     this.allocated_slots={}
     this.allocated_count = 0;
-
+    
     this.count = function(){
         return this.allocated_count;
     }
-
+    
     this.reserve = function(i, from, to){
         if(this.allocated_slots[i] == undefined){
             this.allocated_count++;
@@ -81,7 +81,7 @@ VisualKopasu.ChannelAllocator = function(){
         }
         this.allocated_slots[i][this.allocated_slots[i].length]=[from, to];
     }
-
+    
     this.allocate = function(from,to){
         if(from > to){
             temp = from;
@@ -99,10 +99,10 @@ VisualKopasu.ChannelAllocator = function(){
                     var slot_from=slot[0];
                     var slot_to=slot[1];
                     if(
-                       (slot_from <= from && from <= slot_to)
-                    || (slot_from <= to && to <= slot_to)
-                    || (from <= slot_from && slot_from <= to)
-                    || (from <= slot_to && slot_to <= to)
+                        (slot_from <= from && from <= slot_to)
+                            || (slot_from <= to && to <= slot_to)
+                            || (from <= slot_from && slot_from <= to)
+                            || (from <= slot_to && slot_to <= to)
                     ) {
                         // Allocated
                         is_allocated=true;
@@ -123,7 +123,7 @@ VisualKopasu.ChannelAllocator = function(){
             }       
         }while(is_allocated);
     }
-        
+    
 }
 
 VisualKopasu.DMRSTheme = function(){
@@ -173,7 +173,7 @@ VisualKopasu.DMRSTheme = function(){
     
     // Nodes & links
     this.DEFAULT_LINK_STYLE = {
-                'stroke' : 'black'
+        'stroke' : 'black'
     };
     this.LINK_LABEL_BOX_STYLE = {
         "fill" : "#AAAAAA"
@@ -201,7 +201,7 @@ VisualKopasu.DMRSTheme = function(){
     this.CARG_NODE_TEXT_STYLE = {
         //"fill" : "#222222"
     };
-        
+    
     // Sentence style
     this.DMRS_SENTENCE_TEXT_STYLE = {
         'fill': 'black'
@@ -245,7 +245,7 @@ VisualKopasu.SentenceText = function(holder_id, text){
         if (this.text == undefined || this.text.length == 0 
             || from < 0 || from > this.text.length 
             || to < 0 || to > this.text.length){
-                return ['', '', a_list]; // Invalid => no highlight
+            return ['', '', a_list]; // Invalid => no highlight
         }
         if(from == 0 && to == this.text.length){
             return [ '', this.text, '' ];
@@ -254,7 +254,7 @@ VisualKopasu.SentenceText = function(holder_id, text){
         a_list.push(this.text.slice(0, from));
         a_list.push(this.text.slice(from, to));
         a_list.push(this.text.slice(to, text.length));
-
+        
         return a_list;
     }
 }
@@ -274,7 +274,7 @@ VisualKopasu.DMRSCanvas = function(dmrs, canvas, text_holder, theme){
     var layer_tooltip = canvas.addLayer("Tooltip layer");
     var node_flow = new ChibiJS.ShinChan.HorizontalFlow(layer_nodes); // Reflow node after draw
     var node_vflow = []; // Vertical flow for nodes linked by RSTR
-
+    
     this.clear = function(){
         var holder = $("#" + canvas.holder_name);
         if (holder.has('svg') && canvas.getLayers().length > 0){
@@ -282,7 +282,7 @@ VisualKopasu.DMRSCanvas = function(dmrs, canvas, text_holder, theme){
         }
         // canvas = new Canvas(canvas.holder_name);
     }
-
+    
     this.visualise = function(){
         // this.clear();
         // Map links
@@ -315,13 +315,13 @@ VisualKopasu.DMRSCanvas = function(dmrs, canvas, text_holder, theme){
             var node_style = 'rounded';
             //console.writeline(current_node.text + " - " + current_node.pos);
             switch(current_node.pos){
-                case 'a':{ node_style = 'parallelogram'; break; }
-                case 's':{ node_style = 'diagonals'; break; }
-                case 'n':{ node_style = 'rect'; break; }
-                case 'v':{ node_style = 'hexagon'; break; }
+            case 'a':{ node_style = 'parallelogram'; break; }
+            case 's':{ node_style = 'diagonals'; break; }
+            case 'n':{ node_style = 'rect'; break; }
+            case 'v':{ node_style = 'hexagon'; break; }
             }
             visual_node = layer_nodes.draw_label(0, 0, 
-                current_node.text, theme.NODE_PADDING_X, theme.NODE_PADDING_Y, current_node.text, min_width, node_style); // Draw a node at (0,0), we'll reflow the nodes later ...
+                                                 current_node.text, theme.NODE_PADDING_X, theme.NODE_PADDING_Y, current_node.text, min_width, node_style); // Draw a node at (0,0), we'll reflow the nodes later ...
             visual_node.node_info = current_node;
             current_node.visual_element = visual_node;
             if(current_node.type == "gpred"){
@@ -333,25 +333,25 @@ VisualKopasu.DMRSCanvas = function(dmrs, canvas, text_holder, theme){
                 visual_node.getElements()[0].attr(theme.CARG_NODE_BOX_STYLE);   
                 visual_node.getElements()[1].attr(theme.CARG_NODE_TEXT_STYLE);
             }
-
+            
             /*
-            if(prev_node != undefined){
-                node_vflow.push(new ChibiJS.ShinChan.VerticalFlow(layer_nodes, [visual_node, prev_node]));
-            }
-            // If two nodes are linked by a RSTR link, move the fromNode beneath its next node
-            prev_node = undefined;
-            if(current_node.linkTo != undefined){
-                for(var i = 0; i < current_node.linkTo.length; i++){
-                    if(current_node.linkTo[i].rargname == 'RSTR'
-                    && idx+1 < nodes.length){
-                        prev_node = visual_node;
-                        break;
-                    }
-                } //end-for 
-            } // end-if defined
-            if(prev_node == undefined){
-                node_flow.addElement(visual_node);
-            }
+              if(prev_node != undefined){
+              node_vflow.push(new ChibiJS.ShinChan.VerticalFlow(layer_nodes, [visual_node, prev_node]));
+              }
+              // If two nodes are linked by a RSTR link, move the fromNode beneath its next node
+              prev_node = undefined;
+              if(current_node.linkTo != undefined){
+              for(var i = 0; i < current_node.linkTo.length; i++){
+              if(current_node.linkTo[i].rargname == 'RSTR'
+              && idx+1 < nodes.length){
+              prev_node = visual_node;
+              break;
+              }
+              } //end-for 
+              } // end-if defined
+              if(prev_node == undefined){
+              node_flow.addElement(visual_node);
+              }
             */
             node_flow.addElement(visual_node);
         }
@@ -393,7 +393,7 @@ VisualKopasu.DMRSCanvas = function(dmrs, canvas, text_holder, theme){
                 var points = [
                     VisualKopasu.getBottomMiddle(visual_node)
                     , VisualKopasu.getTopMiddle(tooltip_table)
-                    ];
+                ];
                 var tooltip_arrow = layer_nodes.draw_arrow(points[0].x, points[0].y, points[1].x, points[1].y);
                 var tooltip = layer_nodes.group([tooltip_table, tooltip_arrow]);
                 
@@ -443,7 +443,7 @@ VisualKopasu.DMRSCanvas = function(dmrs, canvas, text_holder, theme){
             to_node = links[i].to;
             rargname = links[i].rargname;
             post = links[i].post;
-    
+            
             // Draw link (line) 
             // from_node.slot means a free slot ID of from_node
             from_x = from_node.visual_element.location.x + theme.LINK_SLOT_SPACE * from_node.slot;
@@ -469,7 +469,7 @@ VisualKopasu.DMRSCanvas = function(dmrs, canvas, text_holder, theme){
                 c = layer_links.draw_circle(to_x, to_y, 3).attr({'fill' : 'black'});
             }
             l.attr(theme.DEFAULT_LINK_STYLE);
-    
+            
             /* Draw link head
             //- H: tee, 
             //- EQ: none,
@@ -503,7 +503,7 @@ VisualKopasu.DMRSCanvas = function(dmrs, canvas, text_holder, theme){
             }
         } // End for links
     }
-
+    
     /**
      * Draw link tail: tee style (H)
      **/
@@ -512,7 +512,7 @@ VisualKopasu.DMRSCanvas = function(dmrs, canvas, text_holder, theme){
         b_x = x - theme.LINK_HEAD_TEE_WIDTH / 2;
         b_y = y - theme.LINK_HEAD_TEE_HEIGHT - 1;
         r = layer_links.draw_rect(b_x, b_y, theme.LINK_HEAD_TEE_WIDTH, theme.LINK_HEAD_TEE_HEIGHT)
-                        .attr({'fill' : 'white'});
+            .attr({'fill' : 'white'});
         return r;   
     }
     
@@ -521,7 +521,7 @@ VisualKopasu.DMRSCanvas = function(dmrs, canvas, text_holder, theme){
      **/
     function draw_circle_tail(x, y){
         c = layer_links.draw_circle(x, y - theme.LINK_HEAD_DOT_RADIUS, theme.LINK_HEAD_DOT_RADIUS)
-                        .attr({'fill' : 'red'});
+            .attr({'fill' : 'red'});
         return c;
     }
     
@@ -532,7 +532,7 @@ VisualKopasu.DMRSCanvas = function(dmrs, canvas, text_holder, theme){
         b_x = x - theme.LINK_HEAD_BOX_WIDTH / 2;
         b_y = y - theme.LINK_HEAD_BOX_HEIGHT;
         c = layer_links.draw_rect(b_x, b_y, theme.LINK_HEAD_BOX_WIDTH, theme.LINK_HEAD_BOX_HEIGHT)
-                        .attr({'fill' : 'black'});
+            .attr({'fill' : 'black'});
         return c;
     }
     
@@ -541,75 +541,92 @@ VisualKopasu.DMRSCanvas = function(dmrs, canvas, text_holder, theme){
      **/
     function draw_arrow(x, y){
         return new Path().moveTo(x - theme.ARROW_DELTA_X, y - theme.ARROW_DELTA_Y)
-        .lineTo(x,y)
-        .lineTo(x + theme.ARROW_DELTA_X, y - theme.ARROW_DELTA_Y)
-        .drawTo(layer_links);
+            .lineTo(x,y)
+            .lineTo(x + theme.ARROW_DELTA_X, y - theme.ARROW_DELTA_Y)
+            .drawTo(layer_links);
     }   
     
 }
 
 
- function json2visko(json, text){
-     // node -> text, from, to, type, pos, linkcount
-     // node-map
-     var node_map = {};
-     var nodes = [];
-     // convert nodes
-     $(json.nodes).each(function(idx, elem){
-         var node = {'text': elem.predicate, 'from': elem.lnk.from, 'to': elem.lnk.to, 'type': elem.type, 'pos': elem.pos, linkcount: 0, 'nodeid': elem.nodeid, 'tooltip': []};
-         
-         // build tooltip
-         max_length = 3;
+function get_synset_link(synsetid){
+    if (synsetid != undefined){
+        return "http://compling.hss.ntu.edu.sg/omw/cgi-bin/wn-gridx.cgi?synset=" + sense.synsetid;
+    }
+    else {
+        return "#";
+    }
+}
+
+/*
+ * Create a Visko object from a DMRS/JSON string
+ */
+function json2visko(json, text, synset_link_builder){
+    if (synset_link_builder == undefined){
+        synset_link_builder = get_synset_link;
+    }
+    // node -> text, from, to, type, pos, linkcount
+    var nodes = [];
+    var node_map = {};
+    
+    // convert nodes
+    $(json.nodes).each(function(idx, elem){
+        var node = {'text': elem.predicate, 'from': elem.lnk.from, 'to': elem.lnk.to, 'type': elem.type, 'pos': elem.pos, linkcount: 0, 'nodeid': elem.nodeid, 'tooltip': [], 'senses': []};
+        
+        // build tooltip
+        max_length = 3;
         colcount = 0;
         row = [];
-         // get senses
-         if (elem.senses != undefined && elem.senses.length > 0){
-             console.writeline("Sense: " + elem.senses);
-             sense = elem.senses[0];
-             var sense_text = sense.synsetid + ": " + sense.lemma;
-             var sense_url = (sense.url == undefined) ? "http://compling.hss.ntu.edu.sg/omw/cgi-bin/wn-gridx.cgi?synset=" + sense.synsetid : sense.url;
-             colcount = 1;
-             row = [new ChibiJS.URL(sense_text, sense_url)]
-             node.tooltip.push(row);
-             }
-             
-         if (elem.sortinfo != undefined && Object.keys(elem.sortinfo).length > 0){
-             if (node.tooltip.length == 0){
+        // get senses
+        if (elem.senses != undefined && elem.senses.length > 0){
+            sense = elem.senses[0];
+            var sense_text = sense.synsetid + ": " + sense.lemma;
+            var sense_url = (sense.url == undefined) ? get_synset_link(sense.synsetid) : sense.url;
+            colcount = 1;
+            var sense_obj = new ChibiJS.URL(sense_text, sense_url);
+            row = [sense_obj];
+            node.tooltip.push(row);
+            node.senses.push(sense_obj);
+        }
+        
+        if (elem.sortinfo != undefined && Object.keys(elem.sortinfo).length > 0){
+            if (node.tooltip.length == 0){
                 node.tooltip.push(row);
             }
             for (k in elem.sortinfo){
-                 colcount++;
-                 if (colcount == 3){
-                     colcount = 1;
-                     row = [];
-                     node.tooltip.push(row)
-                     }
-                 row.push(k + ":" + elem.sortinfo[k])
-                 }
-             console.writeline("Tooltip: " + node.tooltip + " | len: " + node.tooltip.length);
+                colcount++;
+                if (colcount == 3){
+                    colcount = 1;
+                    row = [];
+                    node.tooltip.push(row)
+                }
+                row.push(k + ":" + elem.sortinfo[k])
+            }
+            // console.writeline("Tooltip: " + node.tooltip + " | len: " + node.tooltip.length);
         }
-         node_map[elem.nodeid] = node;
-         nodes.push(node);
-         });
-     // convert links
-     var links = [];
-     $(json.links).each(function(idx, l){
-         // create TOP node (id=0) if needed
+        node_map[elem.nodeid] = node;
+        nodes.push(node);
+    });
+    // convert links
+    var links = [];
+    $(json.links).each(function(idx, l){
+        // create TOP node (id=0) if needed
         if (l.from == 0 || l.to == 0){
-             if (node_map[0] == undefined){
-                 node_map[0] = {'text': 'TOP', 'from': 0, 'to': 0, 'type': 'realpred', 'pos': 'TOP', linkcount: 0, 'nodeid': 0, 'tooltip': []};
-                 nodes.unshift(node_map[0]);
-             }
-         }
-         var fnode = node_map[l.from];
-         fnode.linkcount++;
-         var tonode = node_map[l.to];
-         tonode.linkcount++;
-         var lnk = {'from': fnode, 'to': tonode, 'post': l.post, 'rargname': (l.rargname != undefined) ? l.rargname : ''};
-
-         links.push(lnk);
-     });
-     visko = { 'sentence_text': text, 'nodes': nodes, 'links': links };
-     return visko;
- }
-     
+            if (node_map[0] == undefined){
+                node_map[0] = {'text': 'TOP', 'from': 0, 'to': 0, 'type': 'realpred', 'pos': 'TOP', linkcount: 0, 'nodeid': 0, 'tooltip': []};
+                nodes.unshift(node_map[0]);
+            }
+        }
+        var fnode = node_map[l.from];
+        fnode.linkcount++;
+        var tonode = node_map[l.to];
+        tonode.linkcount++;
+        var lnk = {'from': fnode, 'to': tonode, 'post': l.post, 'rargname': (l.rargname != undefined) ? l.rargname : ''};
+        
+        links.push(lnk);
+    });
+    
+    visko = { 'sentence_text': text, 'nodes': nodes, 'links': links, 'node_map':  node_map };
+    for (n in nodes)
+        return visko;
+}
