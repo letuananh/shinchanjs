@@ -42,6 +42,9 @@ function dump_element(element){
     console.writeline(info);
 }
 
+/**
+ * Dump a canvas structure to console 
+ **/
 function displayInformation(a_canvas){
     if(a_canvas == null){
         a_canvas = canvas;

@@ -2,58 +2,205 @@
           "http://www.w3.org/TR/html4/loose.dtd">
 <html>
   <head>
-    <title>Console demo</title>
-    
-    <link rel="stylesheet" href="css/redmond/jquery-ui-1.9.0.custom.min.css" />
-    <link rel="stylesheet" href="css/visualkopasu.css" />
-    <style>
-     #toolbar {
-       /* T-R-B-L */
-       margin: 5px 5px 5px 0px;
-       padding: 4px;
-       display: inline-block;
-     }
-     /* support: IE7 */
-     *+html #toolbar {
-       display: inline;
-     }
-    </style>    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="DMRS Visualisation - Version 0.3.1">
+    <meta name="author" content="Le Tuan Anh <tuananh.ke@gmail.com">
+    <link rel="icon" href="../../favicon.ico">
+    <!-- Title and styles -->
+    <title>DMRS Visualisation - Version 0.3.1</title>
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/visko2.css" />
   </head>
   
   <body>
-    <div id="banner" class="ui-widget-header ui-corner-all">DMRS demo (Version 0.3)</div>
-    <h1>DMRS #1</h1>
-    <div id="dmrs1_canvas"></div>
-    <div id="dmrs1_sentence_text" class="dmrs_sentence_text"></div>
-    <h1>DMRS #2</h1>
-    <div id="dmrs2_canvas"></div>
-    <div id="dmrs2_text_holder" class="dmrs_sentence_text"></div>
-    <h1>DMRS #3</h1>
-    <div id="dmrs3_canvas"></div>
-    <div id="dmrs3_text_holder" class="dmrs_sentence_text"></div>
-    
-    <div id="toolbar" class="ui-corner-all">
-      <input type="button" id="btnClearCanvas" name="btnClearCanvas" value="Clear Canvas"/>
-      <input type="button" id="btnVisualise" name="btnVisualise" value="Diplay DMRS3"/>
-      <input type="button" id="btnStart" name="btnStart" value="Information"/>
-      <input type="button" id="btnClear" name="btnClear" value="Clear Console"/>
-      <span class="toolbar_label">A label</span>
-      <input type="button" id="btnHide" name="btnHide" value="Hide Console"/>
-    </div>
-    
-    <div id="console" style="overflow: auto; max-height: 300px;"></div>
-    
-    <!-- Script -->
-    <script src="js/jquery-1.8.2.js"></script>
-    <script src="js/jquery-ui-1.9.0.custom.min.js"></script>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="dmrs_v3_demo.html">DMRS Visualisation - Version 0.3.1</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
+
+    <div style="padding: 60px 20px;">
+      <div class="row">
+        <div class="col-md-6">
+          <!-- DMRS canvases -->
+          <h1>DMRS #1</h1>
+          <div id="dmrs1_canvas"></div>
+          <div id="dmrs1_text_holder" class="dmrs_sentence_text"></div>
+          <h1>DMRS #2</h1>
+          <div id="dmrs2_canvas"></div>
+          <div id="dmrs2_text_holder" class="dmrs_sentence_text"></div>
+          <h1>DMRS #3</h1>
+          <div id="dmrs3_canvas"></div>
+          <div id="dmrs3_text_holder" class="dmrs_sentence_text"></div>
+        </div>
+        <div class="col-md-6">
+          <div id="toolbar" class="ui-corner-all" style="padding: 10px;">
+            <input type="button" class="btn btn-primary" id="btnClearCanvas" name="btnClearCanvas" value="Clear Canvas #1"/>
+            <input type="button" class="btn btn-primary" id="btnRenderDMRS" name="btnRenderDMRS" value="Render DMRS #1"/>
+            <input type="button" class="btn btn-default" id="btnDebug" name="btnDebug" value="Debug"/>
+            <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
+            <button type="button" id="btnHide" name="btnHide" class="btn btn-default">Hide Console</button>
+          </div>
+          <div id="console" style="overflow: auto; max-height: 80vh;"></div>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; 2012-2017 Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</p>
+      </footer>
+    </div> <!-- /container -->
+       
+    <!-- Bootstrap core JavaScript
+         ================================================== -->
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- ShinchanJS scripts -->
     <script src="js/raphael.js"></script>
-    <script src="js/kajika.js"></script>
     <script src="js/console.js"></script>
     <script src="js/shinchan.js"></script>
     <script src="js/shinchan.debug.js"></script>
     <script src="js/visualisation_v3.js"></script>
+
+    <script>         
+     var visual_dmrs1;
+     var visual_dmrs2;
+     var visual_dmrs3;
+     
+     function clearDMRS1(){
+       if (visual_dmrs1 != undefined){
+         visual_dmrs1.clear();
+         visual_dmrs1 = undefined;
+       }
+     }
+     
+     function showDMRS1(){
+       if (visual_dmrs1 == undefined) {
+         console.writeline("Generating DMRS #1 visual object");
+         visual_dmrs1 = new VisualKopasu.DMRSCanvas(dmrs1, "dmrs1_canvas", "dmrs1_text_holder");
+       }
+       visual_dmrs1.visualise();
+     }
+
+     /** Sample synset link builder **/
+     function find_synset(synsetid) {
+       return function(){ 
+         var sid = synsetid;
+         console.writeline("Searching for synset: " + sid);
+       };
+     }
+     
+     function draw_dmrs(){
+       showDMRS1();
+       
+       // Transform DMRS JSON into Visko JS format
+       dmrs2 = json2visko(dmrs2_json, dmrs2_text);
+       visual_dmrs2 = new VisualKopasu.DMRSCanvas(dmrs2, "dmrs2_canvas", "dmrs2_text_holder");
+       visual_dmrs2.visualise();
+       
+       // DMRS3
+       dmrs3 = json2visko(dmrs3_json, dmrs3_text, find_synset);
+       visual_dmrs3 = new VisualKopasu.DMRSCanvas(dmrs3, "dmrs3_canvas", "dmrs3_text_holder");
+       visual_dmrs3.visualise();
+
+       show_info();
+     }
+
+     function show_info() {
+       console.header("DMRS #2")
+       console.writeline("Text           : " + dmrs2.sentence_text);       
+       console.writeline("Node count     : " + dmrs2_json['nodes'].length);
+       console.writeline("JSON Node data : " + dmrs2_json.nodes);
+       console.writeline("Visko Node data: " + dmrs2.nodes);
+       // Test get node by ID => get visual element => bind an event
+       var n = dmrs2.node_map['10001'];
+       console.write("Node info: " + n.nodeid + " | text: " + n.text);
+       console.write(" | Visual elem: " + n.visual_element);
+       n.visual_element.click(function(){console.writeline('I am fabulous!')});
+       console.writeline(" => Now click it");
+
+       console.header("DMRS #3");
+       var n_rain = visual_dmrs3.get_data().node_map['10000'];
+       console.writeline("Find this and click it >>> " + n_rain.nodeid + '/' + n_rain.text);
+     }
+     
+     var console;
+
+     $(window).on('resize', function(){
+       update_console();
+     });
+
+     function toggleConsole(){
+       $("#console").toggle();
+       if($("#console").is(":visible")){
+         $("#btnHide").prop('value', "Hide Console");                
+       } 
+       else{
+         $("#btnHide").prop('value', "Show Console");
+       }
+     }
+     
+     function update_console(){
+       var ch = $(window).height() - 130;
+       if (ch < 300){
+         ch = 300;
+       }
+       $("#console").height(ch);
+       $("#console").css('max-height', ch);
+       //console.writeline("Window's height: " + $(window).height());
+     }
+     
+     $(document).ready(function(){       
+       initialise();   
+       draw_dmrs();
+     });
+
+     function initialise(){
+       // Create a console
+       console = new Console("console");
+       console.writeline(" - DMRS Visualisation Version 0.3 - ");
+
+       update_console();       
+       
+       $("#btnDebug").click(function(){
+         console.clear(" - DMRS Visualisation Version 0.3 - ");
+         show_info();
+         // Dump canvas structure to console
+         console.header("DMRS #3 canvas structure");
+         displayInformation(visual_dmrs3.get_canvas());
+       });
+       $("#btnClear").click(function(){
+         console.clear(" - DMRS Visualisation Version 0.3 - ");
+       });
+       $("#btnHide").click(function(){
+         toggleConsole();
+       });
+       $("#btnClearCanvas").click(function(){
+         clearDMRS1();
+       });
+       $("#btnRenderDMRS").click(function(){
+         clearDMRS1(); // Don't display it twice
+         showDMRS1();
+       });
+     }     
+    </script>    
     
-    <script type="text/javascript"><!-- DMRS #1: Some dogs bark -->
+    <!-- DMRS #1: Some dogs bark -->
+    <script type="text/javascript">
      var dmrs1 = new function(){
        var node_10000 = { 'text' : 'some', 'from' : 0, 'to' : 4, 'type' : 'realpred', 'pos': 'q', 'link_count' : 1, 'tooltip' : [['pos:q']] };
        var node_10001 = { 'text' : 'generic_entity', 'from' : 0, 'to' : 4, 'type' : 'gpred', 'pos': '', 'link_count' : 2, 'tooltip' : [['cvarsort:individual','number:singular','pers:3']] };
@@ -71,117 +218,19 @@
        
        this.sentence_text = 'Some dogs bark.';
      };
-    </script>
-    <script><!-- DMRS 2: Some dogs chase a cat. -->
+        </script>
+    <!-- DMRS 2: Some dogs chase a cat. -->
+    <script>
      dmrs2_text = 'Some dogs chase a cat.';
      mrs2_json = {"top": "h0", "relations": [{"predicate": "_some_q", "arguments": {"ARG0": "x3", "RSTR": "h5", "BODY": "h6"}, "label": "h4", "lnk": {"to": 4, "from": 0}}, {"predicate": "_dog_n_1", "arguments": {"ARG0": "x3"}, "label": "h7", "lnk": {"to": 9, "from": 5}}, {"predicate": "_chase_v_1", "arguments": {"ARG0": "e2", "ARG1": "x3", "ARG2": "x8"}, "label": "h1", "lnk": {"to": 15, "from": 10}}, {"predicate": "_a_q", "arguments": {"ARG0": "x8", "RSTR": "h10", "BODY": "h11"}, "label": "h9", "lnk": {"to": 17, "from": 16}}, {"predicate": "_cat_n_1", "arguments": {"ARG0": "x8"}, "label": "h12", "lnk": {"to": 22, "from": 18}}], "index": "e2", "constraints": [{"high": "h5", "low": "h7", "relation": "qeq"}, {"high": "h0", "low": "h1", "relation": "qeq"}, {"high": "h10", "low": "h12", "relation": "qeq"}], "variables": {"e2": {"type": "e", "properties": {"PERF": "-", "PROG": "-", "MOOD": "indicative", "SF": "prop", "TENSE": "pres"}}, "h4": {"type": "h"}, "h1": {"type": "h"}, "h11": {"type": "h"}, "h5": {"type": "h"}, "x3": {"type": "x", "properties": {"PERS": "3", "IND": "+", "NUM": "pl"}}, "h0": {"type": "h"}, "h10": {"type": "h"}, "h6": {"type": "h"}, "h9": {"type": "h"}, "h7": {"type": "h"}, "h12": {"type": "h"}, "x8": {"type": "x", "properties": {"PERS": "3", "IND": "+", "NUM": "sg"}}}};
      dmrs2_json = {"links": [{"rargname": null, "to": 10002, "from": 0, "post": "H"}, {"rargname": "RSTR", "to": 10001, "from": 10000, "post": "H"}, {"rargname": "ARG1", "to": 10001, "from": 10002, "post": "NEQ"}, {"rargname": "ARG2", "to": 10004, "from": 10002, "post": "NEQ"}, {"rargname": "RSTR", "to": 10004, "from": 10003, "post": "H"}], "nodes": [{"predicate": "_some_q", "type": "realpred", "lnk": {"to": 4, "from": 0}, "pos": "q", "nodeid": 10000}, {"type": "realpred", "pos": "n", "sortinfo": {"PERS": "3", "IND": "+", "NUM": "pl", "cvarsort": "x"}, "predicate": "_dog_n_1", "nodeid": 10001, "lnk": {"to": 9, "from": 5}}, {"type": "realpred", "pos": "v", "sortinfo": {"PERF": "-", "PROG": "-", "SF": "prop", "cvarsort": "e", "MOOD": "indicative", "TENSE": "pres"}, "predicate": "_chase_v_1", "nodeid": 10002, "lnk": {"to": 15, "from": 10}}, {"predicate": "_a_q", "type": "realpred", "lnk": {"to": 17, "from": 16}, "pos": "q", "nodeid": 10003}, {"type": "realpred", "pos": "n", "sortinfo": {"PERS": "3", "IND": "+", "NUM": "sg", "cvarsort": "x"}, "predicate": "_cat_n_1", "nodeid": 10004, "lnk": {"to": 22, "from": 18}}]};
-    </script>
-    <script><!-- DMRS 3: It rains -->
+        </script>
+    <!-- DMRS 3: It rains -->
+    <script>
      dmrs3_text = "It rained.";
      mrs3_json = {"top": "h0", "relations": [{"arguments": {"ARG0": "e2"}, "predicate": "_rain_v_1", "label": "h1", "lnk": {"from": 3, "to": 10}}], "constraints": [{"low": "h1", "relation": "qeq", "high": "h0"}], "variables": {"h0": {"type": "h"}, "e2": {"properties": {"TENSE": "past", "PROG": "-", "SF": "prop", "PERF": "-", "MOOD": "indicative"}, "type": "e"}, "h1": {"type": "h"}}};
      dmrs3_json = {"nodes": [{"nodeid": 10000, "predicate": "_rain_v_1", "senses": [{"type": "isf", "synsetid": "11501381-n", "lemma": "rain"}], "pos": "v", "type": "realpred", "sortinfo": {"mood": "indicative", "cvarsort": "e", "tense": "past", "perf": "-", "prog": "-", "sf": "prop"}, "lnk": {"from": 3, "to": 10}}], "links": [{"from": 0, "rargname": null, "post": "H", "to": 10000}], "lnk": {"from": -1, "to": -1}};
      
-    </script>
-    
-    <script>
-     var console;
-     var dmrs1_canvas;
-     
-     function initialise(){
-       // Create a console
-       console = new Console("console");
-       console.writeline("- Test Console -");
-       
-       $("#btnStart").button().click(function(){
-         displayInformation(dmrs1_canvas);
-       });
-       $("#btnClear").button().click(function(){
-         console.clear("- Cleared -");
-       });
-       $("#btnHide").button().click(function(){
-         toggleConsole();
-       });
-       $("#btnClearCanvas").button().click(function(){
-         clearDMRS3();
-       });
-       $("#btnVisualise").button().click(function(){
-         showDMRS3();
-       });
-     }
-     
-     $(document).ready(function(){       
-       initialise();   
-       draw_dmrs();
-     });
-     
-     var dmrs1_canvas;
-     var visual_dmrs1;
-     
-     function clearDMRS1(){
-       visual_dmrs1.clear();
-     }
-     function showDMRS1(){
-       dmrs1_canvas = new Canvas('dmrs1_canvas');
-       visual_dmrs1 = new VisualKopasu.DMRSCanvas(dmrs1, dmrs1_canvas, "dmrs1_text_holder");
-       visual_dmrs1.visualise();
-     }
-     
-     function draw_dmrs(){
-       dmrs1_canvas = new Canvas('dmrs1_canvas');
-       visual_dmrs1 = new VisualKopasu.DMRSCanvas(dmrs1, dmrs1_canvas, "dmrs1_text_holder");
-       // visual_dmrs1.clear();
-       visual_dmrs1.visualise();
-       
-       // Transform DMRS JSON into Visko JS format
-       dmrs2 = json2visko(dmrs2_json, dmrs2_text);
-       var visual_dmrs2 = new VisualKopasu.DMRSCanvas(dmrs2, "dmrs2_canvas", "dmrs2_text_holder");
-       visual_dmrs2.visualise();
-       console.writeline("DMRS2: " + dmrs2.sentence_text);       
-       console.writeline("DMRS2 length: " + dmrs2_json['nodes'].length);
-       console.writeline("JSON/DMRS 4's nodes: " + dmrs2_json.nodes);
-       console.writeline("DMRS2's nodes: " + dmrs2.nodes);
-       // Test get node by ID => get visual element => bind an event
-       var n = dmrs2.node_map['10001'];
-       console.write("Node info: " + n.nodeid + " | text: " + n.text);
-       console.write(" | Visual elem: " + n.visual_element);
-       n.visual_element.click(function(){alert('I am fabulous!')});
-       console.writeline(" => Now click it");
-       
-       // DMRS3
-       dmrs3 = json2visko(dmrs3_json, dmrs3_text);
-       // Override sense link event before rendering ...
-       $.each(dmrs3.nodes, function (i, n){
-         if (n.senses != undefined && n.senses.length > 0){
-           $.each(n.senses, function(idx, s){
-             s._url = function(){ alert(s.text()); };
-           });
-           console.writeline("Sense node: " + n.nodeid + " | value = " + n.senses[0].text());
-         }
-       });
-       var visual_dmrs3 = new VisualKopasu.DMRSCanvas(dmrs3, "dmrs3_canvas", "dmrs3_text_holder");
-       visual_dmrs3.visualise();
-       
-       boo = function(){alert('boo');};
-       var nothing;
-       console.writeline("type of 'abc' is " + typeof "abc");
-       console.writeline("type of boo is " + typeof boo);
-       console.writeline("type of nothing is " + typeof nothing);
-     }
-     
-     function toggleConsole(){
-       $("#console").toggle();
-       if($("#console").is(":visible")){
-         $("#btnHide").prop('value', "Hide Console");                
-       } 
-       else{
-         $("#btnHide").prop('value', "Show Console");
-       }
-     }
-     
-     function start(){
-       // nothing
-     }
     </script>    
   </body>
 </html>

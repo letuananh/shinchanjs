@@ -1,0 +1,40 @@
+/** Links **/
+
+a:link {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:visited {
+}
+
+/** Corpus & documents **/
+
+.sentence_list{
+    font-size: 1.4em;	
+}
+
+/** DMRS visualisation **/
+
+.dmrs_sentence_text{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.sentence_text_normal{
+    font-family: monospace, 'Courier New';
+    font-size: 14px;
+    color: black;
+}
+
+.sentence_text_highlight{
+    font-family: monospace, 'Courier New';
+    font-size: 14px;
+    color: #FFFFFF;
+    padding: 3px;
+    font-weight: bold;
+    background-color: #FF3300;
+}

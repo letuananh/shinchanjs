@@ -260,6 +260,7 @@ VisualKopasu.SentenceText = function(holder_id, text){
 }
 
 VisualKopasu.DMRSCanvas = function(dmrs, canvas, text_holder, theme){
+    var dmrs = dmrs;
     var nodes = dmrs.nodes;
     var links = dmrs.links;
     var sentence_text = dmrs.sentence_text;
@@ -304,6 +305,16 @@ VisualKopasu.DMRSCanvas = function(dmrs, canvas, text_holder, theme){
             text_holder.highlight();
         }
         canvas.pack(theme.PAGE_MARGIN);
+        return this;
+    }
+
+    /** Get DMRS data (compiled from JSON string?) **/
+    this.get_data = function() {
+        return dmrs;
+    }
+    /** get a pointer to Shinchan canvas object **/
+    this.get_canvas = function(){
+        return canvas;
     }
     
     this.draw_nodes = function(){
@@ -581,7 +592,7 @@ function json2visko(json, text, synset_link_builder){
         if (elem.senses != undefined && elem.senses.length > 0){
             sense = elem.senses[0];
             var sense_text = sense.synsetid + ": " + sense.lemma;
-            var sense_url = (sense.url == undefined) ? get_synset_link(sense.synsetid) : sense.url;
+            var sense_url = (sense.url == undefined) ? synset_link_builder(sense.synsetid) : sense.url;
             colcount = 1;
             var sense_obj = new ChibiJS.URL(sense_text, sense_url);
             row = [sense_obj];
@@ -627,6 +638,5 @@ function json2visko(json, text, synset_link_builder){
     });
     
     visko = { 'sentence_text': text, 'nodes': nodes, 'links': links, 'node_map':  node_map };
-    for (n in nodes)
-        return visko;
+    return visko;
 }

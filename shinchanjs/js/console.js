@@ -24,6 +24,7 @@ function Console(id){
 	,"background-color" : "black"
 	,"font-family" : "monospace, 'Courier New'"
 	,"font-size" : '12px'
+        ,"padding": '5px'
     });
     var mode = true;
     
