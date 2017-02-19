@@ -13,8 +13,8 @@
  * along with VisualKopasu. If not, see http://www.gnu.org/licenses/.
  **/
 
-Yawol = function(container_id, root) {
-    this._synsetbox_url = 'js/synsetbox.html';
+Yawol = function(container_id, root, synsetbox_template) {
+    this._template = _.template(synsetbox_template);
     this._root = (root == undefined) ? 'http://127.0.0.1:5000/yawol/' : root;
     this._container = $("#" + container_id);
 }
@@ -23,25 +23,10 @@ Yawol.prototype = {
     /* 
      * Display a synset to a synsetbox
      */
-    render_synset: function(synset, synsetbox) {
-        var txtSynsetID = synsetbox.find(".synsetid");
-        var txtLemmas = synsetbox.find(".lemmas");
-        var txtDefinition = synsetbox.find(".definition");
-        var txtExamples = synsetbox.find(".examples");
-        if (synset != undefined) {
-            txtSynsetID.text(synset.synsetid);
-            txtLemmas.text(synset.lemmas);
-            txtDefinition.text(synset.definition);
-            txtExamples.text(synset.examples);
-        }
-        // Debug
-        synsetbox.show();
-        console.writeline("SynsetID   : " + synsetbox.find(".synsetid").text());
-        console.writeline("Lemmas     : " + synsetbox.find(".lemmas").text());
-        console.writeline("Definitions: " + synsetbox.find(".definition").text());
-        console.writeline("Examples   : " + synsetbox.find(".examples").text());
-        console.writeline("Synset JSON: " + JSON.stringify(synset));
-        console.writeline("--");
+    build_synsetbox: function(synset) {
+        var sbox = $(this._template({synset: synset}));
+        sbox.find('.close').click(function(){ sbox.remove(); });
+        sbox.appendTo(this._container);
     },
     
     clear: function() {
@@ -56,13 +41,8 @@ Yawol.prototype = {
             this._container.empty();
         }
         // Add a synsetbox
-        this._container.append('<div class="newss"></div>');
-        var newdiv = this._container.find('.newss:last-child');
-        newdiv.load('js/synsetbox.html', {}, function(){
-            var curbox = $(this).find('.synsetbox');
-            curbox.find('.close').click(function(){ curbox.remove(); });
-            _yawol.render_synset(synset, curbox);
-        });                 
+        console.writeline(JSON.stringify(synset));
+        this.build_synsetbox(synset);
     },
     
     /** Load a synset using AJAX/JSONP **/
@@ -102,6 +82,8 @@ Yawol.prototype = {
     
     /** Log error msg **/
     fail: function(jqxhr, textStatus, error) {
-        console.writeline( "Request Failed: " + textStatus + ", " + error);
+        if (console != undefined && console.writeline != undefined) {
+            console.writeline( "Request Failed: " + textStatus + ", " + error);
+        }
     }       
 }

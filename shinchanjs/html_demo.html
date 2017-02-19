@@ -49,6 +49,8 @@
             <tbody>
             </tbody>
           </table>
+          <div id="synsets"></div>
+          <!-- End left column -->
         </div>
         <div class="col-md-6">
           <!-- Right column (for console) -->
@@ -70,19 +72,69 @@
         <p>&copy; 2012-2017 Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</p>
       </footer>
     </div> <!-- /container -->
-       
+    
     <!-- Bootstrap core JavaScript
          ================================================== -->
     <script src="js/jquery-3.1.1.min.js"></script>
     <script src="bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Lodash -->
+    <script src="js/lodash.min.js"></script>
     <!-- ShinchanJS scripts -->
     <script src="js/raphael.js"></script>
     <script src="js/console.js"></script>
     <script src="js/shinchan.js"></script>
     <script src="js/shinchan.debug.js"></script>
     <script src="js/visualisation_v3.js"></script>
+    <script src="js/yawol.js"></script>
 
+    <script type="text/template" id="synsetbox_template">
+     <div class="synsetbox container-fluid well">
+     <div class="row">
+     <div class="col-xs-12">
+      <button type="button" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+     </div>
+     </div>
+     <div class="row">
+     <div class="col-xs-6 col-md-3">
+      <label>SynsetID</label>
+     </div>
+     <div class="col-xs-6 col-md-3">
+      <span class="synsetid"><%= synset.synsetID %></span>                
+     </div>
+     <div class="col-xs-6 col-md-3">
+      <label>Lemmas</label> <span class="lemma"></span>
+     </div>
+     <div class="col-xs-6 col-md-3">
+      <span class="lemmas"><%= synset.lemmas %></span>
+     </div>
+     </div>
+     <div class="row">
+     <div class="col-xs-6 col-md-6">
+      <label>Definition</label>
+     </div>
+     <div class="col-xs-6 col-md-6">
+      <span class="definition"><%= synset.definition %></span>
+     </div>
+     </div>
+     <div class="row">
+     <div class="col-xs-12 col-md-6">
+      <label>Examples</label>
+     </div>
+     <div class="col-xs-12 col-md-6">
+      <span class="examples"><%= synset.examples %></span>
+     </div>
+     </div>
+     </div>
+    </script>
+    
     <script>
+     function render_synsetbox(synset){
+       var yawol = new Yawol('synsets', undefined, $('#sbox_template').html());
+       yawol.display_synset(synset, true);
+     }
+     
      function load_article() {
        $("#article").load("ajax/ajax.html");
      }
@@ -94,6 +146,7 @@
        $.ajax({url: u, dataType: 'jsonp'})
         .done(function(json){
           console.writeline("Done " + JSON.stringify(json));
+          render_synsetbox(json);
         })
         .fail(function(err){
           console.writeline("Fail " + err.status + " | " + err.message);
@@ -106,12 +159,13 @@
        console.writeline("Loading synset information from: " + ssurl);
        $.getJSON(ssurl)
         .done(function(synset) {
-          $("#sinfo tbody").append("<tr>" +
+          $("#sinfo tbody").empty().append("<tr>" +
                                    "<td>" + synset.synsetid + "</td>" +
                                    "<td>" + synset.definition + "</td>" +
                                    "<td>" + synset.examples + "</td>" +
                                    "</tr>");
           dump_synset(synset);
+          render_synsetbox(synset);
         })
         .fail(function( jqxhr, textStatus, error ) {
           var err = textStatus + ", " + error;
@@ -168,6 +222,8 @@
        console = new Console("console");
        console.writeline(" - DMRS Visualisation Version 0.3 - ");
 
+       load_synset();
+       
        update_console();       
        $("#btnLoadArticle").click(function(){
          load_article();

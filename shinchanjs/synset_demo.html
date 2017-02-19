@@ -30,7 +30,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="index_home.html">Home</a></li>
+            <li><a href="index.html">Home</a></li>
           </ul>
         </div><!--/.navbar-collapse -->
       </div>
@@ -79,10 +79,12 @@
         <p>&copy; 2012-2017 Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</p>
       </footer>
     </div> <!-- /container -->
-       
+    
     <!-- Bootstrap -->
     <script src="js/jquery-3.1.1.min.js"></script>
     <script src="bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Lodash -->
+    <script src="js/lodash.min.js"></script>
     <!-- ShinchanJS scripts -->
     <script src="js/raphael.js"></script>
     <script src="js/console.js"></script>
@@ -91,7 +93,56 @@
     <script src="js/visko-2.0.js"></script>
     <!-- Yawol client -->
     <script src="js/yawol.js"></script>
-    <!-- Document ready -->
+    <!-- Yawol support -->
+    <script type="text/template" id="synsetbox_template">
+     <div class="synsetbox container-fluid well">
+     <div class="row">
+     <div class="col-xs-12">
+      <button type="button" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+     </div>
+     </div>
+     <div class="row">
+     <div class="col-xs-12 col-sm-2 col-md-2">
+      <label>SynsetID</label>
+     </div>
+     <div class="col-xs-12 col-sm-2 col-md-2">
+      <span class="synsetid"><%= synset.synsetid %></span>                
+     </div>
+     <div class="col-xs-12 col-sm-2 col-md-2">
+      <label>Lemmas</label> <span class="lemma"></span>
+     </div>
+     <div class="col-xs-12 col-sm-6 col-md-6">
+      <span class="lemmas"><%= _.join(synset.lemmas, ', ') %></span>
+     </div>
+     </div>
+     <div class="row">
+     <div class="col-xs-12 col-md-2">
+      <label>Definition</label>
+     </div>
+     <div class="col-xs-12 col-md-10">
+      <span class="definition"><%= synset.definition %></span>
+     </div>
+     </div>
+     <div class="row">
+     <div class="col-xs-12 col-md-2">
+      <label>Examples</label>
+     </div>
+     <div class="col-xs-12 col-md-10">
+       <span class="examples">
+         <% if(synset.examples.length > 0) {  %>
+         <ul>
+           <% _.each(synset.examples, function(ex){ %>
+           <li><%= ex %></li>
+           <% }); %>
+         </ul>
+         <% } %>    
+       </span>
+     </div>
+     </div>
+     </div>
+    </script>
     <script>
      var yawol;
 
@@ -100,11 +151,13 @@
        if (yawol == undefined) {
          var root = $('#yawol_url').val();
          console.writeline("Yawol root: " + root);
-         yawol = new Yawol("synsets", root);
+         yawol = new Yawol("synsets", root, $("#synsetbox_template").html());
        }
        return yawol;
      }
-     
+    </script>
+    <!-- Document ready -->
+    <script>
      function do_search_local() {
        var synsetid = $('#query').val();
        get_yawol().load_synset(synsetid);
@@ -144,15 +197,15 @@
      function toggleConsole(){
        $("#console").toggle();
        if($("#console").is(":visible")){
-         $("#btnHide").prop('value', "Hide Console");                
+         $("#btnHide").text("Hide Console");                
        } 
        else{
-         $("#btnHide").prop('value', "Show Console");
+         $("#btnHide").text("Show Console");
        }
      }
      
      function update_console(){
-       var ch = $(window).height() - 130;
+       var ch = $(window).height() - 200;
        if (ch < 300){
          ch = 300;
        }

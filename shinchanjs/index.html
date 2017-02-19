@@ -1,14 +1,95 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"
-   "http://www.w3.org/TR/html4/frameset.dtd">
-<HTML>
-<HEAD>
-<TITLE>ShinchanJS Demo Applications</TITLE>
-</HEAD>
-<FRAMESET cols="17%, 83%">
-  <FRAME name="nagiframe" src="index_navi.html">
-    <FRAME name="mainframe" src="index_home.html">
-      <NOFRAMES>
-        Please enable frame
-      </NOFRAMES>
-</FRAMESET>
-</HTML>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Bootstrap page template">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>ShinchanJS Demo Homepage</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/visko2.css" />
+  </head>
+
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html">ShinchanJS Demo Homepage</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1>ShinchanJS Demo Homepage</h1>
+        <p>Uber Javascript-based Graphic Engine, made for pros, blah blah blah. No, I'm kidding. This is just a humble library that I made for visualising stuff for my work.</p>
+      </div>
+    </div>
+
+    <div style="padding: 20px;">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-sm-12 col-md-6">
+          <h2>DMRS Visualisation Library</h2>
+          <p>This library visualises DMRS data in various formats (currently support JSON format) with hookable elements.</p>
+          <div id="dmrs1_canvas"></div>
+          <div id="dmrs1_text_holder" class="dmrs_sentence_text"></div>
+          <p><a class="btn btn-default" href="visko-2.0-demo.html" role="button">View details &raquo;</a></p>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <h2>ShinchanJS Library</h2>
+          <p>Shinchan is a graphic engine which supports multiple layers drawing and elements manipulation.</p>
+          <p><a class="btn btn-default" href="shinchan_demo.html" role="button">View details &raquo;</a></p>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <h2>Yawol Client</h2>
+          <p>A REST client for accessing Yawol (REST server for querying various Wordnets data)</p>
+          <p><a class="btn btn-default" href="synset_demo.html" role="button">View details &raquo;</a></p>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; 2012-2017 <a href="https://github.com/letuananh">Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</a></p>
+      </footer>
+    </div> <!-- /container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- ShinchanJS scripts -->
+    <script src="js/raphael.js"></script>
+    <script src="js/console.js"></script>
+    <script src="js/shinchan.js"></script>
+    <script src="js/visko-2.0.js"></script>
+
+    <script>
+     var visual_dmrs1;
+     $(document).ready(function(){
+       $.getJSON("ajax/dmrs_love.json")
+        .done(function(json) {
+          // Do something
+          dmrs_canvas = json2canvas(json, "dmrs1").visualise();
+        })
+        .fail(function( jqxhr, textStatus, error ) {
+          console.log( "Request Failed: " + err );
+        });
+     });
+    </script>
+  </body>
+</html>
