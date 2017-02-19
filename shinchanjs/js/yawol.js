@@ -40,6 +40,8 @@ Yawol.prototype = {
         console.writeline("Lemmas     : " + synsetbox.find(".lemmas").text());
         console.writeline("Definitions: " + synsetbox.find(".definition").text());
         console.writeline("Examples   : " + synsetbox.find(".examples").text());
+        console.writeline("Synset JSON: " + JSON.stringify(synset));
+        console.writeline("--");
     },
     
     clear: function() {
