@@ -38,3 +38,9 @@ a:visited {
     font-weight: bold;
     background-color: #FF3300;
 }
+
+/** Synset Box **/
+.synsetbox {
+    border: 1px solid black;
+}
+.synsetbox

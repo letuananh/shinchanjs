@@ -1,163 +1,162 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
-                    "http://www.w3.org/TR/html4/loose.dtd">
+          "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-	<title>Console demo</title>
-	
-	<link rel="stylesheet" href="css/redmond/jquery-ui-1.9.0.custom.min.css" />
-	<link rel="stylesheet" href="css/visualkopasu.css" />
-	
-	<style>
- 		#toolbar {
- 			/* T-R-B-L */
- 			margin: 5px 5px 5px 0px;
-			padding: 4px;
-			display: inline-block;
-		}
-		/* support: IE7 */
-		*+html #toolbar {
-			display: inline;
-		}
-	</style>
-	
-	<script src="js/jquery-1.8.2.js"></script>
-	<script src="js/jquery-ui-1.9.0.custom.min.js"></script>
-	<script src="js/raphael-min.js"></script>
-	<script src="js/kajika.js"></script>
-	<script src="js/console.js"></script>
-	<script src="js/shinchan.js"></script>
-	<script src="js/shinchan.debug.js"></script>
-	<script src="js/jikan.js"></script>
-	<script src="js/visualisation_v2.js"></script>
+  <head>
+    <title>Element hover event</title>
+    
+    <link rel="stylesheet" href="css/redmond/jquery-ui-1.9.0.custom.min.css" />
+    <link rel="stylesheet" href="css/visualkopasu.css" />
+    
+    <style>
+     #toolbar {
+       /* T-R-B-L */
+       margin: 5px 5px 5px 0px;
+       padding: 4px;
+       display: inline-block;
+     }
+     /* support: IE7 */
+     *+html #toolbar {
+       display: inline;
+     }
+    </style>
+  </head>
+  <body>
+    <div id="banner" class="ui-widget-header ui-corner-all">Hover Demo</div>
+    <div id="main_canvas"></div>
+    
+    <div id="sentence_text" class="dmrs_sentence_text"></div>
+    
+    <div id="toolbar" class="ui-corner-all">
+      <input type="button" id="btnStart" name="btnStart" value="Information"/>
+      <input type="button" id="btnClear" name="btnClear" value="Clear Console"/>
+      <span class="toolbar_label">A label</span>
+      <input type="button" id="btnHide" name="btnHide" value="Hide Console"/>
+    </div>
+    
+    <div id="console" style="overflow: auto; max-height: 300px;"></div>
+  </body>
   
-	<script type="text/javascript">
-
-		dmrs1 = new function(){
-			// Nodes
-			//node1 = {"text": "Linux", "from": 0, "to": 5};
-			//node2 = {"text": "is", "from": 6, "to": 8};
-			var node_438116 = { 'text' : 'a', 'from' : 0, 'to' : 2, 'type' : 'realpred', 'link_count' : 1, 'tooltip' : [['pos:q']] };
-			var node_438117 = { 'text' : 'important', 'from' : 3, 'to' : 12, 'type' : 'realpred', 'link_count' : 1, 'tooltip' : [['pos:a','RP.sense:for','cvarsort:event'], ['sf:prop','tense:untensed','mood:indicative']] };
-			var node_438118 = { 'text' : 'trait', 'from' : 13, 'to' : 18, 'type' : 'realpred', 'link_count' : 4, 'tooltip' : [['pos:n','RP.sense:1','cvarsort:individual'], ['number:singular','pers:3','ind:plus']] };
-			var node_438119 = { 'text' : 'of', 'from' : 19, 'to' : 21, 'type' : 'realpred', 'link_count' : 2, 'tooltip' : [['pos:p','cvarsort:event','sf:prop']] };
-			var node_438120 = { 'text' : 'the', 'from' : 22, 'to' : 25, 'type' : 'realpred', 'link_count' : 1, 'tooltip' : [['pos:q']] };
-			var node_438121 = { 'text' : 'great', 'from' : 26, 'to' : 31, 'type' : 'realpred', 'link_count' : 1, 'tooltip' : [['pos:a','RP.sense:for','cvarsort:event'], ['sf:prop','tense:untensed','mood:indicative']] };
-			var node_438122 = { 'text' : 'generic_entity', 'from' : 32, 'to' : 36, 'type' : 'gpred', 'link_count' : 4, 'tooltip' : [['cvarsort:individual','number:plural','pers:3'], ['ind:plus']] };
-			var node_438123 = { 'text' : '2+', 'from' : 32, 'to' : 36, 'type' : 'carg', 'link_count' : 1, 'tooltip' : [['cvarsort:event','sf:prop','tense:untensed'], ['mood:indicative','prog:minus','perf:minus']] };
-			var node_438124 = { 'text' : 'be', 'from' : 37, 'to' : 39, 'type' : 'realpred', 'link_count' : 2, 'tooltip' : [['pos:v','RP.sense:id','cvarsort:event'], ['sf:prop','tense:pres','mood:indicative'], ['prog:minus','perf:minus']] };
-			var node_438125 = { 'text' : 'udef_q', 'from' : 40, 'to' : 62, 'type' : 'gpred', 'link_count' : 1, 'tooltip' : [] };
-			var node_438126 = { 'text' : 'constructive', 'from' : 40, 'to' : 52, 'type' : 'realpred', 'link_count' : 1, 'tooltip' : [['pos:a','RP.sense:1','cvarsort:event'], ['sf:prop','tense:untensed','mood:indicative']] };
-			var node_438127 = { 'text' : 'laziness', 'from' : 53, 'to' : 62, 'type' : 'realpred', 'link_count' : 3, 'tooltip' : [['pos:n','RP.sense:1','cvarsort:individual'], ['number:singular','pers:3','gend:n'], ['ind:minus']] };
-			
-
-			// Links
-			//link1 = { "from": node1, "to": node2 };
-			var link_446289 = { 'from': node_438116, 'to': node_438118, 'post' : 'H', 'rargname' : '' }; 
-			var link_446290 = { 'from': node_438117, 'to': node_438118, 'post' : 'EQ', 'rargname' : '1' }; 
-			var link_446291 = { 'from': node_438119, 'to': node_438118, 'post' : 'EQ', 'rargname' : '1' }; 
-			var link_446292 = { 'from': node_438119, 'to': node_438122, 'post' : 'NEQ', 'rargname' : '2' }; 
-			var link_446293 = { 'from': node_438120, 'to': node_438122, 'post' : 'H', 'rargname' : '' }; 
-			var link_446294 = { 'from': node_438121, 'to': node_438122, 'post' : 'EQ', 'rargname' : '1' }; 
-			var link_446295 = { 'from': node_438123, 'to': node_438122, 'post' : 'EQ', 'rargname' : '1' }; 
-			var link_446296 = { 'from': node_438124, 'to': node_438118, 'post' : 'NEQ', 'rargname' : '1' }; 
-			var link_446297 = { 'from': node_438124, 'to': node_438127, 'post' : 'NEQ', 'rargname' : '2' }; 
-			var link_446298 = { 'from': node_438125, 'to': node_438127, 'post' : 'H', 'rargname' : '' }; 
-			var link_446299 = { 'from': node_438126, 'to': node_438127, 'post' : 'EQ', 'rargname' : '1' }; 
-			
-
-			// Node array and Link array
-			//nodes = [ node1, node2 ];
-			//links = [ link1 ];
-			this.nodes = [ node_438116, node_438117, node_438118, node_438119, node_438120, node_438121, node_438122, node_438123, node_438124, node_438125, node_438126, node_438127 ];
-			this.links = [ link_446289, link_446290, link_446291, link_446292, link_446293, link_446294, link_446295, link_446296, link_446297, link_446298, link_446299 ];
-
-			this.sentence_text = 'An important trait of the great ones is constructive laziness.';
-		}
-	</script>
+  <script src="js/jquery-1.8.2.js"></script>
+  <script src="js/jquery-ui-1.9.0.custom.min.js"></script>
+  <script src="js/raphael-min.js"></script>
+  <script src="js/kajika.js"></script>
+  <script src="js/console.js"></script>
+  <script src="js/shinchan.js"></script>
+  <script src="js/shinchan.debug.js"></script>
+  <script src="js/jikan.js"></script>
+  <script src="js/visualisation_v2.js"></script>
   
-	<script>
-	var console;
-	var canvas;
-
-	function initialise(){
-		// Create a console
-		console = new Console("console");
-		console.writeline("- Test Console -");
-		
-		canvas = new Canvas("main_canvas", 320, 240, "MainCanvas");
-		
-		$("#btnStart").button().click(function(){
-			start();
-		});
-		$("#btnClear").button().click(function(){
-			console.clear("- Cleared -");
-		});
-		$("#btnHide").button().click(function(){
-			toggleConsole();
-		});
-	}
-
-	$(document).ready(function(){		
-		initialise();	
-		draw_stuffs();
-	});
-
-	var stext;
-
-	function draw_stuffs(){
-		dmrs_layer = canvas.addLayer("dmrs");
-		var a_flow = new HorizontalFlow(dmrs_layer);
-		stext = new VisualKopasu.SentenceText("sentence_text", sentence_text);
-		stext.highlight();
-		$.each(nodes, function(idx, node){			
-			(function(){
-				var a_node = dmrs_layer.draw_label(0,0,node.text);
-				a_node.info = node;
-				a_flow.addElement(a_node);
-				a_node.hover(
-					function(){ 
-						console.writeline("From: " + a_node.info.from + " - To: " + a_node.info.to);
-						//console.writeline(dump_array(stext.string_split(a_node.info.from, a_node.info.to)));
-						stext.highlight(a_node.info.from, a_node.info.to);
-					}
-					,function(){
-						// hover out
-					}
-				);
-			})();
-		});
-		a_flow.rearrange(15);
-		canvas.pack(20);
-	}
-
-	function toggleConsole(){
-		$("#console").toggle();
-		if($("#console").is(":visible")){
-			$("#btnHide").prop('value', "Hide Console");				
-		} 
-		else{
-			$("#btnHide").prop('value', "Show Console");
-		}
-	}
-
-	function start(){
-		console.writeline("Started doing something...");
-	}
-	</script>
-</head>
-<body>
-	<div id="banner" class="ui-widget-header ui-corner-all">Demo Template</div>
-	<div id="main_canvas"></div>
-
-	<div id="sentence_text" class="dmrs_sentence_text"></div>
-
-	<div id="toolbar" class="ui-corner-all">
-		<input type="button" id="btnStart" name="btnStart" value="Information"/>
-		<input type="button" id="btnClear" name="btnClear" value="Clear Console"/>
-		<span class="toolbar_label">A label</span>
-		<input type="button" id="btnHide" name="btnHide" value="Hide Console"/>
-	</div>
-
-	<div id="console" style="overflow: auto; max-height: 300px;"></div>
-</body>
+  <script type="text/javascript">
+   
+   dmrs1 = new function(){
+     // Nodes
+     //node1 = {"text": "Linux", "from": 0, "to": 5};
+     //node2 = {"text": "is", "from": 6, "to": 8};
+     var node_438116 = { 'text' : 'a', 'from' : 0, 'to' : 2, 'type' : 'realpred', 'link_count' : 1, 'tooltip' : [['pos:q']] };
+     var node_438117 = { 'text' : 'important', 'from' : 3, 'to' : 12, 'type' : 'realpred', 'link_count' : 1, 'tooltip' : [['pos:a','RP.sense:for','cvarsort:event'], ['sf:prop','tense:untensed','mood:indicative']] };
+     var node_438118 = { 'text' : 'trait', 'from' : 13, 'to' : 18, 'type' : 'realpred', 'link_count' : 4, 'tooltip' : [['pos:n','RP.sense:1','cvarsort:individual'], ['number:singular','pers:3','ind:plus']] };
+     var node_438119 = { 'text' : 'of', 'from' : 19, 'to' : 21, 'type' : 'realpred', 'link_count' : 2, 'tooltip' : [['pos:p','cvarsort:event','sf:prop']] };
+     var node_438120 = { 'text' : 'the', 'from' : 22, 'to' : 25, 'type' : 'realpred', 'link_count' : 1, 'tooltip' : [['pos:q']] };
+     var node_438121 = { 'text' : 'great', 'from' : 26, 'to' : 31, 'type' : 'realpred', 'link_count' : 1, 'tooltip' : [['pos:a','RP.sense:for','cvarsort:event'], ['sf:prop','tense:untensed','mood:indicative']] };
+     var node_438122 = { 'text' : 'generic_entity', 'from' : 32, 'to' : 36, 'type' : 'gpred', 'link_count' : 4, 'tooltip' : [['cvarsort:individual','number:plural','pers:3'], ['ind:plus']] };
+     var node_438123 = { 'text' : '2+', 'from' : 32, 'to' : 36, 'type' : 'carg', 'link_count' : 1, 'tooltip' : [['cvarsort:event','sf:prop','tense:untensed'], ['mood:indicative','prog:minus','perf:minus']] };
+     var node_438124 = { 'text' : 'be', 'from' : 37, 'to' : 39, 'type' : 'realpred', 'link_count' : 2, 'tooltip' : [['pos:v','RP.sense:id','cvarsort:event'], ['sf:prop','tense:pres','mood:indicative'], ['prog:minus','perf:minus']] };
+     var node_438125 = { 'text' : 'udef_q', 'from' : 40, 'to' : 62, 'type' : 'gpred', 'link_count' : 1, 'tooltip' : [] };
+     var node_438126 = { 'text' : 'constructive', 'from' : 40, 'to' : 52, 'type' : 'realpred', 'link_count' : 1, 'tooltip' : [['pos:a','RP.sense:1','cvarsort:event'], ['sf:prop','tense:untensed','mood:indicative']] };
+     var node_438127 = { 'text' : 'laziness', 'from' : 53, 'to' : 62, 'type' : 'realpred', 'link_count' : 3, 'tooltip' : [['pos:n','RP.sense:1','cvarsort:individual'], ['number:singular','pers:3','gend:n'], ['ind:minus']] };
+     
+     
+     // Links
+     //link1 = { "from": node1, "to": node2 };
+     var link_446289 = { 'from': node_438116, 'to': node_438118, 'post' : 'H', 'rargname' : '' }; 
+     var link_446290 = { 'from': node_438117, 'to': node_438118, 'post' : 'EQ', 'rargname' : '1' }; 
+     var link_446291 = { 'from': node_438119, 'to': node_438118, 'post' : 'EQ', 'rargname' : '1' }; 
+     var link_446292 = { 'from': node_438119, 'to': node_438122, 'post' : 'NEQ', 'rargname' : '2' }; 
+     var link_446293 = { 'from': node_438120, 'to': node_438122, 'post' : 'H', 'rargname' : '' }; 
+     var link_446294 = { 'from': node_438121, 'to': node_438122, 'post' : 'EQ', 'rargname' : '1' }; 
+     var link_446295 = { 'from': node_438123, 'to': node_438122, 'post' : 'EQ', 'rargname' : '1' }; 
+     var link_446296 = { 'from': node_438124, 'to': node_438118, 'post' : 'NEQ', 'rargname' : '1' }; 
+     var link_446297 = { 'from': node_438124, 'to': node_438127, 'post' : 'NEQ', 'rargname' : '2' }; 
+     var link_446298 = { 'from': node_438125, 'to': node_438127, 'post' : 'H', 'rargname' : '' }; 
+     var link_446299 = { 'from': node_438126, 'to': node_438127, 'post' : 'EQ', 'rargname' : '1' }; 
+     
+     
+     // Node array and Link array
+     //nodes = [ node1, node2 ];
+     //links = [ link1 ];
+     this.nodes = [ node_438116, node_438117, node_438118, node_438119, node_438120, node_438121, node_438122, node_438123, node_438124, node_438125, node_438126, node_438127 ];
+     this.links = [ link_446289, link_446290, link_446291, link_446292, link_446293, link_446294, link_446295, link_446296, link_446297, link_446298, link_446299 ];
+     
+     this.sentence_text = 'An important trait of the great ones is constructive laziness.';
+   }
+  </script>
+  
+  <script>
+   var console;
+   var canvas;
+   
+   function initialise(){
+     // Create a console
+     console = new Console("console");
+     console.writeline("- Test Console -");
+     
+     canvas = new Canvas("main_canvas", 320, 240, "MainCanvas");
+     
+     $("#btnStart").button().click(function(){
+       start();
+     });
+     $("#btnClear").button().click(function(){
+       console.clear("- Cleared -");
+     });
+     $("#btnHide").button().click(function(){
+       toggleConsole();
+     });
+   }
+   
+   $(document).ready(function(){       
+     initialise();   
+     draw_stuffs();
+   });
+   
+   var stext;
+   
+   function draw_stuffs(){
+     dmrs_layer = canvas.addLayer("dmrs");
+     var a_flow = new HorizontalFlow(dmrs_layer);
+     stext = new VisualKopasu.SentenceText("sentence_text", sentence_text);
+     stext.highlight();
+     $.each(dmrs1.nodes, function(idx, node){          
+       (function(){
+         var a_node = dmrs_layer.draw_label(0,0,node.text);
+         a_node.info = node;
+         a_flow.addElement(a_node);
+         a_node.hover(
+           function(){ 
+             console.writeline("From: " + a_node.info.from + " - To: " + a_node.info.to);
+             stext.highlight(a_node.info.from, a_node.info.to);
+           }
+           ,function(){
+             // hover out
+           }
+         );
+       })();
+     });
+     a_flow.rearrange(15);
+     canvas.pack(20);
+   }
+   
+   function toggleConsole(){
+     $("#console").toggle();
+     if($("#console").is(":visible")){
+       $("#btnHide").prop('value', "Hide Console");                
+     } 
+     else{
+       $("#btnHide").prop('value', "Show Console");
+     }
+   }
+   
+   function start(){
+     console.writeline("Started doing something...");
+   }
+  </script>
 </html>

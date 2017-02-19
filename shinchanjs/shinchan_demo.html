@@ -2,15 +2,91 @@
           "http://www.w3.org/TR/html4/loose.dtd">
 <html>
   <head>
-    <title>Layers demo</title>
-    <script src="js/jquery-1.8.2.js"></script>
-    <script src="js/raphael-min.js"></script>
-    <script src="js/kajika.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="DMRS Visualisation - Version 0.3.1">
+    <meta name="author" content="Le Tuan Anh <tuananh.ke@gmail.com">
+    <link rel="icon" href="../../favicon.ico">
+    <!-- Title and styles -->
+    <title>ShinchanJS Showcase</title>
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Visko -->
+    <link rel="stylesheet" href="css/visko2.css" />
+  </head>
+  
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="shinchan_demo.html">ShinchanJS showcases</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="index_home.html">Home</a></li>
+          </ul>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
+
+    <div style="padding: 60px 20px;">
+      <div class="row">
+        <div class="col-md-6">
+          <!-- Left column -->
+          <h1>ShinchanJS showcase</h1>
+          <div id="main_canvas"></div>
+          <br/>
+          <input type="button" class="btn btn-default" id="btnLeft" name="btnLeft" value="Left"/>
+          <input type="button" class="btn btn-default" id="btnUp" name="btnUp" value="Up"/>
+          <input type="button" class="btn btn-default" id="btnDown" name="btnDown" value="Down"/>
+          <input type="button" class="btn btn-default" id="btnRight" name="btnRight" value="Right"/>
+          - Speed: <input type="text" id="txtSpeed" name="txtSpeed" value="10"/>
+          
+          <div id="holder1"></div>
+          <div id="holder2"></div>
+          
+          <input type="button" id="btn1" name="btn1" class="btn btn-default" value="Expand"/>
+          <input type="button" id="btn2" name="btn2" class="btn btn-default" value="Collapse"/>
+          <!-- End DMRS column -->
+        </div>
+        <div class="col-md-6">
+          <!-- Control Panel and Console -->
+          <div id="toolbar" style="padding: 20px;">
+            <div class="row">
+              <button type="button" id="btnInfo" name="btnInfo" class="btn btn-primary">Information</button>
+              <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
+              <button type="button" id="btnHide" name="btnHide" class="btn btn-default">Hide Console</button>  
+            </div>
+          </div>
+          <div id="console" style="overflow: auto; max-height: 80vh;"></div>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; 2012-2017 Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</p>
+      </footer>
+    </div> <!-- /container -->
+    
+    <!-- Bootstrap -->
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- ShinchanJS scripts -->
+    <script src="js/raphael.js"></script>
     <script src="js/console.js"></script>
     <script src="js/shinchan.js"></script>
     <script src="js/shinchan.debug.js"></script>
+    <script src="js/visko-2.0.js"></script>
+    <script src="js/kajika.js"></script>
     <script>
-     var console;
      var canvas;
      var paper1;
      var paper2;
@@ -23,10 +99,6 @@
      }
      
      function initialise(){
-       // Create a console
-       console = new Console("console");
-       console.writeline("- Test Console -");
-       
        // Create canvas
        canvas = new ChibiJS.ShinChan.Canvas("main_canvas", 320, 240);	
        paper1 = new ChibiJS.ShinChan.Canvas("holder1", 50, 25);
@@ -75,8 +147,8 @@
        $('[name="btnRight"]').click(function(){ layer1.translate(getSpeed(),0); return false; });
        $('[name="btnUp"]').click(function(){ layer1.translate(0,-getSpeed()); return false; });
        $('[name="btnDown"]').click(function(){ layer1.translate(0,getSpeed()); return false; });		
-       $('[name="btnStart"]').click(function(){
-	 console.clear("- Test Console -");
+       $('#btnInfo').click(function(){
+	 clear_console();
 	 displayInformation();
        });
        
@@ -90,10 +162,10 @@
 	 paper1.resize(25,50);
 	 paper2.resize(50,25);
        });
-       $("#btnClear").click(function(){ console.clear("- Test Console -"); });
      }
      
-     $(document).ready(function(){		
+     $(document).ready(function(){
+       init_console();
        initialise();
        background = canvas.addLayer("Background");
        c = background.draw_circle(50,50, 20, "BALL").fill("yellow").toBack().stroke("- ");
@@ -133,29 +205,51 @@
        }
        
        canvas.pack(20);
-       displayInformation();
+       // displayInformation();
      });
     </script>
-  </head>
-  <body>
-    <h1>Test ShinChan library</h1>
-    <div id="main_canvas"></div>
-    <input type="button" id="btnStart" name="btnStart" value="Information"/>
-    <input type="button" id="btnClear" name="btnClear" value="Clear"/>
-    <br/>
-    <input type="button" id="btnLeft" name="btnLeft" value="Left"/>
-    <input type="button" id="btnUp" name="btnUp" value="Up"/>
-    <input type="button" id="btnDown" name="btnDown" value="Down"/>
-    <input type="button" id="btnRight" name="btnRight" value="Right"/>
-    - Speed: <input type="text" id="txtSpeed" name="txtSpeed" value="10"/>
     
-    <div id="holder1"></div>
-    <div id="holder2"></div>
-    
-    <input type="button" id="btn1" name="btn1" value="Expand"/>
-    <input type="button" id="btn2" name="btn2" value="Collapse"/>
-    
-    
-    <div id="console"></div>
+    <!-- Console support -->
+    <script>
+     var console;
+
+     function init_console(){
+       // Console support
+       console = new Console("console");
+       $("#btnClear").click(clear_console);
+       $("#btnHide").click(toggleConsole);
+       clear_console();
+       update_console();
+     }
+     
+     $(window).on('resize', function(){
+       update_console();
+     });
+
+     function toggleConsole(){
+       $("#console").toggle();
+       if($("#console").is(":visible")){
+         $("#btnHide").prop('value', "Hide Console");                
+       } 
+       else{
+         $("#btnHide").prop('value', "Show Console");
+       }
+     }
+     
+     function update_console(){
+       var ch = $(window).height() - 160;
+       if (ch < 300){
+         ch = 300;
+       }
+       $("#console").height(ch);
+       $("#console").css('max-height', ch);
+       //console.writeline("Window's height: " + $(window).height());
+     }
+
+     function clear_console() {
+       console.clear("Synset Demo");
+       console.writeline();
+     }
+    </script>
   </body>
 </html>

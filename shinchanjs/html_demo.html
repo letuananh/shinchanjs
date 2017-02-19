@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+          "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="HTML Demo">
+    <meta name="author" content="Le Tuan Anh <tuananh.ke@gmail.com">
+    <link rel="icon" href="../../favicon.ico">
+    <!-- Title and styles -->
+    <title>HTML Demo</title>
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/visko2.css" />
+  </head>
+  
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="html_demo.html">HTML Demo</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
+
+    <div style="padding: 60px 20px;">
+      <div class="row">
+        <div class="col-md-6">
+          <!-- Left column -->
+          <div id="article"></div>
+          <h1>Synset Information</h1>
+          <table id="sinfo" class="table table-condensed">
+            <thead>
+              <tr>
+                <th>SynsetID</th>
+                <th>Definition</th>
+                <th>Examples</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-6">
+          <!-- Right column (for console) -->
+          <div id="toolbar" class="ui-corner-all" style="padding: 10px;">
+            <input type="button" class="btn btn-primary" id="btnLoadArticle" name="btnLoadArticle" value="Load Article"/>
+            <input type="button" class="btn btn-primary" id="btnLoadSynset" name="btnLoadSynset" value="Load Synset"/>
+            <input type="button" class="btn btn-primary" id="btnLoadAJAX" name="btnLoadAJAX" value="Load JSONP"/>
+            <input type="button" class="btn btn-default" id="btnDebug" name="btnDebug" value="Debug"/>
+            <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
+            <button type="button" id="btnHide" name="btnHide" class="btn btn-default">Hide Console</button>
+          </div>
+          <div id="console" style="overflow: auto; max-height: 80vh;"></div>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; 2012-2017 Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</p>
+      </footer>
+    </div> <!-- /container -->
+       
+    <!-- Bootstrap core JavaScript
+         ================================================== -->
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- ShinchanJS scripts -->
+    <script src="js/raphael.js"></script>
+    <script src="js/console.js"></script>
+    <script src="js/shinchan.js"></script>
+    <script src="js/shinchan.debug.js"></script>
+    <script src="js/visualisation_v3.js"></script>
+
+    <script>
+     function load_article() {
+       $("#article").load("ajax/ajax.html");
+     }
+
+     function load_ajax() {
+       console.writeline("Load remote content");
+       var u = "http://127.0.0.1:5000/yawol/synset/01775164-v";
+       console.writeline("Fetching " + u);
+       $.ajax({url: u, dataType: 'jsonp'})
+        .done(function(json){
+          console.writeline("Done " + JSON.stringify(json));
+        })
+        .fail(function(err){
+          console.writeline("Fail " + err.status + " | " + err.message);
+        });
+     }
+     
+     function load_synset() {
+       // Demo load synset information using AJAX and JSON
+       var ssurl = "ajax/01775164-v.json";
+       console.writeline("Loading synset information from: " + ssurl);
+       $.getJSON(ssurl)
+        .done(function(synset) {
+          $("#sinfo tbody").append("<tr>" +
+                                   "<td>" + synset.synsetid + "</td>" +
+                                   "<td>" + synset.definition + "</td>" +
+                                   "<td>" + synset.examples + "</td>" +
+                                   "</tr>");
+          dump_synset(synset);
+        })
+        .fail(function( jqxhr, textStatus, error ) {
+          var err = textStatus + ", " + error;
+          console.writeline( "Request Failed: " + err );
+        });
+     }
+
+     function dump_synset(synset) {
+       console.writeline("Synset ID : " + synset.synsetid);
+       console.writeline("Definition: " + synset.definition);
+       console.writeline("Examples  : ");
+       $.each(synset.examples, function(idx, val){
+         console.writeline("  + " + val);
+       });
+
+     }
+     
+     function show_info() {
+       console.writeline("HTML Demo");
+     }
+     
+     var console;
+
+     $(window).on('resize', function(){
+       update_console();
+     });
+
+     function toggleConsole(){
+       $("#console").toggle();
+       if($("#console").is(":visible")){
+         $("#btnHide").prop('value', "Hide Console");                
+       } 
+       else{
+         $("#btnHide").prop('value', "Show Console");
+       }
+     }
+     
+     function update_console(){
+       var ch = $(window).height() - 130;
+       if (ch < 300){
+         ch = 300;
+       }
+       $("#console").height(ch);
+       $("#console").css('max-height', ch);
+       //console.writeline("Window's height: " + $(window).height());
+     }
+     
+     $(document).ready(function(){       
+       initialise();
+     });
+
+     function initialise(){
+       // Create a console
+       console = new Console("console");
+       console.writeline(" - DMRS Visualisation Version 0.3 - ");
+
+       update_console();       
+       $("#btnLoadArticle").click(function(){
+         load_article();
+       });
+       $("#btnLoadSynset").click(function(){
+         load_synset();
+       });
+       $("#btnLoadAJAX").click(function(){
+         load_ajax();
+       });
+       $("#btnDebug").click(function(){
+         console.clear(" - DMRS Visualisation Version 0.3 - ");
+         show_info();
+       });
+       $("#btnClear").click(function(){
+         console.clear(" - DMRS Visualisation Version 0.3 - ");
+       });
+       $("#btnHide").click(function(){
+         toggleConsole();
+       });
+     }     
+    </script>        
+  </body>
+</html>
