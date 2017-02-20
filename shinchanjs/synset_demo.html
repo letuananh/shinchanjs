@@ -40,7 +40,7 @@
       <div class="row">
         <div class="col-md-6">
           <!-- Search box -->
-          <form style="padding: 20px 3px;">
+          <form style="padding: 20px 3px;" action="#">
             <div class="row">
               <div class="input-group input-group-lg">
                 <input class="form-control input-lg" name="query" id="query" placeholder="01775164-v or love or love%2:37:00::" value="01775164-v" type="text">
@@ -93,7 +93,7 @@
     <script src="js/visko-2.0.js"></script>
     <!-- Yawol client -->
     <script src="js/yawol.js"></script>
-    <!-- Yawol support -->
+    <!-- Yawol synsetbox template -->
     <script type="text/template" id="synsetbox_template">
      <div class="synsetbox container-fluid well">
      <div class="row">
@@ -143,6 +143,7 @@
      </div>
      </div>
     </script>
+    <!-- Yawol client helper functions -->
     <script>
      var yawol;
 
@@ -155,9 +156,7 @@
        }
        return yawol;
      }
-    </script>
-    <!-- Document ready -->
-    <script>
+
      function do_search_local() {
        var synsetid = $('#query').val();
        get_yawol().load_synset(synsetid);
@@ -167,20 +166,25 @@
        var synsetid = $('#query').val();
        get_yawol().search_synset(synsetid);
      }
+    </script>
+    <!-- Document ready -->
+    <script>
      
      $(document).ready(function(){       
        initialise();   
      });
 
      function initialise(){
-       // Console support
-       console = new Console("console");
-       $("#btnClear").click(clear_console);
-       $("#btnHide").click(toggleConsole);
-       clear_console();
-       update_console();
+       init_console();
        $('#synset_info').hide();
 
+       $('#query').keydown(function(e) {
+         if (e.keyCode == 13) {
+           do_search();
+           return false;
+         }
+       });
+       
        // Synset related features
        $("#btnSearch").click(function(){do_search();});
        $("#btnSearchLocal").click(function(){do_search_local();});
@@ -190,6 +194,15 @@
     <script>
      var console;
 
+     function init_console() {
+       // Console support
+       console = new Console("console");
+       $("#btnClear").click(clear_console);
+       $("#btnHide").click(toggleConsole);
+       clear_console();
+       update_console();
+     }
+     
      $(window).on('resize', function(){
        update_console();
      });

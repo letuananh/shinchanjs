@@ -13,13 +13,22 @@
  * along with VisualKopasu. If not, see http://www.gnu.org/licenses/.
  **/
 
-Yawol = function(container_id, root, synsetbox_template) {
+Yawol = function(container_id, yawol_root, synsetbox_template, local_url) {
     this._template = _.template(synsetbox_template);
-    this._root = (root == undefined) ? 'http://127.0.0.1:5000/yawol/' : root;
+    this._yawol_root = (yawol_root == undefined) ? "http://127.0.0.1:5000/yawol/" : yawol_root;
+    this._local_url = _.template((local_url == undefined) ? 'ajax/<%=synsetid%>.json' : local_url);
     this._container = $("#" + container_id);
 }
 
 Yawol.prototype = {
+    /*
+     * Load synset template box
+     */
+    load_template: function (template) {
+        this._template = _.template(template);
+        return this;
+    },
+    
     /* 
      * Display a synset to a synsetbox
      */
@@ -41,7 +50,7 @@ Yawol.prototype = {
             this._container.empty();
         }
         // Add a synsetbox
-        console.writeline(JSON.stringify(synset));
+        console.writeline("Synset JSON retrieved: " + JSON.stringify(synset));
         this.build_synsetbox(synset);
     },
     
@@ -65,7 +74,7 @@ Yawol.prototype = {
     load_synset: function(synsetid) {
         // Load and display synset
         var _yawol = this;
-        var ssurl = "ajax/" + synsetid + ".json";
+        var ssurl = this._local_url({synsetid: synsetid});
         console.header("Fetching from: " + ssurl);
         $.getJSON(ssurl)
             .done(function(json){
@@ -76,14 +85,14 @@ Yawol.prototype = {
     
     /** Search synset (remote or local) **/
     search_synset: function(query) {
-        var url = this._root + 'search/' + query;
+        var url = this._yawol_root + 'search/' + query;
         this._search_synset_ajax(url);
     },
     
     /** Log error msg **/
-    fail: function(jqxhr, textStatus, error) {
+    fail: function(jqxhr) {
         if (console != undefined && console.writeline != undefined) {
-            console.writeline( "Request Failed: " + textStatus + ", " + error);
+            console.writeline( "Request Failed: " + jqxhr.statusText + " | code = " + jqxhr.status);
         }
     }       
 }
