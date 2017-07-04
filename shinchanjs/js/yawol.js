@@ -67,6 +67,15 @@ Yawol.prototype = {
             })
             .fail(_yawol.fail);
     },
+
+    /** Load a synset using AJAX/JSONP **/
+    version: function(callback) {
+        var url = this._yawol_root + 'version';
+        console.header("Accessing: " + url);
+        $.ajax({url: url, dataType: 'jsonp'})
+            .done(callback)
+            .fail(_yawol.fail);
+    },
     
     /*
      * Load a synset (same server)

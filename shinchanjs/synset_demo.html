@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="DMRS Visualisation - Version 0.3.1">
+    <meta name="description" content="Yawol demo client - Version 0.3.1">
     <meta name="author" content="Le Tuan Anh <tuananh.ke@gmail.com">
     <link rel="icon" href="../../favicon.ico">
     <!-- Title and styles -->
@@ -62,6 +62,9 @@
               <div class="input-group input-group-sm">
                 <span class="input-group-addon">Yawol URL</span>
                 <input class="form-control input-lg" name="yawol_url" id="yawol_url" placeholder="http://127.0.0.1:5000/yawol/" value="http://127.0.0.1:5000/yawol/" type="text">
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" name="btnPing" id="btnPing" value="parse">Ping Server</button>
+                </span>
               </div>
             </div>
             <div class="row">
@@ -166,6 +169,13 @@
        var synsetid = $('#query').val();
        get_yawol().search_synset(synsetid);
      }
+
+     function ping_server() {
+       get_yawol().version(function(json){
+         console.writeline("Product: " + json.product + " " + json.version);
+         console.writeline("Server:  " + json.server);
+       });
+     }
     </script>
     <!-- Document ready -->
     <script>
@@ -188,6 +198,7 @@
        // Synset related features
        $("#btnSearch").click(function(){do_search();});
        $("#btnSearchLocal").click(function(){do_search_local();});
+       $('#btnPing').click(function(){ping_server();});
      }     
     </script>
     <!-- Console support -->
