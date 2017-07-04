@@ -61,9 +61,18 @@
             <div class="row" style="padding: 10px 0px;">
               <div class="input-group input-group-sm">
                 <span class="input-group-addon">Yawol URL</span>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Server
+                  </button>
+                  <ul class="dropdown-menu" id="servers">
+                    <li><a>Django</a></li>
+                    <li><a>Flask</a></li>
+                  </ul>
+                </span>
                 <input class="form-control input-lg" name="yawol_url" id="yawol_url" placeholder="http://127.0.0.1:5000/yawol/" value="http://127.0.0.1:5000/yawol/" type="text">
                 <span class="input-group-btn">
-                  <button type="button" class="btn btn-default" name="btnPing" id="btnPing" value="parse">Ping Server</button>
+                  <button type="button" class="btn btn-primary" name="btnPing" id="btnPing" value="parse">Ping Server</button>
                 </span>
               </div>
             </div>
@@ -199,6 +208,15 @@
        $("#btnSearch").click(function(){do_search();});
        $("#btnSearchLocal").click(function(){do_search_local();});
        $('#btnPing').click(function(){ping_server();});
+       $('#servers').on('click' ,'li a', function(){
+         var server = $(this).text();
+         if (server == 'Django'){
+           $('#yawol_url').val('http://127.0.0.1:8000/yawol/');
+         }
+         else if (server == 'Flask'){
+           $('#yawol_url').val('http://127.0.0.1:5000/yawol/');
+         }
+       });
      }     
     </script>
     <!-- Console support -->
