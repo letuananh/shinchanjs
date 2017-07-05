@@ -50,14 +50,14 @@ Yawol.prototype = {
             this._container.empty();
         }
         // Add a synsetbox
-        console.writeline("Synset JSON retrieved: " + JSON.stringify(synset));
+        // console.writeline("Synset JSON retrieved: " + JSON.stringify(synset));
         this.build_synsetbox(synset);
     },
     
     /** Load a synset using AJAX/JSONP **/
     _search_synset_ajax: function(url) {
         var _yawol = this;
-        console.header("Fetching from: " + url);
+        // console.header("Fetching from: " + url);
         $.ajax({url: url, dataType: 'jsonp'})
             .done(function(json){
                 _yawol.clear();
@@ -71,7 +71,7 @@ Yawol.prototype = {
     /** Load a synset using AJAX/JSONP **/
     version: function(callback) {
         var url = this._yawol_root + 'version';
-        console.header("Accessing: " + url);
+        // console.header("Accessing: " + url);
         $.ajax({url: url, dataType: 'jsonp'})
             .done(callback)
             .fail(_yawol.fail);
@@ -84,7 +84,7 @@ Yawol.prototype = {
         // Load and display synset
         var _yawol = this;
         var ssurl = this._local_url({synsetid: synsetid});
-        console.header("Fetching from: " + ssurl);
+        // console.header("Fetching from: " + ssurl);
         $.getJSON(ssurl)
             .done(function(json){
                 _yawol.display_synset(json, true);
