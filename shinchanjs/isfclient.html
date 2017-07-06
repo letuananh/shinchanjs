@@ -212,7 +212,7 @@
      }
 
      function clear_console() {
-       console.clear("VisualKopasu/DMRS Visualisation - Version 2.0");
+       console.clear("CoolISF REST Client - Version 0.1");
        console.writeline();
      }
     </script>
@@ -220,15 +220,16 @@
     <!-- DMRS related scripts -->
     <script>
      
-     function clearDMRS(){
-       console.writeline("Clear");
-     }
-     
-     function showDMRS(){
-       console.writeline("Render");
-     }
+     function clear_parses(){
+       $('#dmrses').empty();
+       $('#raws').empty();
+     }   
 
      var json_raw = _.template('<pre><code id="dmrs<%=pid%>_json"><%=json%></code></pre>');
+
+     /**
+      * Render a parse
+      **/
      function render_json(parse, parseid, container, raw_container){
        if (parseid == undefined) { parseid = 1; }
        if (container == undefined) { container = 'dmrses'; }
@@ -253,24 +254,28 @@
        var div_raw = $(json_raw({'pid': parseid, 'json': JSON.stringify(parse)}));
        $('#' + raw_container).append(div_raw);
      }
-     
-     /** Show debug info **/
-     function debug() {
-       console.writeline("Debug");
+
+     /** Parse a sentence using RESTful **/
+     function do_parse() {
+       var sent = $('#input_sentence').val();
+       console.header("Sentence: " + sent);
+       console.writeline("Server is processing. Please wait ...");
        $.ajax({
          url: 'http://localhost:8000/restisf/parse/',
          dataType: 'jsonp',
          data: {
-           'sent': $('#input_sentence').val(),
+           'sent': sent,
 	   'parse_count': $('#input_results').val(),
-	   'tagger': 'tagger',
+	   'tagger': 'LELESK',
 	   'grammar': 'ERG'
          },
          success: function(json){
-	   console.writeline("Reveiced data: " + JSON.stringify(json));
+           // Clear previous parses first
+           clear_parses();
+	   console.writeline("Raw response: " + JSON.stringify(json));
 	   $(json['parses']).each(function(idx, parse){
 	     pid = idx + 1;
-	     console.writeline("Parse #" + pid + " json: " + JSON.stringify(parse));
+	     // console.writeline("Parse #" + pid + " json: " + JSON.stringify(parse));
 	     render_json(parse, pid);  
 	   });
          },
@@ -279,17 +284,16 @@
          }
        });
      }
-
-     /** Parse a sentence using RESTful **/
-     function do_parse() {
-       debug();
-     }          
-        </script>
+     
+     /** Show debug info **/
+     function debug() {
+       console.writeline("Debug");
+     }
+    </script>
     <!-- Document ready -->
     <script>
      $(document).ready(function(){       
-       initialise();   
-       // draw_dmrs();
+       initialise();
      });
 
      function initialise(){
@@ -303,11 +307,7 @@
        
        $("#btnDebug").click(debug);
        $("#btnClearCanvas").click(function(){
-         clearDMRS();
-       });
-       $("#btnRenderDMRS").click(function(){
-         clearDMRS(); // Don't display it twice
-         showDMRS();
+         clear_parses();
        });
        $("#btnParse").click(function(){
          do_parse();
