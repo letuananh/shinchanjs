@@ -1,0 +1,465 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+          "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Coolisf - REST client 0.2">
+    <meta name="author" content="Le Tuan Anh <tuananh.ke@gmail.com">
+    <link rel="icon" href="../../favicon.ico">
+    <!-- Title and styles -->
+    <title>Coolisf - REST client 0.2</title>
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Visko -->
+    <link rel="stylesheet" href="css/visko2.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="viz/demo.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="viz/delphin-viz.css"/>
+    <link rel="stylesheet" href="highlight.js/styles/github.css">
+
+  </head>
+  
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="isfclient2.html">CoolISF - REST client 0.2</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="index.html">Home</a></li>
+          </ul>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
+    
+    <div style="padding: 60px 20px;">
+      
+      <!-- Parsing Form -->
+      <form>
+        <div class="input-group input-group-lg">
+          <input class="form-control input-lg" name="input_sentence" id="input_sentence" placeholder="Some dogs bark." value="Some dogs barked." type="text">
+          <span class="input-group-addon">Parse Count</span>
+          <select id="input_results" name="input_results" class="form-control input-small" title="Maximum parses">
+            <option value="1">1</option>
+            <option value="5" selected="">5</option>
+            <option value="10">10</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="500">500</option>
+          </select>
+          <span class="input-group-btn">
+            <button class="btn btn-default btn-lg" name="btnParse" type="button" id="btnParse" value="cached">Parse</button>
+          </span>
+        </div>
+      </form>
+
+      <div class="dmrs_sentence_text">Parse count: <span id="parse_count">0</span></div>
+      <div id="sentence_text" class="dmrs_sentence_text"></div>
+
+      <!-- Synset Information -->
+      <div id="synsets"></div>
+
+      <ul id="alltabs" class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#visko">DMRS</a></li>
+        <li><a data-toggle="tab" href="#delviz">delphin-viz</a></li>
+        <li><a data-toggle="tab" href="#raw">pyDelphin</a></li>
+        <li><a data-toggle="tab" href="#xml">XML</a></li>
+        <li><a data-toggle="tab" href="#json">JSON</a></li>
+        <li><a data-toggle="tab" href="#debug">Debug</a></li>
+      </ul>
+      <div class="tab-content">
+        <div id="visko" class="tab-pane active">
+          <div style="overflow-y: auto; height: 600px;">
+            <!-- DMRSes container -->
+	    <div id="dmrses"></div>
+          </div>
+        </div>
+        <div id="delviz" class="tab-pane">
+          <!-- Delphin-viz container -->
+          <div id="dvizes"></div>
+        </div>
+        <div id="raw" class="tab-pane">
+          <div id="raws"></div>
+        </div>
+        <div id="xml" class="tab-pane">
+          <pre><code id="xmlcontent"></code></pre>
+        </div>
+        <div id="json" class="tab-pane">
+          <div id="jsons"></div>
+        </div>
+        <div id="debug" class="tab-pane">
+          <!-- Control Panel and Console -->
+          <div id="toolbar" class="input-group" style="padding: 10px 0px;">
+	    <div class="input-group-btn">
+              <input type="button" class="btn btn-primary" id="btnClearCanvas" name="btnClearCanvas" value="Reset"/>
+              <input type="button" class="btn btn-default" id="btnDebug" name="btnDebug" value="Debug"/>
+              <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
+              <!-- <button type="button" id="btnHide" name="btnHide" class="btn btn-default">Hide Console</button> -->
+	    </div>
+          </div>
+          <div id="console" style="overflow: auto; max-height: 80vh;"></div>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; 2012-2017 Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</p>
+      </footer>
+    </div> <!-- /container -->
+       
+    <!-- Bootstrap -->
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Lodash -->
+    <script src="js/lodash.min.js"></script>
+    <script src="highlight.js/highlight-9.9.0.js"></script>
+    <!-- ShinchanJS scripts -->
+    <script src="js/raphael.js"></script>
+    <script src="js/console.js"></script>
+    <script src="js/shinchan.js"></script>
+    <script src="js/shinchan.debug.js"></script>
+    <script src="js/visko-2.0.js"></script>
+    <!-- Delphin-viz support-->
+    <!-- script type="text/javascript" src="viz/lodash-4.11.2.min.js"></script-->
+    <script type="text/javascript" src="viz/svg-2.3.0.min.js"></script>
+    <script type="text/javascript" src="viz/d3.v3.min.js"></script>
+    <script type="text/javascript" src="viz/demo.js"></script>
+    <script type="text/javascript" src="viz/tree.js"></script>
+    <script type="text/javascript" src="viz/mrs.js"></script>
+    <script type="text/javascript" src="viz/dmrs.js"></script>
+
+    <!-- Yawol client -->
+    <script src="js/yawol.js"></script>
+    <!-- Yawol support -->
+    <script type="text/template" id="synsetbox_template">
+     <div class="synsetbox container-fluid well">
+     <div class="row">
+     <div class="col-xs-12">
+      <button type="button" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+     </div>
+     </div>
+     <div class="row">
+     <div class="col-xs-12 col-sm-2 col-md-2">
+      <label>SynsetID</label>
+     </div>
+     <div class="col-xs-12 col-sm-2 col-md-2">
+      <span class="synsetid"><%= synset.synsetid %></span>                
+     </div>
+     <div class="col-xs-12 col-sm-2 col-md-2">
+      <label>Lemmas</label> <span class="lemma"></span>
+     </div>
+     <div class="col-xs-12 col-sm-6 col-md-6">
+      <span class="lemmas"><%= _.join(synset.lemmas, ', ') %></span>
+     </div>
+     </div>
+     <div class="row">
+     <div class="col-xs-12 col-md-2">
+      <label>Definition</label>
+     </div>
+     <div class="col-xs-12 col-md-10">
+      <span class="definition"><%= synset.definition %></span>
+     </div>
+     </div>
+     <div class="row">
+     <div class="col-xs-12 col-md-2">
+      <label>Examples</label>
+     </div>
+     <div class="col-xs-12 col-md-10">
+       <span class="examples">
+         <% if(synset.examples.length > 0) {  %>
+         <ul>
+           <% _.each(synset.examples, function(ex){ %>
+           <li><%= ex %></li>
+           <% }); %>
+         </ul>
+         <% } %>    
+       </span>
+     </div>
+     </div>
+     </div>
+    </script>
+    <script>
+     var yawol;
+     var yawol_root = 'http://localhost:8000/yawol/';
+
+     function get_yawol() {
+       var yawol = undefined;
+       if (yawol == undefined) {
+         yawol = new Yawol("synsets", yawol_root, $("#synsetbox_template").html());
+       }
+       return yawol;
+     }
+
+     /** Sample synset link builder **/
+     function find_synset(synsetid) {
+       return function(){ 
+         get_yawol().search_synset(synsetid);
+       };
+     }
+    </script>
+    <!-- Console support -->
+    <script>
+     var console;
+
+     $(window).on('resize', function(){
+       update_console();
+     });
+
+     function toggleConsole(){
+       $("#console").toggle();
+       if($("#console").is(":visible")){
+         $("#btnHide").text("Hide Console");                
+       } 
+       else{
+         $("#btnHide").text("Show Console");
+       }
+     }
+     
+     function update_console(){
+       var ch = $(window).height() - 130;
+       if (ch < 300){
+         ch = 300;
+       }
+       $("#console").height(ch);
+       $("#console").css('max-height', ch);
+       //console.writeline("Window's height: " + $(window).height());
+     }
+
+     function clear_console() {
+       console.clear("CoolISF REST Client - Version 0.1");
+       console.writeline();
+     }
+    </script>
+    <!-- Delphin-viz support -->
+    <script>
+     // delphin-viz visualisation
+     function render_delviz(parse, parseid, container){
+       if (parseid == undefined) { parseid = 1; }
+       if (container == undefined) { container = 'dvizes'; }
+
+       // Update sentence text
+       // var vizdivtext = $('#sentence_text');
+       // vizdivtext.text(text);
+
+       // Add parse header
+       var div_parse = $('<h3></h3>');
+       div_parse.text('Parse #' + parseid);
+       div_parse.attr('id', 'parse' + parseid);
+       $('#' + container).append(div_parse);
+       // Visualize dmrs
+       var dviz_dmrs = $('<div></div>');
+       dviz_dmrs.attr('id', 'dviz_dmrs' + parseid);
+       $('#' + container).append(dviz_dmrs);
+       var $viz = $(Templates.viz({vizType:'dmrs'})).appendTo(dviz_dmrs);
+       dmrs = DMRS(dviz_dmrs[0], parse.dmrs);
+       // Visualize mrs
+       var dviz_mrs = $('<div></div>');
+       dviz_mrs.attr('id', 'dviz_mrs' + parseid);
+       $('#' + container).append(dviz_mrs);
+       var $viz = $(Templates.viz({vizType:'mrs'})).appendTo(dviz_mrs);
+       mrs = MRS(dviz_mrs[0], parse.mrs, $('#input_sentence'), $('#sentence_text'));
+     }
+    </script>
+    <!-- ISF REST Client -->
+    <script>
+     var restisf_root = 'http://localhost:8000/restisf/parse/';
+     var response = undefined;
+     
+     function clear_parses() {
+       $('#dmrses').empty();
+       $('#jsons').empty();
+       $('#dvizes').empty();
+       response = undefined;
+     }   
+
+     var json_raw = _.template('<pre><code id="dmrs<%=pid%>_json"><%=json%></code></pre>');
+
+     /**
+      * Render a parse
+      **/
+     function render_visko(parse, parseid, container){
+       if (parseid == undefined) { parseid = 1; }
+       if (container == undefined) { container = 'dmrses'; }
+       // Create a h2 for canvas
+       var div_parse = $('<h3></h3>');
+       div_parse.text('Parse #' + parseid);
+       div_parse.attr('id', 'parse' + parseid);
+       $('#' + container).append(div_parse);
+       // Create a div for canvas
+       var div_canvas = $('<div></div>');
+       div_canvas.attr('id', 'dmrs' + parseid + '_canvas');
+       $('#dmrses').append(div_canvas);
+       dmrs_visko = json2visko(parse, find_synset);
+       var dmrs_canvas = new VisualKopasu.DMRSCanvas(dmrs_visko, 'dmrs' + parseid + '_canvas', 'sentence_text');
+       dmrs_canvas.visualise();
+     }
+
+     function display_xml(content) {
+       $('#xmlcontent').text(content);
+       highlight('#xml');
+     }
+
+     function display_raw(parse, parseid, container){
+       if (container == undefined) { container = 'raws'; }
+       // Header
+       var div_rparse = $('<h3></h3>');
+       div_rparse.text('Parse #' + parseid);
+       div_rparse.attr('id', 'rparse' + parseid);
+       $('#' + container).append(div_rparse);
+       // MRS JSON
+       $('#' + container).append($('<h4>MRS</h4>'));
+       var div_raw = $(json_raw({'pid': parseid, 'json': parse.mrs_raw}));
+       $('#' + container).append(div_raw);
+       // DMRS JSON
+       $('#' + container).append($('<h4>DMRS</h4>'));
+       var div_raw = $(json_raw({'pid': parseid, 'json': parse.dmrs_raw}));
+       $('#' + container).append(div_raw);
+     }
+
+     function display_json(parse, parseid, container){
+       if (container == undefined) { container = 'jsons'; }
+       // Header
+       var div_rparse = $('<h3></h3>');
+       div_rparse.text('Parse #' + parseid);
+       div_rparse.attr('id', 'rparse' + parseid);
+       $('#' + container).append(div_rparse);
+       // MRS JSON
+       $('#' + container).append($('<h4>MRS</h4>'));
+       var div_raw = $(json_raw({'pid': parseid, 'json': JSON.stringify(parse.mrs)}));
+       $('#' + container).append(div_raw);
+       // DMRS JSON
+       $('#' + container).append($('<h4>DMRS</h4>'));
+       var div_raw = $(json_raw({'pid': parseid, 'json': JSON.stringify(parse.dmrs)}));
+       $('#' + container).append(div_raw);
+     }
+
+     function highlight(a_div) {
+       $(a_div).find('pre code').each(function(i, block) {
+         hljs.highlightBlock(block);
+       });
+
+     }
+     
+     // Render active visualizer
+     function visualise(){
+       if (response == undefined) {
+         return;
+       }
+       var parses = $(response['parses']);
+       // if using delviz
+       if ($('#dvizes').is(':empty') && active_tab() == '#delviz'){
+         console.writeline("Delvizing");
+         parses.each(function(idx, parse){
+           pid = idx + 1;
+           render_delviz(parse, pid);
+         });
+       }
+       // if using visko
+       else if ($('#dmrses').is(':empty') && active_tab() == '#visko'){
+         console.writeline("Viskoing");
+         parses.each(function(idx, parse){
+           pid = idx + 1;
+           render_visko(parse.dmrs, pid);
+         });
+       }
+       // XML
+       else if ($('#xmlcontent').is(':empty') && active_tab() == '#xml') {
+         display_xml(response.xml);
+       }
+       // Raws
+       else if ($('#raws').is(':empty') && active_tab() == '#raw') {
+         console.writeline("Displaying raws ...");
+         parses.each(function(idx, parse){
+           pid = idx + 1;
+           display_raw(parse, pid);
+         });
+         // Highlight
+         highlight('#raws');
+       }       
+       // JSONs
+       else if ($('#jsons').is(':empty') && active_tab() == '#json') {
+         console.writeline("Displaying JSON ...");
+         parses.each(function(idx, parse){
+           pid = idx + 1;
+           display_json(parse, pid);
+         });
+         // Highlight
+         highlight('#jsons');
+       }
+       // end if
+     }
+     
+     /** Parse a sentence using REST API **/
+     function do_parse() {
+       var sent = $('#input_sentence').val();
+       console.header("Sentence: " + sent);
+       console.writeline("Server is processing. Please wait ...");
+       $.ajax({
+         url: restisf_root,
+         dataType: 'jsonp',
+         data: {
+           'sent': sent,
+	   'parse_count': $('#input_results').val(),
+	   'tagger': 'lelesk',
+	   'grammar': 'ERG'
+         },
+         success: function(json){
+           clear_parses();
+           response = json; // store parses for rendering
+	   console.writeline("Raw response: " + JSON.stringify(response));
+           visualise();
+         },
+         fail: function(jqxhr){
+           console.writeline("Request Failed: " + jqxhr.statusText + " | code = " + jqxhr.status);
+         }
+       });
+     }
+
+     function active_tab() {
+       // return $("#alltabs .active").attr('href');
+       return $("#alltabs .active > a").attr("href");
+     }
+     
+     /** Show debug info **/
+     function debug() {
+       console.writeline("Debug | Active tab text: " + active_tab());
+     }
+    </script>
+    <!-- Document ready -->
+    <script>
+     $(document).ready(function(){       
+       initialise();
+     });
+     
+
+     function initialise(){
+       // Console support
+       console = new Console("console");
+       $("#btnClear").click(clear_console);
+       $("#btnHide").click(toggleConsole);
+       clear_console();
+       update_console();
+       $('#synset_info').hide();
+       
+       $("#btnDebug").click(debug);
+       $("#btnParse").click(do_parse);
+       $("#btnClearCanvas").click(clear_parses);
+       $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+         visualise();
+         // debug();
+       });
+     }     
+    </script>
+  </body>
+</html>

@@ -165,7 +165,7 @@
     </script>
     <script>
      var yawol;
-     var yawol_root = 'http://localhost:5000/yawol/';
+     var yawol_root = 'http://localhost:8000/yawol/';
 
      function get_yawol() {
        var yawol = undefined;
@@ -216,9 +216,10 @@
      }
     </script>
     
-    <!-- DMRS related scripts -->
+    <!-- ISF REST Client -->
     <script>
-     
+     var restisf_root = 'http://localhost:8000/restisf/parse/';
+      
      function clear_parses(){
        $('#dmrses').empty();
        $('#raws').empty();
@@ -254,13 +255,13 @@
        $('#' + raw_container).append(div_raw);
      }
 
-     /** Parse a sentence using RESTful **/
+     /** Parse a sentence using REST API **/
      function do_parse() {
        var sent = $('#input_sentence').val();
        console.header("Sentence: " + sent);
        console.writeline("Server is processing. Please wait ...");
        $.ajax({
-         url: 'http://localhost:8000/restisf/parse/',
+         url: restisf_root,
          dataType: 'jsonp',
          data: {
            'sent': sent,
@@ -307,7 +308,6 @@
        $("#btnDebug").click(debug);
        $("#btnParse").click(do_parse);
        $("#btnClearCanvas").click(clear_parses);
-       // $("#btnHideSynset").click(function(){ $('#synset_info').hide(); });
      }     
     </script>
   </body>
