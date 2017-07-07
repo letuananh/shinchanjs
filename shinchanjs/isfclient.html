@@ -83,8 +83,7 @@
           <!-- Control Panel and Console -->
           <div id="toolbar" class="input-group" style="padding: 10px 0px;">
 	    <div class="input-group-btn">
-            <input type="button" class="btn btn-primary" id="btnRenderDMRS" name="btnRenderDMRS" value="Render"/>
-            <input type="button" class="btn btn-primary" id="btnClearCanvas" name="btnClearCanvas" value="Destroy"/>
+            <input type="button" class="btn btn-primary" id="btnClearCanvas" name="btnClearCanvas" value="Reset"/>
             <input type="button" class="btn btn-default" id="btnDebug" name="btnDebug" value="Debug"/>
             <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
             <button type="button" id="btnHide" name="btnHide" class="btn btn-default">Hide Console</button>
@@ -266,7 +265,7 @@
          data: {
            'sent': sent,
 	   'parse_count': $('#input_results').val(),
-	   'tagger': 'LELESK',
+	   'tagger': 'lelesk',
 	   'grammar': 'ERG'
          },
          success: function(json){
@@ -279,8 +278,8 @@
 	     render_json(parse, pid);  
 	   });
          },
-         error: function(data){
-           console.writeline("Error" + data);
+         fail: function(jqxhr){
+           console.writeline("Request Failed: " + jqxhr.statusText + " | code = " + jqxhr.status);
          }
        });
      }
@@ -306,13 +305,9 @@
        $('#synset_info').hide();
        
        $("#btnDebug").click(debug);
-       $("#btnClearCanvas").click(function(){
-         clear_parses();
-       });
-       $("#btnParse").click(function(){
-         do_parse();
-       });
-       $("#btnHideSynset").click(function(){ $('#synset_info').hide(); });
+       $("#btnParse").click(do_parse);
+       $("#btnClearCanvas").click(clear_parses);
+       // $("#btnHideSynset").click(function(){ $('#synset_info').hide(); });
      }     
     </script>
   </body>
