@@ -40,66 +40,64 @@
     </div>
 
     <div style="padding: 20px;">
-      <!-- Example row of columns -->
       <div class="row">
-        <div class="col-sm-12 col-md-12">
+        <div class="col-md-6">
           <h2>DMRS Visualisation Library</h2>
           <p>This library visualises DMRS data in various formats (currently support JSON format) with hookable elements.</p>
           <div id="dmrs1_canvas"></div>
           <div id="dmrs1_text_holder" class="dmrs_sentence_text"></div>
           <p><a class="btn btn-default" href="visko-2.0-demo.html" role="button">View details &raquo;</a></p>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-6 col-md-4">
+        <div class="col-md-6">
           <h2>ShinchanJS Library</h2>
           <p>Shinchan is a graphic engine which supports multiple layers drawing and elements manipulation.</p>
           <p><a class="btn btn-default" href="shinchan_demo.html" role="button">View details &raquo;</a></p>
         </div>
-        <div class="col-sm-6 col-md-4">
+      </div>
+      <div class="row">
+        <div class="col-md-6">
           <h2>Yawol Client</h2>
           <p>A REST client for accessing Yawol (REST server for querying various Wordnets data)</p>
           <p><a class="btn btn-default" href="yawol_demo.html" role="button">View details &raquo;</a></p>
         </div>
-        <div class="col-sm-6 col-md-4">
+        <div class="col-md-6">
           <h2>Coolisf Client</h2>
           <p>A REST client for accessing CoolISF (Integrated Semantic Framework) REST API</p>
           <p><a class="btn btn-default" href="isfclient.html" role="button">View details &raquo;</a></p>
         </div>
       </div>
-
-      <hr>
-
-      <footer>
-        <p>&copy; 2012-2017 <a href="https://github.com/letuananh">Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</a></p>
-      </footer>
     </div> <!-- /container -->
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <!-- Bootstrap -->
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="modules/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- Others -->
-    <script src="js/lodash-4.17.4.min.js"></script>
-    <!-- ShinchanJS scripts -->
-    <script src="js/raphael-2.2.1.min.js"></script>
-    <script src="js/shinchan.js"></script>
-    <script src="js/visko-2.0.js"></script>
-
-    <script>
-     var visual_dmrs1;
-     $(document).ready(function(){
-       $.getJSON("ajax/dmrs_love.json")
-        .done(function(json) {
-          // Do something
-          dmrs_canvas = json2canvas(json, "dmrs1").visualise();
-        })
-        .fail(function( jqxhr, textStatus, error ) {
-          console.log( "Request Failed: " + err );
-        });
-     });
-    </script>
+    <hr>
+    <footer>
+      <p>&copy; 2012-2017 <a href="https://github.com/letuananh">Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</a></p>
+    </footer>
   </body>
+
+  <!-- Bootstrap core JavaScript
+       ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <!-- Bootstrap -->
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="modules/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <!-- Others -->
+  <script src="js/lodash-4.17.4.min.js"></script>
+  <!-- ShinchanJS scripts -->
+  <script src="js/raphael-2.2.1.min.js"></script>
+  <script src="js/shinchan.js"></script>
+  <script src="js/visko-2.0.js"></script>
+
+  <script>
+   var visual_dmrs1;
+   $(document).ready(function(){
+     $.getJSON("ajax/dmrs_love.json")
+      .done(function(json) {
+        // Do something
+        dmrs_canvas = json2canvas(json, "dmrs1").visualise();
+      })
+      .fail(function( jqxhr, textStatus, error ) {
+        console.log( "Request Failed: " + err );
+      });
+   });
+  </script>
 </html>
