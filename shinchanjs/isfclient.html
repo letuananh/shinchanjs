@@ -1,17 +1,20 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
-          "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Coolisf - REST client 0.1">
+    <meta name="description" content="Coolisf - REST client 0.2.1">
     <meta name="author" content="Le Tuan Anh <tuananh.ke@gmail.com">
     <link rel="icon" href="../../favicon.ico">
     <!-- Title and styles -->
-    <title>Coolisf - REST client 0.1</title>
+    <title>Coolisf - REST client 0.2.1</title>
+    
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="modules/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="modules/viz/demo.css" />
+    <link rel="stylesheet" href="modules/viz/delphin-viz.css" />
+    <link rel="stylesheet" href="modules/highlight.js/styles/github.css" />
     <!-- Demo CSS -->
     <link rel="stylesheet" href="css/visko2.css" />
   </head>
@@ -26,7 +29,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="isfclient.html">CoolISF - REST client 0.1</a>
+          <a class="navbar-brand" href="isfclient2.html">CoolISF - REST client 0.2.1</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -35,58 +38,70 @@
         </div><!--/.navbar-collapse -->
       </div>
     </nav>
-
+    
     <div style="padding: 60px 20px;">
-      <div class="row">
-        <div class="col-md-6">
-	  <!-- Parsing Form -->
-          <form style="padding: 20px 3px;">
-            <div class="input-group input-group-lg">
-              <input class="form-control input-lg" name="input_sentence" id="input_sentence" placeholder="Some dogs bark." value="Some dogs barked." type="text">
-              <span class="input-group-addon">Parse Count</span>
-              <select id="input_results" name="input_results" class="form-control input-small" title="Maximum parses">
-                <option value="1">1</option>
-                <option value="5" selected="">5</option>
-                <option value="10">10</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="500">500</option>
-              </select>
-              <span class="input-group-btn">
-                <button type="button" class="btn btn-default btn-lg" name="btnParse" id="btnParse" value="parse">Parse</button>
-              </span>
-            </div>
-	  </form>
-
-	  <div id="sentence_text" class="dmrs_sentence_text"></div>
-
-          <!-- Synset Information -->
-          <div id="synsets"></div>
-	  
-          <!-- DMRS column -->
-          <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#dmrs">Visko</a></li>
-            <li><a data-toggle="tab" href="#json">JSON</a></li>
-          </ul>
-          <div class="tab-content">
-            <div id="dmrs" class="tab-pane fade in active">
-	      <!-- DMRSes container -->
-	      <div id="dmrses"></div>
-            </div>
-            <div id="json" class="tab-pane fade">
-              <div id="raws"></div>
-            </div>
-          </div>
-          <!-- End DMRS column -->
+      
+      <!-- Parsing Form -->
+      <form>
+        <div class="input-group input-group-lg">
+          <input class="form-control input-lg" name="input_sentence" id="input_sentence" placeholder="Some dogs bark." value="Some dogs barked." type="text">
+          <span class="input-group-addon">Parse Count</span>
+          <select id="input_results" name="input_results" class="form-control input-small" title="Maximum parses">
+            <option value="1">1</option>
+            <option value="5" selected="">5</option>
+            <option value="10">10</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="500">500</option>
+          </select>
+          <span class="input-group-btn">
+            <button class="btn btn-default btn-lg" name="btnParse" type="button" id="btnParse" value="cached">Parse</button>
+          </span>
         </div>
-        <div class="col-md-6">
+      </form>
+
+      <div class="dmrs_sentence_text">Parse count: <span id="parse_count">0</span></div>
+      <div id="sentence_text" class="dmrs_sentence_text"></div>
+
+      <!-- Synset Information -->
+      <div id="synsets"></div>
+
+      <ul id="alltabs" class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#visko">DMRS</a></li>
+        <li><a data-toggle="tab" href="#delviz">delphin-viz</a></li>
+        <li><a data-toggle="tab" href="#raw">pyDelphin</a></li>
+        <li><a data-toggle="tab" href="#xml">XML</a></li>
+        <li><a data-toggle="tab" href="#json">JSON</a></li>
+        <li><a data-toggle="tab" href="#debug">Debug</a></li>
+      </ul>
+      <div class="tab-content">
+        <div id="visko" class="tab-pane active">
+          <div style="overflow-y: auto; height: 600px;">
+            <!-- DMRSes container -->
+	    <div id="dmrses"></div>
+          </div>
+        </div>
+        <div id="delviz" class="tab-pane">
+          <!-- Delphin-viz container -->
+          <div id="dvizes"></div>
+        </div>
+        <div id="raw" class="tab-pane">
+          <div id="raws"></div>
+        </div>
+        <div id="xml" class="tab-pane">
+          <pre><code id="xmlcontent"></code></pre>
+        </div>
+        <div id="json" class="tab-pane">
+          <div id="jsons"></div>
+        </div>
+        <div id="debug" class="tab-pane">
           <!-- Control Panel and Console -->
           <div id="toolbar" class="input-group" style="padding: 10px 0px;">
 	    <div class="input-group-btn">
-            <input type="button" class="btn btn-primary" id="btnClearCanvas" name="btnClearCanvas" value="Reset"/>
-            <input type="button" class="btn btn-default" id="btnDebug" name="btnDebug" value="Debug"/>
-            <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
-            <button type="button" id="btnHide" name="btnHide" class="btn btn-default">Hide Console</button>
+              <input type="button" class="btn btn-primary" id="btnClearCanvas" name="btnClearCanvas" value="Reset"/>
+              <input type="button" class="btn btn-default" id="btnDebug" name="btnDebug" value="Debug"/>
+              <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
+              <!-- <button type="button" id="btnHide" name="btnHide" class="btn btn-default">Hide Console</button> -->
 	    </div>
           </div>
           <div id="console" style="overflow: auto; max-height: 80vh;"></div>
@@ -99,7 +114,7 @@
         <p>&copy; 2012-2017 Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</p>
       </footer>
     </div> <!-- /container -->
-
+       
     <!-- Bootstrap -->
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="modules/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -112,9 +127,19 @@
     <script src="js/shinchan.js"></script>
     <script src="js/shinchan.debug.js"></script>
     <script src="js/visko-2.0.js"></script>
+    <script src="js/restisf.js"></script>
+    <!-- Delviz support -->
+    <script type="text/javascript" src="modules/viz/svg-2.3.0.min.js"></script>
+    <script type="text/javascript" src="modules/viz/d3.v3.min.js"></script>
+    <script type="text/javascript" src="modules/viz/demo.js"></script>
+    <script type="text/javascript" src="modules/viz/tree.js"></script>
+    <script type="text/javascript" src="modules/viz/mrs.js"></script>
+    <script type="text/javascript" src="modules/viz/dmrs.js"></script>
+    
 
     <!-- Yawol client -->
     <script src="js/yawol.js"></script>
+    
     <!-- Yawol support -->
     <script type="text/template" id="synsetbox_template">
      <div class="synsetbox container-fluid well">
@@ -183,7 +208,8 @@
          get_yawol().search_synset(synsetid);
        };
      }
-    </script>
+        </script>
+    
     <!-- Console support -->
     <script>
      var console;
@@ -216,80 +242,133 @@
        console.clear("CoolISF REST Client - Version 0.1");
        console.writeline();
      }
-    </script>
+        </script>
     
-    <!-- ISF REST Client -->
+    <!-- Delphin-viz support -->
     <script>
-     var restisf_root = 'http://localhost:8000/restisf/parse/';
-      
-     function clear_parses(){
-       $('#dmrses').empty();
-       $('#raws').empty();
-     }   
-
-     var json_raw = _.template('<pre><code id="dmrs<%=pid%>_json"><%=json%></code></pre>');
-
-     /**
-      * Render a parse
-      **/
-     function render_json(parse, parseid, container, raw_container){
+     // delphin-viz visualisation
+     function render_delviz(parse, parseid, container){
        if (parseid == undefined) { parseid = 1; }
-       if (container == undefined) { container = 'dmrses'; }
-       if (raw_container == undefined) { raw_container = 'raws'; }
-       // Create a h2 for canvas
+       if (container == undefined) { container = 'dvizes'; }
+
+       // Add parse header
        var div_parse = $('<h3></h3>');
        div_parse.text('Parse #' + parseid);
        div_parse.attr('id', 'parse' + parseid);
        $('#' + container).append(div_parse);
-       // Create a div for canvas
-       var div_canvas = $('<div></div>');
-       div_canvas.attr('id', 'dmrs' + parseid + '_canvas');
-       $('#dmrses').append(div_canvas);
-       dmrs_visko = json2visko(parse, find_synset);
-       var dmrs_canvas = new VisualKopasu.DMRSCanvas(dmrs_visko, 'dmrs' + parseid + '_canvas', 'sentence_text');
-       dmrs_canvas.visualise();
-       // Add JSON raws
-       var div_rparse = $('<h3></h3>');
-       div_rparse.text('Parse #' + parseid);
-       div_rparse.attr('id', 'rparse' + parseid);
-       $('#' + raw_container).append(div_rparse);
-       var div_raw = $(json_raw({'pid': parseid, 'json': JSON.stringify(parse)}));
-       $('#' + raw_container).append(div_raw);
+
+       // Visualize dmrs
+       var dviz_dmrs = $('<div></div>');
+       dviz_dmrs.attr('id', 'dviz_dmrs' + parseid);
+       $('#' + container).append(dviz_dmrs);
+       var $viz = $(Templates.viz({vizType:'dmrs'})).appendTo(dviz_dmrs);
+       dmrs = DMRS(dviz_dmrs[0], parse.dmrs);
+
+       // Visualize mrs
+       var dviz_mrs = $('<div></div>');
+       dviz_mrs.attr('id', 'dviz_mrs' + parseid);
+       $('#' + container).append(dviz_mrs);
+       var $viz = $(Templates.viz({vizType:'mrs'})).appendTo(dviz_mrs);
+       mrs = MRS(dviz_mrs[0], parse.mrs, $('#input_sentence'), $('#sentence_text'));
+     }
+        </script>
+    
+    <!-- Coolisf REST support -->
+    <script>
+     var restisf_root = 'http://localhost:8000/restisf/parse/';
+     function get_isf() {
+       return new Restisf(restisf_root);
+     }
+     var response = undefined;
+     
+     function clear_parses() {
+       $('#dmrses').empty();
+       $('#jsons').empty();
+       $('#dvizes').empty();
+       response = undefined;
      }
 
+     function highlight(a_div) {
+       $(a_div).find('pre code').each(function(i, block) {
+         hljs.highlightBlock(block);
+       });
+     }
+     
+     // Render active visualizer
+     function visualise(){       
+       if (response == undefined) {
+         return;
+       }
+       var parses = $(response['parses']);
+       // if using delviz
+       if ($('#dvizes').is(':empty') && active_tab() == '#delviz'){
+         console.writeline("Delvizing");
+         parses.each(function(idx, parse){
+           pid = idx + 1;
+           render_delviz(parse, pid);
+         });
+       }
+       // if using visko
+       else if ($('#dmrses').is(':empty') && active_tab() == '#visko'){
+         console.writeline("Viskoing");
+         parses.each(function(idx, parse){
+           pid = idx + 1;
+           render_visko(parse.dmrs, pid);
+         });
+       }
+       // XML
+       else if ($('#xmlcontent').is(':empty') && active_tab() == '#xml') {
+         display_xml(response.xml);
+       }
+       // Raws
+       else if ($('#raws').is(':empty') && active_tab() == '#raw') {
+         console.writeline("Displaying raws ...");
+         parses.each(function(idx, parse){
+           pid = idx + 1;
+           display_raw(parse, pid);
+         });
+         highlight('#raws');
+       }       
+       // JSONs
+       else if ($('#jsons').is(':empty') && active_tab() == '#json') {
+         console.writeline("Displaying JSON ...");
+         parses.each(function(idx, parse){
+           pid = idx + 1;
+           display_json(parse, pid);
+         });
+         highlight('#jsons');
+       }
+       // end if
+     }
+     
      /** Parse a sentence using REST API **/
      function do_parse() {
        var sent = $('#input_sentence').val();
+       var parse_count = $('#input_results').val();
        console.header("Sentence: " + sent);
+       // call parse async
+       get_isf().parse(sent, parse_count, 'lelesk', 'ERG', success);
        console.writeline("Server is processing. Please wait ...");
-       $.ajax({
-         url: restisf_root,
-         dataType: 'jsonp',
-         data: {
-           'sent': sent,
-	   'parse_count': $('#input_results').val(),
-	   'tagger': 'lelesk',
-	   'grammar': 'ERG'
-         },
-         success: function(json){
-           // Clear previous parses first
-           clear_parses();
-	   console.writeline("Raw response: " + JSON.stringify(json));
-	   $(json['parses']).each(function(idx, parse){
-	     pid = idx + 1;
-	     // console.writeline("Parse #" + pid + " json: " + JSON.stringify(parse));
-	     render_json(parse.dmrs, pid);  
-	   });
-         },
-         fail: function(jqxhr){
-           console.writeline("Request Failed: " + jqxhr.statusText + " | code = " + jqxhr.status);
-         }
-       });
+     }
+
+     /**
+      * When received parses from server
+      **/
+     function success(json) {
+       clear_parses();
+       response = json; // store parses for rendering  
+       console.writeline("Raw response: " + JSON.stringify(response));
+       visualise();
+     }
+
+     function active_tab() {
+       // return $("#alltabs .active").attr('href');
+       return $("#alltabs .active > a").attr("href");
      }
      
      /** Show debug info **/
      function debug() {
-       console.writeline("Debug");
+       console.writeline("Debug | Active tab text: " + active_tab());
      }
     </script>
     <!-- Document ready -->
@@ -310,6 +389,9 @@
        $("#btnDebug").click(debug);
        $("#btnParse").click(do_parse);
        $("#btnClearCanvas").click(clear_parses);
+       $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+         visualise();
+       });
      }     
     </script>
   </body>

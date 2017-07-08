@@ -1,69 +1,68 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
-                    "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
-<head>
-  <script src="js/jquery-1.8.2.js"></script>
-  <script src="js/raphael-min.js"></script>
-  <script src="js/kajika.js"></script>
-  <script src="js/console.js"></script>
-  <script src="js/visualisation.js"></script>
-  <script src="js/shinchan.js"></script>
-  <script src="js/shinchan.debug.js"></script>
-  <script>
-	var console;
-	  
-  $(document).ready(function(){
-		// Create a console
-		console = new Console("console");
-		console.writeline("- Test Console -");
-		// Some text to work with
-		sample_text = "The Cathedral and the Bazaar!";
-		console.writeline(sample_text);
-		
-  		// Test raphael drawing
-		pp_w = 320;
-		pp_h = 200;
-		var paper = Raphael("holder", pp_w, pp_h);
-		paper_border = paper.rect(1,1, pp_w - 2, pp_h -2, 2);
-		paper_border.attr({"fill" : "#FFFFFF"
-				,"stroke" : "black"
-				,"stroke-width" : "1px"});
-		
-		//sample_text = sample_text.replace(/ /g, '_');
-		var text_pieces = draw_text(paper, sample_text, 15, 100, 0, 5);
-		
-		raw_nodes = sample_text.split(' ');
-		nodes = [];
-		prev_loc = 0;
-		$.each(raw_nodes, function(){
-			my_node = {text : this, from : prev_loc, to : prev_loc+this.length};
-			nodes.push(my_node);
-			prev_loc += this.length + 1;
-			//console.writeline("Node: " + my_node.text + " From: " + my_node.from + " To: " + my_node.to);
-		});
-		
-		var test1 = paper.text(50, 20, "a");
-		var test3 = paper.text(50, 20, "a");
-		console.writeline("TEST1 ===> ");
-		dump_bbox(test1);
-		console.writeline("TEST3 ===> ");
-		dump_bbox(test3);
-		test1.transform("...T40,40");
-		var test2 = paper.text(50, 20, "a");
-		console.writeline("TEST2 ===> ");
-		dump_bbox(test2);
-		console.writeline("TEST1 ===> ");
-		dump_bbox(test1);
-		
-		test2.transform("...T40,70");
-		console.writeline(test1);
-		dump_bbox(test1);
-		dump_bbox(test2);
-  });
-  </script>
-</head>
-<body>
-	<div id="holder"></div>
-	<div id="console"></div>
-</body>
+  <head>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/raphael-2.2.1.min.js"></script>
+    <script src="js/kajika.js"></script>
+    <script src="js/console.js"></script>
+    <script src="js/visualisation.js"></script>
+    <script src="js/shinchan.js"></script>
+    <script src="js/shinchan.debug.js"></script>
+    <script>
+     var console;
+     
+     $(document).ready(function(){
+       // Create a console
+       console = new Console("console");
+       console.writeline("- Test Console -");
+       // Some text to work with
+       sample_text = "The Cathedral and the Bazaar!";
+       console.writeline(sample_text);
+       
+       // Test raphael drawing
+       pp_w = 320;
+       pp_h = 200;
+       var paper = Raphael("holder", pp_w, pp_h);
+       paper_border = paper.rect(1,1, pp_w - 2, pp_h -2, 2);
+       paper_border.attr({"fill" : "#FFFFFF"
+			 ,"stroke" : "black"
+			 ,"stroke-width" : "1px"});
+       
+       //sample_text = sample_text.replace(/ /g, '_');
+       var text_pieces = draw_text(paper, sample_text, 15, 100, 0, 5);
+       
+       raw_nodes = sample_text.split(' ');
+       nodes = [];
+       prev_loc = 0;
+       $.each(raw_nodes, function(){
+	 my_node = {text : this, from : prev_loc, to : prev_loc+this.length};
+	 nodes.push(my_node);
+	 prev_loc += this.length + 1;
+	 //console.writeline("Node: " + my_node.text + " From: " + my_node.from + " To: " + my_node.to);
+       });
+       
+       var test1 = paper.text(50, 20, "a");
+       var test3 = paper.text(50, 20, "a");
+       console.writeline("TEST1 ===> ");
+       dump_bbox(test1);
+       console.writeline("TEST3 ===> ");
+       dump_bbox(test3);
+       test1.transform("...T40,40");
+       var test2 = paper.text(50, 20, "a");
+       console.writeline("TEST2 ===> ");
+       dump_bbox(test2);
+       console.writeline("TEST1 ===> ");
+       dump_bbox(test1);
+       
+       test2.transform("...T40,70");
+       console.writeline(test1);
+       dump_bbox(test1);
+       dump_bbox(test2);
+     });
+    </script>
+  </head>
+  <body>
+    <div id="holder"></div>
+    <div id="console"></div>
+  </body>
 </html>

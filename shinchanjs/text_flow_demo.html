@@ -1,12 +1,23 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
-          "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
   <head>
-    <title>Test horizontal flow demo API</title>
-    
-    <link rel="stylesheet" href="css/redmond/jquery-ui-1.9.0.custom.min.css" />
-    <link rel="stylesheet" href="css/visualkopasu.css" />
-    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Text horizontal flow demo">
+    <meta name="author" content="Le Tuan Anh <tuananh.ke@gmail.com">
+    <link rel="icon" href="../../favicon.ico">
+    <!-- Title and styles -->
+    <title>Text horizontal flow demo</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="modules/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="modules/viz/demo.css" />
+    <link rel="stylesheet" href="modules/viz/delphin-viz.css" />
+    <link rel="stylesheet" href="modules/highlight.js/styles/github.css" />
+    <!-- Demo CSS -->
+    <link rel="stylesheet" href="css/visko2.css" />    
+
     <style>
      #toolbar {
        /* T-R-B-L */
@@ -19,54 +30,136 @@
        display: inline;
      }
     </style>
+    
   </head>
   <body>
-    <div id="banner" class="ui-widget-header ui-corner-all">Text Flow Demo</div>
-    <div id="main_canvas"></div>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="isfclient2.html">Text horizontal flow demo</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="index.html">Home</a></li>
+          </ul>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
     
-    <div id="toolbar" class="ui-corner-all">
-      <input type="button" id="btnStart" name="btnStart" value="Information"/>
-      <input type="button" id="btnClear" name="btnClear" value="Clear Console"/>
-      <span class="toolbar_label">A label</span>
-      <input type="button" id="btnHide" name="btnHide" value="Hide Console"/>
-    </div>
-    
-    <div id="console" style="overflow: auto; max-height: 300px;"></div>
+    <div style="padding: 60px 20px;">
+      <div class="row">
+        <div class="col-md-6">
+	  <!-- Parsing Form -->
+          <form style="padding: 20px 3px;">
+            <div class="input-group input-group-lg">
+              <span class="input-group-addon">Input</span>
+              <input class="form-control input-lg" name="userinput" id="userinput" placeholder="Write anything here" value="Some dogs barked." type="text">
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default btn-lg" name="btnProcess" id="btnProcess" value="parse">Process</button>
+              </span>
+            </div>
+	  </form>
+
+          <div id="main_canvas"></div>
+        </div>
+        <div class="col-md-6">
+          <!-- Control Panel and Console -->
+          <div id="toolbar" class="input-group" style="padding: 10px 0px;">
+	    <div class="input-group-btn">
+              <input type="button" class="btn btn-primary" id="btnDebug" name="btnDebug" value="Debug"/>
+              <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
+              <button type="button" id="btnHide" name="btnHide" class="btn btn-default">Hide Console</button>
+	    </div>
+          </div>
+          <div id="console" style="overflow: auto; max-height: 80vh;"></div>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; 2012-2017 Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</p>
+      </footer>
+    </div> <!-- /container -->
   </body>
-  <script src="js/jquery-1.8.2.js"></script>
-  <script src="js/jquery-ui-1.9.0.custom.min.js"></script>
-  <script src="js/raphael-min.js"></script>
-  <script src="js/kajika.js"></script>
+
+  <!-- Bootstrap -->
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="modules/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <!-- Others -->
+  <script src="js/lodash-4.17.4.min.js"></script>
+  <!-- ShinchanJS scripts -->
+  <script src="js/raphael-2.2.1.min.js"></script>
   <script src="js/console.js"></script>
   <script src="js/shinchan.js"></script>
   <script src="js/shinchan.debug.js"></script>
-  <script src="js/jikan.js"></script>
+  <script src="js/visko-2.0.js"></script>
+  
+  <!-- Console support -->
   <script>
    var console;
-   var canvas;
-   
-   function initialise(){
-     // Create a console
-     console = new Console("console");
-     console.writeline("- Test Console -");
-     
-     canvas = new Canvas("main_canvas", 320, 240, "MainCanvas");
-     
-     $("#btnStart").button().click(function(){
-       start();
-     });
-     $("#btnClear").button().click(function(){
-       console.clear("- Cleared -");
-     });
-     $("#btnHide").button().click(function(){
-       toggleConsole();
-     });
+
+   $(window).on('resize', function(){
+     update_console();
+   });
+
+   function toggleConsole(){
+     $("#console").toggle();
+     if($("#console").is(":visible")){
+       $("#btnHide").text("Hide Console");                
+     } 
+     else{
+       $("#btnHide").text("Show Console");
+     }
    }
    
-   $(document).ready(function(){		
-     initialise();	
+   function update_console(){
+     var ch = $(window).height() - 130;
+     if (ch < 300){
+       ch = 300;
+     }
+     $("#console").height(ch);
+     $("#console").css('max-height', ch);
+     //console.writeline("Window's height: " + $(window).height());
+   }
+
+   function clear_console() {
+     console.clear("CoolISF REST Client - Version 0.1");
+     console.writeline();
+   }
+  </script>
+
+  <!-- Document ready -->
+  <script>
+   $(document).ready(function(){       
+     initialise();
      drawFlow();
    });
+
+   function initialise(){
+     // Console support
+     console = new Console("console");
+     $("#btnClear").click(clear_console);
+     $("#btnHide").click(toggleConsole);
+     clear_console();
+     update_console();
+     
+     // Bind events
+     $("#btnDebug").click(function(){ console.writeline("Debug"); });
+     $("#btnProcess").click(function (){});
+
+     canvas = new Canvas("main_canvas", 320, 240, "MainCanvas");
+   }     
+  </script>
+  
+  <script>
+   var canvas;
    
    function drawFlow(){
      flow_layer = canvas.addLayer("Flow layer");
@@ -96,20 +189,6 @@
      });
      
      canvas.pack(20);
-   }
-   
-   function toggleConsole(){
-     $("#console").toggle();
-     if($("#console").is(":visible")){
-       $("#btnHide").prop('value', "Hide Console");				
-     } 
-     else{
-       $("#btnHide").prop('value', "Show Console");
-     }
-   }
-   
-   function start(){
-     displayInformation();
-   }
+   }   
   </script>
 </html>

@@ -4,11 +4,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Demo template">
+    <meta name="description" content="Test Drawing Table">
     <meta name="author" content="Le Tuan Anh <tuananh.ke@gmail.com">
     <link rel="icon" href="../../favicon.ico">
     <!-- Title and styles -->
-    <title>Demo template</title>
+    <title>Test Drawing Table</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="modules/bootstrap/3.3.7/css/bootstrap.min.css" />
@@ -42,7 +42,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="isfclient2.html">Demo Template</a>
+          <a class="navbar-brand" href="isfclient2.html">Test Drawing Table</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -51,35 +51,19 @@
         </div><!--/.navbar-collapse -->
       </div>
     </nav>
-    
-    <div style="padding: 60px 20px;">
-      <div class="row">
-        <div class="col-md-6">
-	  <!-- Parsing Form -->
-          <form style="padding: 20px 3px;">
-            <div class="input-group input-group-lg">
-              <span class="input-group-addon">Input</span>
-              <input class="form-control input-lg" name="userinput" id="userinput" placeholder="Write anything here" value="Some dogs barked." type="text">
-              <span class="input-group-btn">
-                <button type="button" class="btn btn-default btn-lg" name="btnProcess" id="btnProcess" value="parse">Process</button>
-              </span>
-            </div>
-	  </form>
 
-          <div id="main_canvas"></div>
-        </div>
-        <div class="col-md-6">
-          <!-- Control Panel and Console -->
-          <div id="toolbar" class="input-group" style="padding: 10px 0px;">
-	    <div class="input-group-btn">
-              <input type="button" class="btn btn-primary" id="btnDebug" name="btnDebug" value="Debug"/>
-              <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
-              <button type="button" id="btnHide" name="btnHide" class="btn btn-default">Hide Console</button>
-	    </div>
-          </div>
-          <div id="console" style="overflow: auto; max-height: 80vh;"></div>
-        </div>
+    <div style="padding: 60px 20px;">
+      <div id="main_canvas"></div>
+
+      <!-- Control Panel and Console -->
+      <div id="toolbar" class="input-group" style="padding: 10px 0px;">
+	<div class="input-group-btn">
+          <input type="button" class="btn btn-primary" id="btnDebug" name="btnDebug" value="Debug"/>
+          <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
+          <button type="button" id="btnHide" name="btnHide" class="btn btn-default">Hide Console</button>
+	</div>
       </div>
+      <div id="console" style="overflow: auto; max-height: 80vh;"></div>
 
       <hr>
 

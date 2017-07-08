@@ -4,7 +4,6 @@
   <head>
     <title>Element hover event</title>
     
-    <link rel="stylesheet" href="css/redmond/jquery-ui-1.9.0.custom.min.css" />
     <link rel="stylesheet" href="css/visualkopasu.css" />
     
     <style>
@@ -36,9 +35,8 @@
     <div id="console" style="overflow: auto; max-height: 300px;"></div>
   </body>
   
-  <script src="js/jquery-1.8.2.js"></script>
-  <script src="js/jquery-ui-1.9.0.custom.min.js"></script>
-  <script src="js/raphael-min.js"></script>
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="js/raphael-2.2.1.min.js"></script>
   <script src="js/kajika.js"></script>
   <script src="js/console.js"></script>
   <script src="js/shinchan.js"></script>
@@ -102,13 +100,13 @@
      
      canvas = new Canvas("main_canvas", 320, 240, "MainCanvas");
      
-     $("#btnStart").button().click(function(){
+     $("#btnStart").click(function(){
        start();
      });
-     $("#btnClear").button().click(function(){
+     $("#btnClear").click(function(){
        console.clear("- Cleared -");
      });
-     $("#btnHide").button().click(function(){
+     $("#btnHide").click(function(){
        toggleConsole();
      });
    }

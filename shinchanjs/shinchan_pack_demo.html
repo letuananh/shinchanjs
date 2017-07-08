@@ -2,101 +2,77 @@
                     "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title>Shinchan-Animation demo</title>
-	  <script src="js/jquery-1.8.2.js"></script>
-	  <script src="js/raphael-min.js"></script>
-	  <script src="js/kajika.js"></script>
-	  <script src="js/console.js"></script>
-	  <script src="js/shinchan.js"></script>
-	  <script src="js/shinchan.debug.js"></script>
-	  <script src="js/jikan.js"></script>
-	<script>
-	var console;
-	var canvas;
-	var layer1;
-
-
-	function initialise(){
-		// Create a console
-		console = new Console("console");
-		console.writeline("- Test Console -");
-
-		// Create canvas
-		canvas = new ChibiJS.ShinChan.Canvas("main_canvas", 320, 240);	
-		layer1 = canvas.addLayer("MainLayer");
-		
-		// Register event handlers
-		$('[name="btnStart"]').click(function(){
-			// Do nothing
-			displayInformation();
-			
-		});
-		$("#btnClear").click(function(){ console.clear("- Test Console -"); });
-	}
-
-	$(document).ready(function(){		
-		initialise();
-		console.header("Original (draw label at 0,0)");
-		l = layer1.draw_label(0, 0, "Test packing function",10,10,"test");
-		console.write(" >>> "); dump_element(l.getElements()[0]);
-		console.write(" >>> "); dump_element(l.getElements()[1]);
-		
-		console.header("Move to (10,10)");
-		l.moveTo(10,10);
-		console.write(" >>> "); dump_element(l.getElements()[0]);
-		console.write(" >>> "); dump_element(l.getElements()[1]);
-		displayInformation();
-		
-		console.header("Pack(default)");
-		canvas.pack();
-		console.write(" >>> "); dump_element(l.getElements()[0]);
-		console.write(" >>> "); dump_element(l.getElements()[1]);
-		displayInformation();
-		
-		console.header("pack(10)");
-		canvas.pack(10);
-		console.write(" >>> "); dump_element(l.getElements()[0]);
-		console.write(" >>> "); dump_element(l.getElements()[1]);
-		displayInformation();
-		
-		console.header("pack(40)");
-		canvas.pack(40);
-		canvas.pack(40);
-		canvas.pack(40);
-		console.write(" >>> ");
-		dump_element(l.getElements()[0]);
-		displayInformation();
-		
-		/*
-		console.writeline("----------------------------", "red");
-		l.findShapeInfo(true);
-		l.getElements()[0].findShapeInfo(true);
-		l.getElements()[1].findShapeInfo(true);
-		bbox = l.getElements()[0].getObject().getBBox();
-		console.writeline("BBOX_X = " + bbox.x + " - BBOX_Y = " + bbox.y);
-		dump_element(l.getElements()[0]);
-		dump_element(l.getElements()[1]); //box
-		console.writeline("----------------------------", "red");
-		*/ 
-		/*
-		l.moveTo(0,0);
-		canvas.pack(5);
-		displayInformation();
-		canvas.pack(5);
-		displayInformation();
-		canvas.pack(5);
-		displayInformation();
-		canvas.pack(5);
-		displayInformation();
-		*/
-	});
-	</script>
+  <title>Shinchan-Animation demo</title>
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="js/raphael-2.2.1.min.js"></script>
+  <script src="js/kajika.js"></script>
+  <script src="js/console.js"></script>
+  <script src="js/shinchan.js"></script>
+  <script src="js/shinchan.debug.js"></script>
+  <script>
+   var console;
+   var canvas;
+   var layer1;
+   
+   
+   function initialise(){
+     // Create a console
+     console = new Console("console");
+     console.writeline("- Test Console -");
+     
+     // Create canvas
+     canvas = new ChibiJS.ShinChan.Canvas("main_canvas", 320, 240);	
+     layer1 = canvas.addLayer("MainLayer");
+     
+     // Register event handlers
+     $('[name="btnStart"]').click(function(){
+       // Do nothing
+       displayInformation();
+       
+     });
+     $("#btnClear").click(function(){ console.clear("- Test Console -"); });
+   }
+   
+   $(document).ready(function(){		
+     initialise();
+     console.header("Original (draw label at 0,0)");
+     l = layer1.draw_label(0, 0, "Test packing function",10,10,"test");
+     console.write(" >>> "); dump_element(l.getElements()[0]);
+     console.write(" >>> "); dump_element(l.getElements()[1]);
+     
+     console.header("Move to (10,10)");
+     l.moveTo(10,10);
+     console.write(" >>> "); dump_element(l.getElements()[0]);
+     console.write(" >>> "); dump_element(l.getElements()[1]);
+     displayInformation();
+     
+     console.header("Pack(default)");
+     canvas.pack();
+     console.write(" >>> "); dump_element(l.getElements()[0]);
+     console.write(" >>> "); dump_element(l.getElements()[1]);
+     displayInformation();
+     
+     console.header("pack(10)");
+     canvas.pack(10);
+     console.write(" >>> "); dump_element(l.getElements()[0]);
+     console.write(" >>> "); dump_element(l.getElements()[1]);
+     displayInformation();
+     
+     console.header("pack(40)");
+     canvas.pack(40);
+     canvas.pack(40);
+     canvas.pack(40);
+     console.write(" >>> ");
+     dump_element(l.getElements()[0]);
+     displayInformation();
+   });
+  </script>
 </head>
 <body>
-	<h1>Test Canvas Pack ShinChan library</h1>
-	<div id="main_canvas"></div>
-	<input type="button" id="btnStart" name="btnStart" value="Information"/>
-	<input type="button" id="btnClear" name="btnClear" value="Clear"/>
-	<div id="console"></div>
+  <h1>Test Canvas Pack ShinChan library</h1>
+  <div id="main_canvas"></div>
+  <input type="button" id="btnStart" name="btnStart" value="Information"/>
+  <input type="button" id="btnClear" name="btnClear" value="Clear"/>
+  <div id="console"></div>
 </body>
 </html>

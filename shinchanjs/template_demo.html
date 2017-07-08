@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Demo template">
+    <meta name="description" content="ShinchanJS Demo">
     <meta name="author" content="Le Tuan Anh <tuananh.ke@gmail.com">
     <link rel="icon" href="../../favicon.ico">
     <!-- Title and styles -->
-    <title>Demo template</title>
-
+    <title>ShinchanJS Demo</title>
+    
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="modules/bootstrap/3.3.7/css/bootstrap.min.css" />
     <link rel="stylesheet" href="modules/viz/demo.css" />
@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="modules/highlight.js/styles/github.css" />
     <!-- Demo CSS -->
     <link rel="stylesheet" href="css/visko2.css" />    
-
+    
     <style>
      #toolbar {
        /* T-R-B-L */
@@ -42,7 +42,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="isfclient2.html">Demo Template</a>
+          <a class="navbar-brand" href="isfclient2.html">ShinchanJS Demo</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -64,9 +64,10 @@
                 <button type="button" class="btn btn-default btn-lg" name="btnProcess" id="btnProcess" value="parse">Process</button>
               </span>
             </div>
-	          </form>
-
+	  </form>
+          
           Lorem ipsum dolor sit amet.
+          <div id="main_canvas"></div>
         </div>
         <div class="col-md-6">
           <!-- Control Panel and Console -->
@@ -80,15 +81,15 @@
           <div id="console" style="overflow: auto; max-height: 80vh;"></div>
         </div>
       </div>
-
+      
       <hr>
-
+      
       <footer>
         <p>&copy; 2012-2017 Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</p>
       </footer>
     </div> <!-- /container -->
   </body>
-
+  
   <!-- Bootstrap -->
   <script src="js/jquery-3.2.1.min.js"></script>
   <script src="modules/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -104,11 +105,11 @@
   <!-- Console support -->
   <script>
    var console;
-
+   
    $(window).on('resize', function(){
      update_console();
    });
-
+   
    function toggleConsole(){
      $("#console").toggle();
      if($("#console").is(":visible")){
@@ -128,18 +129,18 @@
      $("#console").css('max-height', ch);
      //console.writeline("Window's height: " + $(window).height());
    }
-
+   
    function clear_console() {
      console.clear("CoolISF REST Client - Version 0.1");
      console.writeline();
    }
   </script>
-
+  
   <script>
    function debug(){
      console.writeline("Do this and that");
    }
-
+   
    function process() {
      var input = $("#userinput").val();
      console.writeline("You wrote: " + input);
@@ -148,10 +149,12 @@
   
   <!-- Document ready -->
   <script>
+   var canvas;
+   
    $(document).ready(function(){       
      initialise();
    });
-
+   
    function initialise(){
      // Console support
      console = new Console("console");
@@ -159,6 +162,9 @@
      $("#btnHide").click(toggleConsole);
      clear_console();
      update_console();
+     
+     // Init canvas
+     canvas = new Canvas("main_canvas", 320, 240, "MainCanvas");
      
      // Bind events
      $("#btnDebug").click(debug);
