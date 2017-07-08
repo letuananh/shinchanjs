@@ -1,12 +1,23 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
-          "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
   <head>
-    <title>Console demo</title>
-    
-    <link rel="stylesheet" href="css/redmond/jquery-ui-1.9.0.custom.min.css" />
-    <link rel="stylesheet" href="css/visualkopasu.css" />
-    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Demo template">
+    <meta name="author" content="Le Tuan Anh <tuananh.ke@gmail.com">
+    <link rel="icon" href="../../favicon.ico">
+    <!-- Title and styles -->
+    <title>Demo template</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="modules/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="modules/viz/demo.css" />
+    <link rel="stylesheet" href="modules/viz/delphin-viz.css" />
+    <link rel="stylesheet" href="modules/highlight.js/styles/github.css" />
+    <!-- Demo CSS -->
+    <link rel="stylesheet" href="css/visko2.css" />    
+
     <style>
      #toolbar {
        /* T-R-B-L */
@@ -20,133 +31,212 @@
      }
     </style>
     
-    <script src="js/jquery-1.8.2.js"></script>
-    <script src="js/jquery-ui-1.9.0.custom.min.js"></script>
-    <script src="js/raphael.js"></script>
-    <!--<script src="js/kajika.js"></script>-->
-    <script src="js/console.js"></script>
-    <script src="js/shinchan.js"></script>
-    <script src="js/shinchan.debug.js"></script>
-    <script src="js/jikan.js"></script>
-    <script>
-     var console;
-     var canvas;
-     
-     function initialise(){
-       // Create a console
-       console = new Console("console");
-       console.writeline("- Test Console -");
-       
-       canvas = new Canvas("main_canvas", 800, 600, "MainCanvas");
-       
-       $("#btnStart").button().click(function(){
-	 start();
-       });
-       $("#btnClear").button().click(function(){
-	 console.clear("- Cleared -");
-       });
-       $("#btnHide").button().click(function(){
-	 toggleConsole();
-       });
-     }
-     
-     $(document).ready(function(){		
-       initialise();	
-       //toggleConsole();
-       draw_table();
-     });
-     
-     function toggleConsole(){
-       $("#console").toggle();
-       if($("#console").is(":visible")){
-	 $("#btnHide").prop('value', "Hide Console");				
-       } 
-       else{
-	 $("#btnHide").prop('value', "Show Console");
-       }
-     }
-     
-     function start(){
-       displayInformation();
-     }
-     
-     function draw_table(){
-       var tbl_layer = canvas.addLayer("tbl_layer");
-       
-       var my_table = new ChibiJS.Table();
-       for(i = 0; i < 4; i++){
-	 for(j = 0; j < 2; j++){
-	   my_table.setCell(i, j, "Cell [" + i + ", " + j +"]");
-	 }
-       }
-       table2 = [
-         ['KE', 'ISS', 'AI', 'test',new ChibiJS.URL('>>CLICK ME<<', 'https://github.com/letuananh')],
-         ['datamining', 'textmining', 'something-else', 'nus', 'singapore', 'guess'],
-         [new ChibiJS.URL('EASTER EGG', function(){console.clear();console.writeline("SUPPLY");})]
-       ];	
-       table3 = [['a', 'b'], ['c', 'd', 'e', 'takaji', 'blob'],[1, 2, 3, 1], ['x', 'y', 'nus']];
-       table4 = [['pos:a','RP.sense:for','cvarsort:event'], ['sf:prop','tense:untensed','mood:indicative']];
-       table5 = [['pos:n','RP.sense:1','cvarsort:individual'], ['number:singular','pers:3','ind:plus']];
-       table6 = [['pos:p','cvarsort:event','sf:prop']];
-       table7 = [['pos:p', '<a href="#">foo</a>']];
-       table8 = [["pos:v","RP.sense:id","cvarsort:event"], ["sf:prop","tense:pres","mood:indicative"], ["prog:minus","perf:minus", "a"]];
-       
-       console.header("DRAW TABLES");
-       
-       visual_table1 = tbl_layer.draw_table(50, 50, my_table.getData(), "a_table1");
-       visual_table2 = tbl_layer.draw_table(20, 100, table2, "a_table2");	
-       visual_table3 = tbl_layer.draw_table(120, 150, table3, "a_table3");	
-       visual_table4 = tbl_layer.draw_table(10, 250, table4, 'tbl-4');
-       visual_table5 = tbl_layer.draw_table(10, 400, table5, 'tbl-5');
-       visual_table6 = tbl_layer.draw_table(10, 300, table6, 'tbl-6');
-       visual_table7 = tbl_layer.draw_table(10, 300, table7, 'tbl-7');
-       visual_table8 = tbl_layer.draw_table(10, 300, table8, 'tbl-8');
-
-       console.writeline("Type of tbl2 ee = " + typeof table2[2][0].url());
-       
-       console.header("REMOVE TABLES");
-       //if(typeof visual_table1 != "undefined") { tbl_layer.remove(visual_table1); visual_table1 = undefined; }
-       //if(typeof visual_table2 != "undefined") { tbl_layer.remove(visual_table2); visual_table2 = undefined; }
-       //if(typeof visual_table3 != "undefined") { tbl_layer.remove(visual_table3); visual_table3 = undefined; }
-       //if(typeof visual_table4 != "undefined") { tbl_layer.remove(visual_table4); visual_table4 = undefined; }
-       //if(typeof visual_table5 != "undefined") { tbl_layer.remove(visual_table5); visual_table5 = undefined; }
-       //if(typeof visual_table6 != "undefined") { tbl_layer.remove(visual_table6); visual_table6 = undefined; }
-       //if(typeof visual_table7 != "undefined") { tbl_layer.remove(visual_table7); visual_table7 = undefined; }
-       //if(typeof visual_table8 != "undefined") { tbl_layer.remove(visual_table8); visual_table8 = undefined; }
-
-
-       console.header("REFLOW TABLES");
-       //v_flow = new VerticalFlow();
-       v_flow = new HorizontalFlow();
-       
-       if(typeof visual_table1 != "undefined") { v_flow.addElement(visual_table1); } else { console.writeline("visual_table1 === " + typeof visual_table1); }
-       if(typeof visual_table2 != "undefined") { v_flow.addElement(visual_table2); } else { console.writeline("visual_table2 ===>" + typeof visual_table2); }
-       if(typeof visual_table3 != "undefined") { v_flow.addElement(visual_table3); } else { console.writeline("visual_table3 ===>" + typeof visual_table3); }
-       if(typeof visual_table4 != "undefined") { v_flow.addElement(visual_table4); } else { console.writeline("visual_table4 ===>" + typeof visual_table4); }
-       if(typeof visual_table5 != "undefined") { v_flow.addElement(visual_table5); } else { console.writeline("visual_table5 ===>" + typeof visual_table5); }
-       if(typeof visual_table6 != "undefined") { v_flow.addElement(visual_table6); } else { console.writeline("visual_table6 ===>" + typeof visual_table6); }
-       if(typeof visual_table7 != "undefined") { v_flow.addElement(visual_table7); } else { console.writeline("visual_table7 ===>" + typeof visual_table7); }
-       if(typeof visual_table8 != "undefined") { v_flow.addElement(visual_table8); } else { console.writeline("visual_table8 ===>" + typeof visual_table8); }
-       
-       CanvasUtil.alignTop(v_flow.getElements());
-       v_flow.rearrange(10);
-
-       console.header("PACKING ...");
-       canvas.pack(20);	
-     }
-    </script>
   </head>
   <body>
-    <div id="banner" class="ui-widget-header ui-corner-all">Draw Table</div>
-    <div id="main_canvas"></div>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="isfclient2.html">Demo Template</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="index.html">Home</a></li>
+          </ul>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
+    
+    <div style="padding: 60px 20px;">
+      <div class="row">
+        <div class="col-md-6">
+	  <!-- Parsing Form -->
+          <form style="padding: 20px 3px;">
+            <div class="input-group input-group-lg">
+              <span class="input-group-addon">Input</span>
+              <input class="form-control input-lg" name="userinput" id="userinput" placeholder="Write anything here" value="Some dogs barked." type="text">
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default btn-lg" name="btnProcess" id="btnProcess" value="parse">Process</button>
+              </span>
+            </div>
+	  </form>
 
-    <div id="toolbar" class="ui-corner-all">
-      <input type="button" id="btnStart" name="btnStart" value="Information"/>
-      <input type="button" id="btnClear" name="btnClear" value="Clear Console"/>
-      <span class="toolbar_label">A label</span>
-      <input type="button" id="btnHide" name="btnHide" value="Hide Console"/>
-    </div>
+          <div id="main_canvas"></div>
+        </div>
+        <div class="col-md-6">
+          <!-- Control Panel and Console -->
+          <div id="toolbar" class="input-group" style="padding: 10px 0px;">
+	    <div class="input-group-btn">
+              <input type="button" class="btn btn-primary" id="btnDebug" name="btnDebug" value="Debug"/>
+              <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
+              <button type="button" id="btnHide" name="btnHide" class="btn btn-default">Hide Console</button>
+	    </div>
+          </div>
+          <div id="console" style="overflow: auto; max-height: 80vh;"></div>
+        </div>
+      </div>
 
-    <div id="console" style="overflow: auto; max-height: 300px;"></div>
+      <hr>
+
+      <footer>
+        <p>&copy; 2012-2017 Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</p>
+      </footer>
+    </div> <!-- /container -->
   </body>
+
+  <!-- Bootstrap -->
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="modules/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <!-- Others -->
+  <script src="js/lodash-4.17.4.min.js"></script>
+  <!-- ShinchanJS scripts -->
+  <script src="js/raphael-2.2.1.min.js"></script>
+  <script src="js/console.js"></script>
+  <script src="js/shinchan.js"></script>
+  <script src="js/shinchan.debug.js"></script>
+  <script src="js/visko-2.0.js"></script>
+  
+  <!-- Console support -->
+  <script>
+   var console;
+
+   $(window).on('resize', function(){
+     update_console();
+   });
+
+   function toggleConsole(){
+     $("#console").toggle();
+     if($("#console").is(":visible")){
+       $("#btnHide").text("Hide Console");                
+     } 
+     else{
+       $("#btnHide").text("Show Console");
+     }
+   }
+   
+   function update_console(){
+     var ch = $(window).height() - 130;
+     if (ch < 300){
+       ch = 300;
+     }
+     $("#console").height(ch);
+     $("#console").css('max-height', ch);
+     //console.writeline("Window's height: " + $(window).height());
+   }
+
+   function clear_console() {
+     console.clear("CoolISF REST Client - Version 0.1");
+     console.writeline();
+   }
+  </script>
+
+  <script>
+   function debug(){
+     console.writeline("Do this and that");
+   }
+
+   function process() {
+     var input = $("#userinput").val();
+     console.writeline("You wrote: " + input);
+   }
+  </script>
+
+  <!-- Draw table -->
+  <script>
+   var canvas;
+   
+   function draw_table(){
+     canvas = new Canvas("main_canvas", 800, 600, "MainCanvas");
+     var tbl_layer = canvas.addLayer("tbl_layer");
+     
+     var my_table = new ChibiJS.Table();
+     for(i = 0; i < 4; i++){
+       for(j = 0; j < 2; j++){
+	 my_table.setCell(i, j, "Cell [" + i + ", " + j +"]");
+       }
+     }
+     table2 = [
+       ['KE', 'ISS', 'AI', 'test',new ChibiJS.URL('>>CLICK ME<<', 'https://github.com/letuananh')],
+       ['datamining', 'textmining', 'something-else', 'nus', 'singapore', 'guess'],
+       [new ChibiJS.URL('EASTER EGG', function(){console.clear();console.writeline("SUPPLY");})]
+     ];	
+     table3 = [['a', 'b'], ['c', 'd', 'e', 'takaji', 'blob'],[1, 2, 3, 1], ['x', 'y', 'nus']];
+     table4 = [['pos:a','RP.sense:for','cvarsort:event'], ['sf:prop','tense:untensed','mood:indicative']];
+     table5 = [['pos:n','RP.sense:1','cvarsort:individual'], ['number:singular','pers:3','ind:plus']];
+     table6 = [['pos:p','cvarsort:event','sf:prop']];
+     table7 = [['pos:p', '<a href="#">foo</a>']];
+     table8 = [["pos:v","RP.sense:id","cvarsort:event"], ["sf:prop","tense:pres","mood:indicative"], ["prog:minus","perf:minus", "a"]];
+     
+     console.header("DRAW TABLES");
+     
+     visual_table1 = tbl_layer.draw_table(50, 50, my_table.getData(), "a_table1");
+     visual_table2 = tbl_layer.draw_table(20, 100, table2, "a_table2");	
+     visual_table3 = tbl_layer.draw_table(120, 150, table3, "a_table3");	
+     visual_table4 = tbl_layer.draw_table(10, 250, table4, 'tbl-4');
+     visual_table5 = tbl_layer.draw_table(10, 400, table5, 'tbl-5');
+     visual_table6 = tbl_layer.draw_table(10, 300, table6, 'tbl-6');
+     visual_table7 = tbl_layer.draw_table(10, 300, table7, 'tbl-7');
+     visual_table8 = tbl_layer.draw_table(10, 300, table8, 'tbl-8');
+
+     console.writeline("Type of tbl2 ee = " + typeof table2[2][0].url());
+     
+     console.header("REMOVE TABLES");
+     //if(typeof visual_table1 != "undefined") { tbl_layer.remove(visual_table1); visual_table1 = undefined; }
+     //if(typeof visual_table2 != "undefined") { tbl_layer.remove(visual_table2); visual_table2 = undefined; }
+     //if(typeof visual_table3 != "undefined") { tbl_layer.remove(visual_table3); visual_table3 = undefined; }
+     //if(typeof visual_table4 != "undefined") { tbl_layer.remove(visual_table4); visual_table4 = undefined; }
+     //if(typeof visual_table5 != "undefined") { tbl_layer.remove(visual_table5); visual_table5 = undefined; }
+     //if(typeof visual_table6 != "undefined") { tbl_layer.remove(visual_table6); visual_table6 = undefined; }
+     //if(typeof visual_table7 != "undefined") { tbl_layer.remove(visual_table7); visual_table7 = undefined; }
+     //if(typeof visual_table8 != "undefined") { tbl_layer.remove(visual_table8); visual_table8 = undefined; }
+
+
+     console.header("REFLOW TABLES");
+     //v_flow = new VerticalFlow();
+     v_flow = new HorizontalFlow();
+     
+     if(typeof visual_table1 != "undefined") { v_flow.addElement(visual_table1); } else { console.writeline("visual_table1 === " + typeof visual_table1); }
+     if(typeof visual_table2 != "undefined") { v_flow.addElement(visual_table2); } else { console.writeline("visual_table2 ===>" + typeof visual_table2); }
+     if(typeof visual_table3 != "undefined") { v_flow.addElement(visual_table3); } else { console.writeline("visual_table3 ===>" + typeof visual_table3); }
+     if(typeof visual_table4 != "undefined") { v_flow.addElement(visual_table4); } else { console.writeline("visual_table4 ===>" + typeof visual_table4); }
+     if(typeof visual_table5 != "undefined") { v_flow.addElement(visual_table5); } else { console.writeline("visual_table5 ===>" + typeof visual_table5); }
+     if(typeof visual_table6 != "undefined") { v_flow.addElement(visual_table6); } else { console.writeline("visual_table6 ===>" + typeof visual_table6); }
+     if(typeof visual_table7 != "undefined") { v_flow.addElement(visual_table7); } else { console.writeline("visual_table7 ===>" + typeof visual_table7); }
+     if(typeof visual_table8 != "undefined") { v_flow.addElement(visual_table8); } else { console.writeline("visual_table8 ===>" + typeof visual_table8); }
+     
+     CanvasUtil.alignTop(v_flow.getElements());
+     v_flow.rearrange(10);
+
+     console.header("PACKING ...");
+     canvas.pack(20);	
+   }
+    </script>
+
+  <!-- Document ready -->
+  <script>
+   $(document).ready(function(){       
+     initialise();
+   });
+
+   function initialise(){
+     // Console support
+     console = new Console("console");
+     $("#btnClear").click(clear_console);
+     $("#btnHide").click(toggleConsole);
+     
+     // Bind events
+     $("#btnDebug").click(debug);
+     $("#btnProcess").click(process);
+
+     // on load
+     clear_console();
+     update_console();
+     draw_table();
+   }     
+  </script>
 </html>

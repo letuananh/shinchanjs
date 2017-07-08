@@ -1,49 +1,142 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
-                    "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
   <head>
-    <title>Console demo</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Demo template">
+    <meta name="author" content="Le Tuan Anh <tuananh.ke@gmail.com">
+    <link rel="icon" href="../../favicon.ico">
+    <!-- Title and styles -->
+    <title>Demo template</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="modules/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="modules/viz/demo.css" />
+    <link rel="stylesheet" href="modules/viz/delphin-viz.css" />
+    <link rel="stylesheet" href="modules/highlight.js/styles/github.css" />
+    <!-- Demo CSS -->
+    <link rel="stylesheet" href="css/visko2.css" />    
+
+    <style>
+     #toolbar {
+       /* T-R-B-L */
+       margin: 5px 5px 5px 0px;
+       padding: 4px;
+       display: inline-block;
+     }
+     /* support: IE7 */
+     *+html #toolbar {
+       display: inline;
+     }
+    </style>
+    
   </head>
   <body>
-    <h1>Test Console</h1>
-    <div id="main_canvas"></div>
-    <div style="padding-bottom: 20px;">
-      <input type="button" id="btnStart" name="btnStart" value="Information"/>
-      <input type="button" id="btnClear" name="btnClear" value="Clear"/>
-    </div>
-    <div id="console" style="overflow: auto; max-height: 300px;"></div>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="isfclient2.html">Demo Template</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="index.html">Home</a></li>
+          </ul>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
+    
+    <div style="padding: 60px 20px;">
+      <div class="row">
+        <div class="col-md-6">
+	  <!-- Parsing Form -->
+          <form style="padding: 20px 3px;">
+            <div class="input-group input-group-lg">
+              <span class="input-group-addon">Input</span>
+              <input class="form-control input-lg" name="userinput" id="userinput" placeholder="Write anything here" value="Some dogs barked." type="text">
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default btn-lg" name="btnProcess" id="btnProcess" value="parse">Process</button>
+              </span>
+            </div>
+	  </form>
+
+          Lorem ipsum dolor sit amet.
+        </div>
+        <div class="col-md-6">
+          <!-- Control Panel and Console -->
+          <div id="toolbar" class="input-group" style="padding: 10px 0px;">
+	    <div class="input-group-btn">
+              <input type="button" class="btn btn-primary" id="btnDebug" name="btnDebug" value="Debug"/>
+              <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
+              <button type="button" id="btnHide" name="btnHide" class="btn btn-default">Hide Console</button>
+	    </div>
+          </div>
+          <div id="console" style="overflow: auto; max-height: 80vh;"></div>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; 2012-2017 Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</p>
+      </footer>
+    </div> <!-- /container -->
   </body>
 
-  <!-- Keep script at the end of page for better performance -->
-  <script src="js/jquery-1.8.2.js"></script>
-  <script src="js/raphael-min.js"></script>
-  <script src="js/kajika.js"></script>
+  <!-- Bootstrap -->
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="modules/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <!-- Others -->
+  <script src="js/lodash-4.17.4.min.js"></script>
+  <!-- ShinchanJS scripts -->
+  <script src="js/raphael-2.2.1.min.js"></script>
   <script src="js/console.js"></script>
   <script src="js/shinchan.js"></script>
-  <script src="js/jikan.js"></script>
+  <script src="js/shinchan.debug.js"></script>
+  <script src="js/visko-2.0.js"></script>
+  
+  <!-- Console support -->
   <script>
    var console;
-   var canvas;
-   
-   function initialise(){
-     // Create a console
-     console = new Console("console");
-     console.writeline("- Test Console -");
-     
-     $("#btnStart").click(function(){
-       testConsole();
-     });
-     $("#btnClear").click(function(){
-       console.clear("- Cleared -");
-     });
+
+   $(window).on('resize', function(){
+     update_console();
+   });
+
+   function toggleConsole(){
+     $("#console").toggle();
+     if($("#console").is(":visible")){
+       $("#btnHide").text("Hide Console");                
+     } 
+     else{
+       $("#btnHide").text("Show Console");
+     }
    }
    
-   $(document).ready(function(){		
-     initialise();	
-     testConsole();
-   });
-   
-   function testConsole(){
+   function update_console(){
+     var ch = $(window).height() - 130;
+     if (ch < 300){
+       ch = 300;
+     }
+     $("#console").height(ch);
+     $("#console").css('max-height', ch);
+     //console.writeline("Window's height: " + $(window).height());
+   }
+
+   function clear_console() {
+     console.clear("CoolISF REST Client - Version 0.1");
+     console.writeline();
+   }
+  </script>
+
+  <script>
+   function debug(){
      console.header("This is a header");
      console.writeline("This is a text");
      console.writeline("This is a text");
@@ -58,15 +151,41 @@
      console.exec("doSomething()", " | ");
      obj = new function(){ 
        this.str = function(){
-	 return "This is content from AN OBJECT";
+	 return "This content is from AN OBJECT";
        }
      };
      console.writeline(obj);
      console.write(obj);
    }
+
+   function process() {
+     var input = $("#userinput").val();
+     console.writeline("You wrote: " + input);
+   }
    
    function doSomething(){
      return "from inside function";
    }
-  </script>  
+  </script>
+  
+  <!-- Document ready -->
+  <script>
+   $(document).ready(function(){       
+     initialise();
+   });
+
+   function initialise(){
+     // Console support
+     console = new Console("console");
+     $("#btnClear").click(clear_console);
+     $("#btnHide").click(toggleConsole);
+     clear_console();
+     update_console();
+     
+     // Bind events
+     $("#btnDebug").click(debug);
+     $("#btnProcess").click(process);
+     debug();
+   }     
+  </script>
 </html>

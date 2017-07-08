@@ -11,8 +11,8 @@
     <!-- Title and styles -->
     <title>Coolisf - REST client 0.1</title>
     <!-- Bootstrap core CSS -->
-    <link href="bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Visko -->
+    <link rel="stylesheet" href="modules/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <!-- Demo CSS -->
     <link rel="stylesheet" href="css/visko2.css" />
   </head>
   
@@ -99,18 +99,20 @@
         <p>&copy; 2012-2017 Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</p>
       </footer>
     </div> <!-- /container -->
-       
+
     <!-- Bootstrap -->
-    <script src="js/jquery-3.1.1.min.js"></script>
-    <script src="bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- Lodash -->
-    <script src="js/lodash.min.js"></script>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="modules/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Others -->
+    <script src="js/lodash-4.17.4.min.js"></script>
+    <script src="modules/highlight.js/highlight-9.9.0.js"></script>
     <!-- ShinchanJS scripts -->
-    <script src="js/raphael.js"></script>
+    <script src="js/raphael-2.2.1.min.js"></script>
     <script src="js/console.js"></script>
     <script src="js/shinchan.js"></script>
     <script src="js/shinchan.debug.js"></script>
     <script src="js/visko-2.0.js"></script>
+
     <!-- Yawol client -->
     <script src="js/yawol.js"></script>
     <!-- Yawol support -->
@@ -276,7 +278,7 @@
 	   $(json['parses']).each(function(idx, parse){
 	     pid = idx + 1;
 	     // console.writeline("Parse #" + pid + " json: " + JSON.stringify(parse));
-	     render_json(parse, pid);  
+	     render_json(parse.dmrs, pid);  
 	   });
          },
          fail: function(jqxhr){
