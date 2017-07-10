@@ -4,11 +4,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Coolisf - REST client 0.2.1">
+    <meta name="description" content="Visko REST Client 0.1">
     <meta name="author" content="Le Tuan Anh <tuananh.ke@gmail.com">
     <link rel="icon" href="../../favicon.ico">
     <!-- Title and styles -->
-    <title>Coolisf - REST client 0.2.1</title>
+    <title>Visko REST Client 0.1</title>
     
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="modules/bootstrap/3.3.7/css/bootstrap.min.css" />
@@ -29,7 +29,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="isfclient.html">CoolISF - REST client 0.2.1</a>
+          <a class="navbar-brand" href="vkclient.html">Visko REST Client 0.1</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -41,22 +41,21 @@
     
     <div style="padding: 60px 20px;">
       
-      <!-- Parsing Form -->
+      <!-- Which collection to display? -->
       <form>
         <div class="input-group input-group-lg">
-          <input class="form-control input-lg" name="input_sentence" id="input_sentence" placeholder="Some dogs bark." value="Some dogs barked." type="text">
-          <span class="input-group-addon">Parse Count</span>
-          <select id="input_results" name="input_results" class="form-control input-small" title="Maximum parses">
-            <option value="1">1</option>
-            <option value="5" selected="">5</option>
-            <option value="10">10</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-            <option value="500">500</option>
-          </select>
+          <span class="input-group-addon">Collection</span>
+          <input class="form-control input-lg" name="collection" id="collection" placeholder="Collection name (e.g. test)" value="test" type="text">
+          <span class="input-group-addon">Corpus</span>
+          <input class="form-control input-lg" name="corpus" id="corpus" placeholder="Corpus name (e.g. minicb)" value="minicb" type="text">
+          <span class="input-group-addon">Document</span>
+          <input class="form-control input-lg" name="docid" id="docid" placeholder="Document name (e.g. cb100)" value="cb100" type="text">
+          <span class="input-group-addon">Sentence ID</span>
+          <input class="form-control input-lg" name="sentid" id="sentid" placeholder="Sentence ID (e.g. cb100)" value="1" type="text">
+          <span class="input-group-addon">Parse ID</span>
+          <input class="form-control input-lg" name="parseid" id="parseid" placeholder="Parse ID (e.g. 1)" value="1" type="text">
           <span class="input-group-btn">
-            <button class="btn btn-default btn-lg" name="btnParse" type="button" id="btnParse" value="cached" data-loading-text="<i class='icon-spinner icon-spin icon-large'></i> Processing">
-              <i class="icon-upload icon-large"></i> Parse</button>
+            <button class="btn btn-default btn-lg" name="btnFetch" type="button" id="btnFetch" value="cached">Fetch</button>
           </span>
         </div>
       </form>
@@ -68,15 +67,15 @@
       <div id="synsets"></div>
 
       <ul id="alltabs" class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#visko">DMRS</a></li>
+        <li><a data-toggle="tab" href="#visko">DMRS</a></li>
         <li><a data-toggle="tab" href="#delviz">delphin-viz</a></li>
         <li><a data-toggle="tab" href="#raw">pyDelphin</a></li>
         <li><a data-toggle="tab" href="#xml">XML</a></li>
         <li><a data-toggle="tab" href="#json">JSON</a></li>
-        <li><a data-toggle="tab" href="#debug">Debug</a></li>
+        <li class="active"><a data-toggle="tab" href="#debug">Debug</a></li>
       </ul>
       <div class="tab-content">
-        <div id="visko" class="tab-pane active">
+        <div id="visko" class="tab-pane">
           <div style="overflow-y: auto; height: 600px;">
             <!-- DMRSes container -->
 	    <div id="dmrses"></div>
@@ -95,7 +94,7 @@
         <div id="json" class="tab-pane">
           <div id="jsons"></div>
         </div>
-        <div id="debug" class="tab-pane">
+        <div id="debug" class="tab-pane active">
           <!-- Control Panel and Console -->
           <div id="toolbar" class="input-group" style="padding: 10px 0px;">
 	    <div class="input-group-btn">
@@ -256,7 +255,7 @@
      // Add parse header
      var div_parse = $('<h3></h3>');
      div_parse.text('Parse #' + parseid);
-     div_parse.attr('id', 'parse' + parseid);
+     div_parse.attr('id', 'parse_delviz_' + parseid);
      $('#' + container).append(div_parse);
      
      // Visualize dmrs
@@ -274,6 +273,55 @@
      mrs = MRS(dviz_mrs[0], JSON.parse(JSON.stringify(parse.mrs)), $('#input_sentence'), $('#sentence_text'));
    }
   </script>
+
+  <!-- Visko REST -->
+  <script>
+   var visko_root = 'http://localhost:8000/visko2/';
+   function fetch_visko() {
+     var col = $("#collection").val();
+     var cor = $("#corpus").val();
+     var did = $("#docid").val();
+     var sid = $("#sentid").val();
+     var pid = $("#parseid").val();
+
+     console.write("Collection: " + col);
+     console.write(" | Corpus: " + cor);
+     console.write(" | Document: " + did);
+     console.write(" | Sentence: " + sid);
+     console.writeline(" | Parse ID: " + pid);
+
+     var req_url;
+     if (pid.length > 0){
+       req_url = visko_root + 'vkrest/' + col + '/' + cor + '/' + did + '/' + sid + '/' + pid;
+     }
+     else{
+       req_url = visko_root + 'vkrest/' + col + '/' + cor + '/' + did + '/' + sid;
+     }
+     
+     console.writeline("Fetching from: " + req_url);
+     $.ajax({ url: req_url,
+              dataType: 'jsonp',
+              data: { 'raw': true, 'xml': true, 'json': true },
+              success: function(json){
+                clear_parses();
+                response = json;
+                console.writeline(json.parses.length + " parse(s) has been received.");
+                $('#parse_count').text(json.parses.length);
+                visualise();
+              },
+              fail: function(jqxhr){
+                if (console != undefined && console.writeline != undefined) {
+                  console.writeline("Request Failed: " + jqxhr.statusText + " | code = " + jqxhr.status);
+                }
+              },
+              error: function(jqxhr){
+                if (console != undefined && console.writeline != undefined) {
+                  console.writeline("An error occurred. Message = " + jqxhr.statusText + " | code = " + jqxhr.status);
+                }
+              }
+     }); // end .ajax()
+   }
+  </script>
   
   <!-- Coolisf REST support -->
   <script>
@@ -286,6 +334,7 @@
    function clear_parses() {
      $('#dmrses').empty();
      $('#jsons').empty();
+     $('#xmlcontent').empty();
      $('#dvizes').empty();
      response = undefined;
    }
@@ -294,6 +343,17 @@
      $(a_div).find('pre code').each(function(i, block) {
        hljs.highlightBlock(block);
      });
+   }
+
+   /**
+    * Make parse header clickable
+    **/
+   function header_toolbar(parse, parseidx, container) {
+     var h3 = add_parse_header(parse, parseidx, container);
+     var lnk = $('<a href="#"></a>');
+     lnk.attr('href', '#go');
+     lnk.text(h3.text());
+     h3.text('').append(lnk);
    }
    
    // Render active visualizer
@@ -315,7 +375,7 @@
        console.writeline("Viskoing");
        parses.each(function(idx, parse){
          pid = idx + 1;
-         render_visko(parse, pid);
+         render_visko(parse, pid, header_toolbar);
        });
      }
      // XML
@@ -345,24 +405,18 @@
    
    /** Parse a sentence using REST API **/
    function do_parse() {
-     $("#btnParse").button('loading');
      var sent = $('#input_sentence').val();
      var parse_count = $('#input_results').val();
      console.header("Sentence: " + sent);
      // call parse async
-     get_isf().parse(sent, parse_count, 'lelesk', 'ERG', success, fail);
+     get_isf().parse(sent, parse_count, 'lelesk', 'ERG', success);
      console.writeline("Server is processing. Please wait ...");
-   }
-
-   function fail() {
-     $("#btnParse").button('reset');
    }
    
    /**
     * When received parses from server
     **/
    function success(json) {
-     $("#btnParse").button('reset');
      clear_parses();
      response = json; // store parses for rendering  
      console.writeline("Raw response: " + JSON.stringify(response));
@@ -398,8 +452,8 @@
      $('#synset_info').hide();
      
      $("#btnDebug").click(debug);
-     $("#btnParse").click(do_parse);
      $("#btnClearCanvas").click(clear_parses);
+     $("#btnFetch").click(fetch_visko);
      $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
        visualise();
      });
