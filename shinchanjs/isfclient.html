@@ -359,6 +359,9 @@
      clear_parses();
      response = json; // store parses for rendering  
      console.writeline("Raw response: " + JSON.stringify(response));
+     console.writeline("----");
+     console.writeline(json.parses.length + " parse(s) has been received.");
+     $('#parse_count').text(json.parses.length);
      visualise();
    }
    
