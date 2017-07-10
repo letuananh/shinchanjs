@@ -11,7 +11,7 @@ Restisf.prototype = {
         tagger = (tagger == undefined) ? 'lelesk' : tagger;
         grammar = (grammar == undefined) ? 'ERG' : grammar;
         $.ajax({
-            url: this._server,
+            url: this._server + 'parse',
             dataType: 'jsonp',
             data: {
                 'sent': sent,
