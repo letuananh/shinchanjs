@@ -12,6 +12,7 @@
     <title>Yawol demo client - Version 0.3.1</title>
     <!-- Bootstrap core CSS -->
     <link href="modules/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="modules/bootstrap-toggle/css/bootstrap-toggle.min.css" />
     <!-- Visko -->
     <link rel="stylesheet" href="css/visko2.css" />
   </head>
@@ -26,7 +27,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="synset_demo.html">Yawol client - Version 0.3.1</a>
+          <a class="navbar-brand" href="yawol_demo.html">Yawol client - Version 0.3.1</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -45,10 +46,15 @@
               <div class="input-group input-group-lg">
                 <input class="form-control input-lg" name="query" id="query" placeholder="01775164-v or love or love%2:37:00::" value="01775164-v" type="text">
                 <span class="input-group-btn">
-                  <button type="button" class="btn btn-default btn-lg" name="btnSearchLocal" id="btnSearchLocal" value="parse">Search Local</button>
-                  <button type="button" class="btn btn-default btn-lg" name="btnSearch" id="btnSearch" value="parse">Search AJAX</button>
+                  <button type="button" class="btn btn-default btn-lg" name="btnSearch" id="btnSearch" value="parse">Search</button>
                 </span>
               </div>
+            </div>
+            <div class="row" style="padding: 5px;">
+              <span class="label label-default">Try these</span>
+              <a href="#" id="txtSynsetID">01775164-v</a> | 
+              <a href="#" id="txtLemma">love</a> | 
+              <a href="#" id="txtSensekey">love%2:37:00::</a>
             </div>
           </form>
           <!-- Synset Information -->
@@ -77,8 +83,9 @@
               </div>
             </div>
             <div class="row">
+              <button type="button" id="btnReset" name="btnReset" class="btn btn-primary">Reset</button>    
               <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
-              <button type="button" id="btnHide" name="btnHide" class="btn btn-default">Hide Console</button>  
+              <input type="checkbox" id="consoletoggle" data-width="100" checked data-toggle="toggle" data-on="Console" data-off="Console"></input>              
             </div>
           </div>
           <div id="console" style="overflow: auto; max-height: 80vh;"></div>
@@ -95,6 +102,7 @@
     <!-- Bootstrap -->
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="modules/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="modules/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
     <!-- Others -->
     <script src="js/lodash-4.17.4.min.js"></script>
     <!-- ShinchanJS scripts -->
@@ -155,6 +163,7 @@
      </div>
      </div>
     </script>
+    
     <!-- Yawol client helper functions -->
     <script>
      var yawol;
@@ -197,20 +206,13 @@
      });
 
      function initialise(){
-       init_console();
-       $('#synset_info').hide();
+       // Console support
+       console = new Console("console", 220, ".:: Yawol REST Client - Version 0.3.1 ::.<br/>");
+       $("#btnClear").click(function() { console.clear(); });
+       $(window).on('resize', function() { console.resize(); });
+       $('#consoletoggle').change(function(){ console.toggle(); });
+       console.clear().resize();
 
-       $('#query').keydown(function(e) {
-         if (e.keyCode == 13) {
-           do_search();
-           return false;
-         }
-       });
-       
-       // Synset related features
-       $("#btnSearch").click(function(){do_search();});
-       $("#btnSearchLocal").click(function(){do_search_local();});
-       $('#btnPing').click(function(){ping_server();});
        $('#servers').on('click' ,'li a', function(){
          var server = $(this).text();
          if (server == 'Django'){
@@ -220,49 +222,22 @@
            $('#yawol_url').val('http://127.0.0.1:5000/yawol/');
          }
        });
+       // Press enter to search
+       $('#query').keydown(function(e) {
+         if (e.keyCode == 13) {
+           do_search();
+           return false;
+         }
+       });
+       $('#txtSynsetID').click(function(){ $('#query').val($(this).text()); });
+       $('#txtLemma').click(function(){ $('#query').val($(this).text()); });
+       $('#txtSensekey').click(function(){ $('#query').val($(this).text()); });
+       
+       // Synset related features
+       $("#btnReset").click(function(){get_yawol().clear();});
+       $("#btnSearch").click(function(){do_search();});
+       $('#btnPing').click(function(){ping_server();});
      }     
-    </script>
-    <!-- Console support -->
-    <script>
-     var console;
-
-     function init_console() {
-       // Console support
-       console = new Console("console");
-       $("#btnClear").click(clear_console);
-       $("#btnHide").click(toggleConsole);
-       clear_console();
-       update_console();
-     }
-     
-     $(window).on('resize', function(){
-       update_console();
-     });
-
-     function toggleConsole(){
-       $("#console").toggle();
-       if($("#console").is(":visible")){
-         $("#btnHide").text("Hide Console");                
-       } 
-       else{
-         $("#btnHide").text("Show Console");
-       }
-     }
-     
-     function update_console(){
-       var ch = $(window).height() - 200;
-       if (ch < 300){
-         ch = 300;
-       }
-       $("#console").height(ch);
-       $("#console").css('max-height', ch);
-       //console.writeline("Window's height: " + $(window).height());
-     }
-
-     function clear_console() {
-       console.clear("Synset Demo");
-       console.writeline();
-     }
     </script>
   </body>
 </html>
