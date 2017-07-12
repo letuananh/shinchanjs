@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Advanced Visko Hacks">
+    <meta name="author" content="Le Tuan Anh <tuananh.ke@gmail.com">
+    <link rel="icon" href="../../favicon.ico">
+    <!-- Title and styles -->
+    <title>Advanced Visko Hacks</title>
+    
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="modules/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="modules/bootstrap-toggle/css/bootstrap-toggle.min.css" />
+    <link rel="stylesheet" href="modules/viz/demo.css" />
+    <link rel="stylesheet" href="modules/viz/delphin-viz.css" />
+    <link rel="stylesheet" href="modules/highlight.js/styles/github.css" />
+    <!-- Demo CSS -->
+    <link rel="stylesheet" href="css/visko2.css" />
+  </head>
+  
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="visko_adv.html">Advanced Visko Hacks</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="index.html">Home</a></li>
+          </ul>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
+    
+    <div style="padding: 60px 20px;">
+      <div class="row">
+        <div class="dmrs_sentence_text">Parse count: <span id="parse_count">0</span></div>
+        <div id="sentence_text" class="dmrs_sentence_text"></div>
+
+        <!-- Synset Information -->
+        <div id="synsets"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <!-- DMRS column -->
+          <ul id="alltabs" class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#visko">DMRS</a></li>
+            <li><a data-toggle="tab" href="#delviz">delphin-viz</a></li>
+            <li><a data-toggle="tab" href="#raw">pyDelphin</a></li>
+            <li><a data-toggle="tab" href="#xml">XML</a></li>
+            <li><a data-toggle="tab" href="#json">JSON</a></li>
+          </ul>
+          <div class="tab-content">
+            <div id="visko" class="tab-pane active">
+              <div style="overflow-y: auto; min-height: 200px;">
+                <!-- DMRSes container -->
+	        <div id="dmrses"></div>
+              </div>
+            </div>
+            <div id="delviz" class="tab-pane">
+              <div style="overflow-y: auto; min-height: 200px;">
+                <!-- Delphin-viz container -->
+                <div id="dvizes"></div>
+              </div>
+            </div>
+            <div id="raw" class="tab-pane">
+              <div id="raws"></div>
+            </div>
+            <div id="xml" class="tab-pane">
+              <pre><code id="xmlcontent"></code></pre>
+            </div>
+            <div id="json" class="tab-pane">
+              <div id="jsons"></div>
+            </div>
+          </div>
+          <!-- End DMRS column -->
+        </div>
+        <div class="col-md-6">
+          <!-- Control Panel and Console -->
+          <div id="toolbar" class="input-group" style="padding: 10px 0px;">
+            <input type="button" class="btn btn-primary" id="btnRender" name="btnRender" value="Render"/>
+            <input type="button" class="btn btn-primary" id="btnClearCanvas" name="btnClearCanvas" value="Destroy"/>
+            <input type="button" class="btn btn-default" id="btnDebug" name="btnDebug" value="Debug"/>
+            <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
+            <input type="checkbox" id="consoletoggle" data-width="100" checked data-toggle="toggle" data-on="Console" data-off="Console"></input>
+          </div>
+          <div id="console" style="overflow: auto; max-height: 80vh;"></div>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; 2012-2017 Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</p>
+      </footer>
+    </div> <!-- /container -->
+  </body>
+  
+  <!-- Bootstrap -->
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="modules/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="modules/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
+  <!-- Others -->
+  <script src="js/lodash-4.17.4.min.js"></script>
+  <script src="modules/highlight.js/highlight-9.9.0.js"></script>
+  <!-- ShinchanJS scripts -->
+  <script src="js/raphael-2.2.1.min.js"></script>
+  <script src="js/console.js"></script>
+  <script src="js/shinchan.js"></script>
+  <script src="js/shinchan.debug.js"></script>
+  <script src="js/visko-2.0.js"></script>
+  <script src="js/restisf.js"></script>
+  <!-- Delphin-viz support -->
+  <script src="js/delviz.js"></script>
+  <script type="text/javascript" src="modules/viz/svg-2.3.0.min.js"></script>
+  <script type="text/javascript" src="modules/viz/d3.v3.min.js"></script>
+  <script type="text/javascript" src="modules/viz/demo.js"></script>
+  <script type="text/javascript" src="modules/viz/tree.js"></script>
+  <script type="text/javascript" src="modules/viz/mrs.js"></script>
+  <script type="text/javascript" src="modules/viz/dmrs.js"></script>
+  
+  
+  <!-- Yawol client -->
+  <script src="js/yawol.js"></script>
+  
+  <!-- Yawol support -->
+  <script type="text/template" id="synsetbox_template">
+     <div class="synsetbox container-fluid well">
+     <div class="row">
+     <div class="col-xs-12">
+      <button type="button" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+     </div>
+     </div>
+     <div class="row">
+     <div class="col-xs-12 col-sm-2 col-md-2">
+      <label>SynsetID</label>
+     </div>
+     <div class="col-xs-12 col-sm-2 col-md-2">
+      <span class="synsetid"><%= synset.synsetid %></span>                
+     </div>
+     <div class="col-xs-12 col-sm-2 col-md-2">
+      <label>Lemmas</label> <span class="lemma"></span>
+     </div>
+     <div class="col-xs-12 col-sm-6 col-md-6">
+      <span class="lemmas"><%= _.join(synset.lemmas, ', ') %></span>
+     </div>
+     </div>
+     <div class="row">
+     <div class="col-xs-12 col-md-2">
+      <label>Definition</label>
+     </div>
+     <div class="col-xs-12 col-md-10">
+      <span class="definition"><%= synset.definition %></span>
+     </div>
+     </div>
+     <div class="row">
+     <div class="col-xs-12 col-md-2">
+      <label>Examples</label>
+     </div>
+     <div class="col-xs-12 col-md-10">
+       <span class="examples">
+         <% if(synset.examples.length > 0) {  %>
+         <ul>
+           <% _.each(synset.examples, function(ex){ %>
+           <li><%= ex %></li>
+           <% }); %>
+         </ul>
+         <% } %>    
+       </span>
+     </div>
+     </div>
+     </div>
+  </script>
+  <script>
+   var yawol;
+   var yawol_root = 'http://localhost:8000/yawol/';
+   
+   function get_yawol() {
+     if (yawol == undefined) {
+       yawol = new Yawol("synsets", yawol_root, $("#synsetbox_template").html());
+     }
+     return yawol;
+   }
+   
+   /** Sample synset link builder **/
+   function find_synset(synsetid) {
+     return function(){ 
+       get_yawol().search_synset(synsetid);
+     };
+   }
+  </script>
+    
+  <!-- Visko tabs support -->
+  <script>
+   function highlight(a_div) {
+     $(a_div).find('pre code').each(function(i, block) {
+       hljs.highlightBlock(block);
+     });
+   }
+
+   function active_tab() {
+     return $("#alltabs .active > a").attr("href");
+   }   
+  </script>
+  
+  <!-- Coolisf REST support -->
+  <script>
+   var last_response;
+   
+   /** Load an ISF sentence **/
+   function do_parse() {
+     clear_parses();
+     $("#btnParse").button('loading');
+     var dmrs_url = "ajax/dmrs_long.json";
+     console.writeline("Fetching from: " + dmrs_url);
+     $.get(dmrs_url).done(success)
+      .always(function(){
+        $("#btnParse").button('reset');   
+      });
+   }
+
+   /**
+    * When received parses from server
+    **/
+   function success(json) {
+     last_response = json; // store parses for rendering  
+     console.writeline(json.parses.length + " parse(s) has been received.");
+     $('#parse_count').text(json.parses.length);
+     visualise(json);
+     $("#dmrs1_canvas").mousedown(function(e){
+       if (e.which == 3) {
+         console.writeline("Boo!");
+       }
+     });
+   }   
+   
+   /** Show debug info **/
+   function debug() {
+     console.writeline("Debug | Active tab text: " + active_tab());
+   }
+  </script>
+
+  <!-- Document ready -->
+  <script>
+   $(document).ready(function(){       
+     initialise();
+     do_parse();
+   });
+   
+   function initialise(){
+     // Console support
+     console = new Console("console", 260, ".:: Advanced Visko Hacks ::.");
+     $("#btnClear").click(function() { console.clear(); });
+     $(window).on('resize', function() { console.resize(); });
+     $('#consoletoggle').change(function(){ console.toggle(); });
+     console.clear().resize();
+     
+     $("#btnDebug").click(debug);
+     $("#btnRender").click(do_parse);
+     $("#btnClearCanvas").click(clear_parses);
+     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+       visualise(last_response);
+     });
+   }     
+  </script>
+</html>

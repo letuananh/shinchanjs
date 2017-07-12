@@ -665,6 +665,16 @@ function add_parse_header(parse, parseidx, container, id_prefix){
     return div_parse;
 }
 
+function clear_parses(dmrs_container, json_container, delviz_container) {
+    if (dmrs_container == undefined) { dmrs_container = $('#dmrses'); }
+    if (json_container == undefined) { json_container = $('#jsons'); }
+    if (delviz_container == undefined) { delviz_container = $('#dvizes'); }
+
+    $(dmrs_container).empty();
+    $(json_container).empty();
+    $(delviz_container).empty();
+}
+
 /**
  * Render a DMRS using Visko
  **/
@@ -729,4 +739,47 @@ function display_json(parse, parseid, container){
     $('#' + container).append($('<h4>DMRS</h4>'));
     var div_raw = $(rawblock({'pid': parseid, 'json': JSON.stringify(parse.dmrs)}));
     $('#' + container).append(div_raw);
+}
+
+// Render active visualizer
+function visualise(response, visko_parse_header, dviz_parse_header){       
+    if (response == undefined) {
+        return;
+    }
+    var parses = $(response['parses']);
+    // if using delviz
+    if ($('#dvizes').is(':empty') && active_tab() == '#delviz'){
+        parses.each(function(idx, parse){
+            pid = idx + 1;
+            render_delviz(parse, pid, dviz_parse_header);
+        });
+    }
+    // if using visko
+    else if ($('#dmrses').is(':empty') && active_tab() == '#visko'){
+        parses.each(function(idx, parse){
+            pid = idx + 1;
+            render_visko(parse, pid, visko_parse_header);
+        });
+    }
+    // XML
+    else if ($('#xmlcontent').is(':empty') && active_tab() == '#xml') {
+        display_xml(response.xml);
+    }
+    // Raws
+    else if ($('#raws').is(':empty') && active_tab() == '#raw') {
+        parses.each(function(idx, parse){
+            pid = idx + 1;
+            display_raw(parse, pid);
+        });
+        highlight('#raws');
+    }       
+    // JSONs
+    else if ($('#jsons').is(':empty') && active_tab() == '#json') {
+        parses.each(function(idx, parse){
+            pid = idx + 1;
+            display_json(parse, pid);
+        });
+        highlight('#jsons');
+    }
+    // end if
 }

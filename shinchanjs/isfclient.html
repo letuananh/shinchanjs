@@ -140,11 +140,9 @@
   <script type="text/javascript" src="modules/viz/mrs.js"></script>
   <script type="text/javascript" src="modules/viz/dmrs.js"></script>
   
-  
   <!-- Yawol client -->
   <script src="js/yawol.js"></script>
-  
-  <!-- Yawol support -->
+  <!-- Yawol synsetbox template -->
   <script type="text/template" id="synsetbox_template">
      <div class="synsetbox container-fluid well">
      <div class="row">
@@ -213,41 +211,7 @@
      };
    }
   </script>
-  
-  <!-- Console support -->
-  <script>
-   var console;
-   
-   $(window).on('resize', function(){
-     update_console();
-   });
-   
-   function toggleConsole(){
-     $("#console").toggle();
-     if($("#console").is(":visible")){
-       $("#btnHide").text("Hide Console");                
-     } 
-     else{
-       $("#btnHide").text("Show Console");
-     }
-   }
-   
-   function update_console(){
-     var ch = $(window).height() - 130;
-     if (ch < 300){
-       ch = 300;
-     }
-     $("#console").height(ch);
-     $("#console").css('max-height', ch);
-     //console.writeline("Window's height: " + $(window).height());
-   }
-   
-   function clear_console() {
-     console.clear("CoolISF REST Client - Version 0.1");
-     console.writeline();
-   }
-  </script>
-  
+    
   <!-- Delphin-viz support -->
   <script>
    // delphin-viz visualisation
@@ -382,7 +346,8 @@
    function debug() {
      console.writeline("Debug | Active tab text: " + active_tab());
    }
-  </script>
+    </script>
+  
   <!-- Document ready -->
   <script>
    $(document).ready(function(){       
