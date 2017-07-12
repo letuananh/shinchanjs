@@ -1,4 +1,7 @@
 #!/bin/bash
 
-export FLASK_APP=app.py
-flask run --port 5001
+# export FLASK_APP=app.py
+# flask run --port 5001
+
+# use python 3 default http server
+python -m http.server 5001
