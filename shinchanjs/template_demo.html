@@ -76,10 +76,11 @@
 	    <div class="input-group-btn">
               <input type="button" class="btn btn-primary" id="btnDebug" name="btnDebug" value="Debug"/>
               <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
-	      <input type="checkbox" id="consoletoggle" checked data-toggle="toggle" data-on="Console" data-off="Console"></input>
+              <input type="checkbox" id="consoletoggle" checked data-toggle="toggle" data-on="Console" data-off="Console"></input>
 	    </div>
           </div>
           <div id="console" style="overflow: auto; max-height: 80vh;"></div>
+          <!-- End console UI -->
         </div>
       </div>
       
@@ -104,31 +105,6 @@
   <script src="js/shinchan.debug.js"></script>
   <script src="js/visko-2.0.js"></script>
   
-  <!-- Console support -->
-  <script>
-   var console;
-   
-   $(window).on('resize', function(){
-     update_console();
-   });
-   
-   
-   function update_console(){
-     var ch = $(window).height() - 280;
-     if (ch < 300){
-       ch = 300;
-     }
-     $("#console").height(ch);
-     $("#console").css('max-height', ch);
-     //console.writeline("Window's height: " + $(window).height());
-   }
-   
-   function clear_console() {
-     console.clear("CoolISF REST Client - Version 0.1");
-     console.writeline();
-   }
-  </script>
-  
   <script>
    function debug(){
      console.writeline("Do this and that");
@@ -143,20 +119,15 @@
   <!-- Document ready -->
   <script>
    var canvas;
-   
-   $(document).ready(function(){       
-     initialise();
-   });
+   var console;
    
    function initialise(){
      // Console support
-     console = new Console("console");
-     $("#btnClear").click(clear_console);
-     clear_console();
-     update_console();
-     $('#consoletoggle').change(function(){
-       console.holder.toggle();
-     });
+     console = new Console("console", 220, ".:: Console Demo ::.<br/>");
+     $("#btnClear").click(function() { console.clear(); });
+     $(window).on('resize', function() { console.resize(); });
+     $('#consoletoggle').change(function(){ console.toggle(); });
+     console.clear().resize();
      
      // Init canvas
      canvas = new Canvas("main_canvas", 320, 240, "MainCanvas");
@@ -164,6 +135,10 @@
      // Bind events
      $("#btnDebug").click(debug);
      $("#btnProcess").click(process);
-   }     
+   }
+
+   $(document).ready(function(){       
+     initialise();
+   });
   </script>
 </html>

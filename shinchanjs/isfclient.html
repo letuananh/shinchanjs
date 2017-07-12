@@ -12,6 +12,7 @@
     
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="modules/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="modules/bootstrap-toggle/css/bootstrap-toggle.min.css" />
     <link rel="stylesheet" href="modules/viz/demo.css" />
     <link rel="stylesheet" href="modules/viz/delphin-viz.css" />
     <link rel="stylesheet" href="modules/highlight.js/styles/github.css" />
@@ -102,7 +103,7 @@
               <input type="button" class="btn btn-primary" id="btnClearCanvas" name="btnClearCanvas" value="Reset"/>
               <input type="button" class="btn btn-default" id="btnDebug" name="btnDebug" value="Debug"/>
               <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
-              <!-- <button type="button" id="btnHide" name="btnHide" class="btn btn-default">Hide Console</button> -->
+              <input type="checkbox" id="consoletoggle" data-width="100" checked data-toggle="toggle" data-on="Console" data-off="Console"></input>
 	    </div>
           </div>
           <div id="console" style="overflow: auto; max-height: 80vh;"></div>
@@ -120,6 +121,7 @@
   <!-- Bootstrap -->
   <script src="js/jquery-3.2.1.min.js"></script>
   <script src="modules/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="modules/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
   <!-- Others -->
   <script src="js/lodash-4.17.4.min.js"></script>
   <script src="modules/highlight.js/highlight-9.9.0.js"></script>
@@ -249,15 +251,14 @@
   <!-- Delphin-viz support -->
   <script>
    // delphin-viz visualisation
-   function render_delviz(parse, parseid, container){
+   function render_delviz(parse, parseid, header_maker, container){
      if (parseid == undefined) { parseid = 1; }
      if (container == undefined) { container = 'dvizes'; }
+
+     if (typeof header_maker != 'function') { header_maker = add_parse_header; }
      
      // Add parse header
-     var div_parse = $('<h3></h3>');
-     div_parse.text('Parse #' + parseid);
-     div_parse.attr('id', 'parse' + parseid);
-     $('#' + container).append(div_parse);
+     header_maker(parse, parseid, container, 'dviz_parse');
      
      // Visualize dmrs
      var dviz_dmrs = $('<div></div>');
@@ -390,12 +391,11 @@
    
    function initialise(){
      // Console support
-     console = new Console("console");
-     $("#btnClear").click(clear_console);
-     $("#btnHide").click(toggleConsole);
-     clear_console();
-     update_console();
-     $('#synset_info').hide();
+     console = new Console("console", 260, ".:: CoolISF REST Client - Version 0.1 ::.");
+     $("#btnClear").click(function() { console.clear(); });
+     $(window).on('resize', function() { console.resize(); });
+     $('#consoletoggle').change(function(){ console.toggle(); });
+     console.clear().resize();
      
      $("#btnDebug").click(debug);
      $("#btnParse").click(do_parse);

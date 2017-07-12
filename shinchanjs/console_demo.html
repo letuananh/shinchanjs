@@ -12,6 +12,7 @@
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="modules/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="modules/bootstrap-toggle/css/bootstrap-toggle.min.css" />
     <link rel="stylesheet" href="modules/viz/demo.css" />
     <link rel="stylesheet" href="modules/viz/delphin-viz.css" />
     <link rel="stylesheet" href="modules/highlight.js/styles/github.css" />
@@ -42,7 +43,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="isfclient2.html">Console demo</a>
+          <a class="navbar-brand" href="console_demo.html">Console demo</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -69,15 +70,15 @@
           Lorem ipsum dolor sit amet.
         </div>
         <div class="col-md-6">
-          <!-- Control Panel and Console -->
-          <div id="toolbar" class="input-group" style="padding: 10px 0px;">
+          <!-- Control Panel and Console -->          <divf id="toolbar" class="input-group" style="padding: 10px 0px;">
 	    <div class="input-group-btn">
               <input type="button" class="btn btn-primary" id="btnDebug" name="btnDebug" value="Debug"/>
               <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
-              <button type="button" id="btnHide" name="btnHide" class="btn btn-default">Hide Console</button>
+              <input type="checkbox" id="consoletoggle" data-width="100" checked data-toggle="toggle" data-on="Console" data-off="Console"></input>
 	    </div>
           </div>
           <div id="console" style="overflow: auto; max-height: 80vh;"></div>
+          <!-- End console UI -->
         </div>
       </div>
 
@@ -92,6 +93,7 @@
   <!-- Bootstrap -->
   <script src="js/jquery-3.2.1.min.js"></script>
   <script src="modules/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="modules/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
   <!-- Others -->
   <script src="js/lodash-4.17.4.min.js"></script>
   <!-- ShinchanJS scripts -->
@@ -100,41 +102,8 @@
   <script src="js/shinchan.js"></script>
   <script src="js/shinchan.debug.js"></script>
   <script src="js/visko-2.0.js"></script>
-  
-  <!-- Console support -->
-  <script>
-   var console;
 
-   $(window).on('resize', function(){
-     update_console();
-   });
-
-   function toggleConsole(){
-     $("#console").toggle();
-     if($("#console").is(":visible")){
-       $("#btnHide").text("Hide Console");                
-     } 
-     else{
-       $("#btnHide").text("Show Console");
-     }
-   }
-   
-   function update_console(){
-     var ch = $(window).height() - 130;
-     if (ch < 300){
-       ch = 300;
-     }
-     $("#console").height(ch);
-     $("#console").css('max-height', ch);
-     //console.writeline("Window's height: " + $(window).height());
-   }
-
-   function clear_console() {
-     console.clear("CoolISF REST Client - Version 0.1");
-     console.writeline();
-   }
-  </script>
-
+  <!-- Demo console features -->
   <script>
    function debug(){
      console.header("This is a header");
@@ -154,8 +123,9 @@
 	 return "This content is from AN OBJECT";
        }
      };
+     console.write(obj, "green");
+     console.write(" | ", "red");
      console.writeline(obj);
-     console.write(obj);
    }
 
    function process() {
@@ -170,17 +140,18 @@
   
   <!-- Document ready -->
   <script>
+   var console;
    $(document).ready(function(){       
      initialise();
    });
 
    function initialise(){
      // Console support
-     console = new Console("console");
-     $("#btnClear").click(clear_console);
-     $("#btnHide").click(toggleConsole);
-     clear_console();
-     update_console();
+     console = new Console("console", 220, ".:: Console Demo ::.<br/>");
+     $("#btnClear").click(function() { console.clear(); });
+     $(window).on('resize', function() { console.resize(); });
+     $('#consoletoggle').change(function(){ console.toggle(); });
+     console.clear().resize();
      
      // Bind events
      $("#btnDebug").click(debug);
