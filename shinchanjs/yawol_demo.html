@@ -173,7 +173,10 @@
        var synsetid = $('#query').val();
        get_yawol().load_synset(synsetid);
      }
-     
+
+     /**
+      * Search synsets using REST API
+      **/
      function do_search() {
        var synsetid = $('#query').val();
        get_yawol().search_synset(synsetid);
