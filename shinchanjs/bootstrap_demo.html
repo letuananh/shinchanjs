@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="ShinchanJS/Bootstrap Demo">
+    <meta name="author" content="Le Tuan Anh <tuananh.ke@gmail.com">
+    <link rel="icon" href="../../favicon.ico">
+    <!-- Title and styles -->
+    <title>ShinchanJS/Bootstrap Demo</title>
+    
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="modules/bootstrap-toggle/css/bootstrap-toggle.min.css" />
+    <link rel="stylesheet" href="modules/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="modules/viz/demo.css" />
+    <link rel="stylesheet" href="modules/viz/delphin-viz.css" />
+    <link rel="stylesheet" href="modules/highlight.js/styles/github.css" />
+    <!-- Demo CSS -->
+    <link rel="stylesheet" href="css/visko2.css" />    
+    
+    <style>
+     #toolbar {
+       /* T-R-B-L */
+       margin: 5px 5px 5px 0px;
+       padding: 4px;
+       display: inline-block;
+     }
+     /* support: IE7 */
+     *+html #toolbar {
+       display: inline;
+     }
+    </style>
+    
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="bootstrap_demo.html">ShinchanJS/Bootstrap Demo</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="index.html">Home</a></li>
+          </ul>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
+    
+    <div style="padding: 60px 20px;">
+      <div class="row">
+        <div class="col-md-6">
+	  <!-- Parsing Form -->
+          <form style="padding: 20px 3px;">
+            <div class="input-group input-group-lg">
+              <span class="input-group-addon">Input</span>
+              <input class="form-control input-lg" name="userinput" id="userinput" placeholder="Write anything here" value="Some dogs barked." type="text">
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default btn-lg" name="btnProcess" id="btnProcess" value="parse">Process</button>
+              </span>
+            </div>
+	  </form>
+
+          <div id="box1"></div>
+          Lorem ipsum dolor sit amet.
+          <div id="main_canvas"></div>
+        </div>
+        <div class="col-md-6">
+          <!-- Control Panel and Console -->
+          <div id="toolbar" class="input-group" style="padding: 10px 0px;">
+	    <div class="input-group-btn">
+              <input type="button" class="btn btn-primary" id="btnDebug" name="btnDebug" value="Debug"/>
+              <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
+              <input type="checkbox" id="consoletoggle" checked data-toggle="toggle" data-on="Console" data-off="Console"></input>
+	    </div>
+          </div>
+          <div id="console" style="overflow: auto; max-height: 80vh;"></div>
+          <!-- End console UI -->
+        </div>
+      </div>
+      
+      <hr>
+      
+      <footer>
+        <p>&copy; 2012-2017 Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</p>
+      </footer>
+    </div> <!-- /container -->
+  </body>
+  
+  <!-- Bootstrap -->
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="modules/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="modules/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
+  <!-- Others -->
+  <script src="js/lodash-4.17.4.min.js"></script>
+  <!-- ShinchanJS scripts -->
+  <script src="js/raphael-2.2.1.min.js"></script>
+  <script src="js/console.js"></script>
+  <script src="js/shinchan.js"></script>
+  <script src="js/shinchan.debug.js"></script>
+  <script src="js/visko-2.0.js"></script>
+
+  <script>
+
+   function gen_button(id) {
+     btn = $("<button class='btn btn-default btn-sm'><span class='glyphicon glyphicon-remove'></span> Remove</button>");
+     if (id == undefined) { id = "btn_" + ChibiJS.IDGenerator.generate(); }
+     btn.data('bid', '#' + id);
+     btn.attr('id', id);
+     return btn;
+   }
+
+   function debug(){
+     btn = gen_button();
+     btn.click(function(){
+       console.writeline($(this).data('bid') + " has been clicked");
+     });
+     $('#box1').append(btn);
+   }
+   
+   function process() {
+     var input = $("#userinput").val();
+     console.writeline("You wrote: " + input);
+   }
+  </script>
+  
+  <!-- Document ready -->
+  <script>
+   var canvas;
+   var console;
+   
+   function initialise(){
+     // Console support
+     console = new Console("console", 220, ".:: ShinchanJS/Bootstrap Demo ::.<br/>");
+     $("#btnClear").click(function() { console.clear(); });
+     $(window).on('resize', function() { console.resize(); });
+     $('#consoletoggle').change(function(){ console.toggle(); });
+     console.clear().resize();
+     
+     // Init canvas
+     canvas = new Canvas("main_canvas", 320, 240, "MainCanvas");
+     
+     // Bind events
+     $("#btnDebug").click(debug);
+     $("#btnProcess").click(process);
+   }
+
+   $(document).ready(function(){       
+     initialise();
+   });
+  </script>
+</html>
