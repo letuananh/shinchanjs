@@ -687,7 +687,10 @@ function render_visko(parse, parseidx, header_maker, container){
     // Create a div for canvas
     var div_canvas = $('<div></div>');
     div_canvas.attr('id', 'dmrs' + parseidx + '_canvas');
-    $('#' + container).append(div_canvas);
+    // horizontal scroll div
+    var div_scroll = $('<div style="overflow-y: auto; min-height: 200px;"></div>');
+    div_scroll.append(div_canvas);
+    $('#' + container).append(div_scroll);
     dmrs_visko = json2visko(JSON.parse(JSON.stringify(parse.dmrs)), find_synset);
     var dmrs_canvas = new VisualKopasu.DMRSCanvas(dmrs_visko, 'dmrs' + parseidx + '_canvas', 'sentence_text');
     dmrs_canvas.visualise();

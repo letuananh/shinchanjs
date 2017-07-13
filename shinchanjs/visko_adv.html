@@ -60,10 +60,8 @@
           </ul>
           <div class="tab-content">
             <div id="visko" class="tab-pane active">
-              <div style="overflow-y: auto; min-height: 200px;">
-                <!-- DMRSes container -->
-	        <div id="dmrses"></div>
-              </div>
+              <!-- DMRSes container -->
+	      <div id="dmrses"></div>
             </div>
             <div id="delviz" class="tab-pane">
               <div style="overflow-y: auto; min-height: 200px;">
@@ -86,6 +84,14 @@
         <div class="col-md-6">
           <!-- Control Panel and Console -->
           <div id="toolbar" class="input-group" style="padding: 10px 0px;">
+
+            <span class="input-group-addon" id="sizing-addon1">Demo</span>
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-primary" id="btnDemo1">1</button>
+              <button type="button" class="btn btn-primary" id="btnDemo2">2</button>
+              <button type="button" class="btn btn-primary" id="btnDemo3">3</button>
+            </div>
+            
             <input type="button" class="btn btn-primary" id="btnRender" name="btnRender" value="Render"/>
             <input type="button" class="btn btn-primary" id="btnClearCanvas" name="btnClearCanvas" value="Destroy"/>
             <input type="button" class="btn btn-default" id="btnDebug" name="btnDebug" value="Debug"/>
@@ -216,33 +222,77 @@
   <!-- Coolisf REST support -->
   <script>
    var last_response;
+   var dmrs_url = "ajax/dmrs_long2.json";
    
    /** Load an ISF sentence **/
    function do_parse() {
      clear_parses();
      $("#btnParse").button('loading');
-     var dmrs_url = "ajax/dmrs_long.json";
      console.writeline("Fetching from: " + dmrs_url);
-     $.get(dmrs_url).done(success)
+     $.get(dmrs_url).done(function(json){
+       last_response = json; // store parses for rendering  
+       console.writeline(json.parses.length + " parse(s) has been received.");
+       $('#parse_count').text(json.parses.length);
+       show_parses();
+     })
       .always(function(){
         $("#btnParse").button('reset');   
       });
    }
 
-   /**
-    * When received parses from server
-    **/
-   function success(json) {
-     last_response = json; // store parses for rendering  
-     console.writeline(json.parses.length + " parse(s) has been received.");
-     $('#parse_count').text(json.parses.length);
-     visualise(json);
-     $("#dmrs1_canvas").mousedown(function(e){
-       if (e.which == 3) {
-         console.writeline("Boo!");
-       }
+   function show_parses() {
+     visualise(last_response, custom_visko_header);
+   }
+
+   var sent_url = "/visko2/rest/corpus/col1/cor1/doc1/1";
+   
+   function custom_visko_header(parse, parseidx, container, id_prefix) {
+     if (parseidx == undefined) { parseidx = 1; }
+     if (id_prefix == undefined) { id_prefix = 'parse_'; }
+     var pid = (parse.pid != undefined) ? parse.pid : parseidx;
+     if (typeof container == 'string') { container = $("#" + container); }
+     var toolbar =  $('<div class="input-group input-group-sm col-sm-6" style="padding: 2px;"></div>');
+     toolbar.attr('id', id_prefix + pid);
+     // Attach toolbar to container
+     container.append(toolbar);
+
+     // Parse label
+     var lblParse = $('<span class="input-group-addon"></span>');
+     lblParse.attr('id', id_prefix + pid + '_lbl');
+     var lnk = $('<a></a>');
+     lnk.attr('href', '#').text('Parse #' + parseidx);
+     lblParse.append(lnk);
+     toolbar.append(lblParse);
+     
+     var btn_group = $('<div class="btn-group" role="group" aria-label="..."></div>');
+     toolbar.append(btn_group);
+     // Edit button
+     var btnEdit = $('<button class="btn btn-default"><span class="glyphicon glyphicon-pencil" aria-hidden="True"></span></button>');
+     btnEdit.attr('id', id_prefix + pid + '_edit');
+     btnEdit.data('pid', pid);
+     btnEdit.click(function(){
+       console.writeline("Edit url: " + sent_url + "/" + $(this).data('pid') + "/edit");
      });
-   }   
+     btn_group.append(btnEdit);
+     // Favourite button
+     var btnFav = $('<button class="btn btn-default"><span class="glyphicon glyphicon-heart" aria-hidden="True"></span></button>');
+     btnFav.attr('id', id_prefix + pid + '_fav');
+     btnFav.data('pid', pid);
+     btnFav.click(function(){
+       console.writeline("Bookmark url: " + sent_url + "/" + $(this).data('pid') + "/bookmark");
+     });
+     btn_group.append(btnFav);
+     // Delete button
+     var btnDelete = $('<button class="btn btn-default"><span class="glyphicon glyphicon-trash" aria-hidden="True"></span></button>');
+     btnDelete.data('pid', pid);
+     btnDelete.attr('id', id_prefix + pid + '_del');
+     btnDelete.click(function(){
+       console.writeline("Delete url: " + sent_url + "/" + $(this).data('pid') + "/delete");
+     });
+     btn_group.append(btnDelete);
+
+     return toolbar;
+   }
    
    /** Show debug info **/
    function debug() {
@@ -256,6 +306,10 @@
      initialise();
      do_parse();
    });
+
+   function show_demo(){
+     var dmrs_url = "ajax/dmrs_long2.json";
+   }
    
    function initialise(){
      // Console support
@@ -264,12 +318,17 @@
      $(window).on('resize', function() { console.resize(); });
      $('#consoletoggle').change(function(){ console.toggle(); });
      console.clear().resize();
+
+     // List of demo
+     $("#btnDemo1").click(function(){ dmrs_url = "ajax/dmrs_long.json"; do_parse(); });
+     $("#btnDemo2").click(function(){ dmrs_url = "ajax/dmrs_long2.json"; do_parse(); });
+     $("#btnDemo3").click(function(){ dmrs_url = "ajax/dmrs_long3.json"; do_parse(); });
      
      $("#btnDebug").click(debug);
      $("#btnRender").click(do_parse);
-     $("#btnClearCanvas").click(clear_parses);
+     $("#btnClearCanvas").click(function() {clear_parses(); });
      $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-       visualise(last_response);
+       show_parses();
      });
    }     
   </script>
