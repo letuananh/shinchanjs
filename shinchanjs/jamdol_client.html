@@ -1,0 +1,243 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+          "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Jamdol client - Version 0.1">
+    <meta name="author" content="Le Tuan Anh <tuananh.ke@gmail.com">
+    <link rel="icon" href="../../favicon.ico">
+    <!-- Title and styles -->
+    <title>Jamdol client - Version 0.1</title>
+    <!-- Bootstrap core CSS -->
+    <link href="modules/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="modules/bootstrap-toggle/css/bootstrap-toggle.min.css" />
+    <!-- Visko -->
+    <link rel="stylesheet" href="css/visko2.css" />
+  </head>
+  
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="yawol_demo.html">Jamdol client - Version 0.1</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="index.html">Home</a></li>
+          </ul>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
+
+    <div style="padding: 60px 20px;">
+      <div class="row">
+        <div class="col-md-6">
+          <!-- Search box -->
+          <form style="padding: 20px 3px;" action="#">
+            <div class="row">
+              <div class="input-group input-group-lg">
+                <input class="form-control input-lg" name="query" id="query" placeholder="げんき" value="" type="text">
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default btn-lg" name="btnSearch" id="btnSearch" value="parse">Search</button>
+                </span>
+              </div>
+            </div>
+            <div class="row" style="padding: 5px;">
+              <span class="label label-default">Try these</span>
+              <a href="#" id="txtKana">げんき</a> | 
+              <a href="#" id="txtKanji">元気</a> | 
+              <a href="#" id="txtEID">1260720</a>
+            </div>
+          </form>
+          <!-- Entry Information -->
+          <div id="entries"></div>
+        </div>
+        <div class="col-md-6">
+          <!-- Control Panel and Console -->
+          <div id="toolbar" style="padding: 20px;">
+            <div class="row" style="padding: 10px 0px;">
+              <div class="input-group input-group-sm">
+                <span class="input-group-addon">Jamdol URL</span>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Server
+                  </button>
+                  <ul class="dropdown-menu" id="servers">
+                    <li><a>Django</a></li>
+                    <li><a>Flask</a></li>
+                  </ul>
+                </span>
+                <input class="form-control input-lg" name="jamdol_url" id="jamdol_url" placeholder="http://127.0.0.1:5002/jamdol/" value="http://127.0.0.1:5002/jamdol/" type="text">
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-primary" name="btnPing" id="btnPing" value="parse">Ping Server</button>
+                </span>
+              </div>
+            </div>
+            <div class="row">
+              <button type="button" id="btnReset" name="btnReset" class="btn btn-primary">Reset</button>    
+              <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
+              <input type="checkbox" id="consoletoggle" data-width="100" checked data-toggle="toggle" data-on="Console" data-off="Console"></input>              
+            </div>
+          </div>
+          <div id="console" style="overflow: auto; max-height: 80vh;"></div>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; 2012-2017 Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</p>
+      </footer>
+    </div> <!-- /container -->
+
+    <!-- Bootstrap -->
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="modules/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="modules/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
+    <!-- Others -->
+    <script src="js/lodash-4.17.4.min.js"></script>
+    <!-- ShinchanJS scripts -->
+    <script src="js/raphael-2.2.1.min.js"></script>
+    <script src="js/console.js"></script>
+    <script src="js/shinchan.js"></script>
+    <script src="js/shinchan.debug.js"></script>
+    <!-- Jamdol client -->
+    <script src="js/jamdol.js"></script>
+    
+    <!-- Yawol client helper functions -->
+    <script>
+     var jamdol;
+     var jamdol_container = $('#entries');
+
+     function get_jamdol() {
+       if (jamdol == undefined) {
+         var root = $('#jamdol_url').val();
+         console.writeline("jamdol root: " + root);
+         jamdol = new Jamdol(root);
+       }
+       return jamdol;
+     }
+
+     function clear_entries() {
+       jamdol_container.empty();
+     }
+
+     function show_entries(entries) {
+       clear_entries();
+       $(entries).each(function(idx, e){
+         console.writeline(JSON.stringify(e));
+         // Entry header
+         var eh = $('<h3></h3>');
+         // eh.text('#' + e.idseq);
+         jamdol_container.append(eh);
+         // Kana
+         if (e.kana.length > 0) {
+           var kn_label = $("<span class='label label-default'></span>&nbsp;");
+           kns = [];
+           $(e.kana).each(function(idx, kn){
+             kns.push(kn.text);
+           });
+           kn_label.text(_.join(kns, '、'));
+           eh.append(kn_label);
+         }
+         // Kanji
+         if (e.kanji.length > 0) {
+           var kjs = [];
+           $(e.kanji).each(function(idx, kj){
+             kjs.push(kj.text);
+           });
+           kj_label = $("<span class='' style='padding-left: 10px;'></span>");
+           kj_label.text("(" + _.join(kjs, '、') + ")");
+           eh.append(kj_label);
+         }
+         // Senses
+         if (e.senses.length > 0) {
+           // jamdol_container.append("<span class='label label-default'>Senses </span>");
+           var slist = $("<ol>");
+           jamdol_container.append(slist);
+           $(e.senses).each(function(idx, sense){
+             sli = $("<li>");
+             slist.append(sli);
+             glosses = []
+             if (sense.SenseGloss != undefined && sense.SenseGloss.length > 0) {
+               $(sense.SenseGloss).each(function(idx, gloss){
+                 glosses.push(gloss.text);
+               });
+               sli.append($("<span>" + _.join(glosses, ', ') + " </span>"));
+             }
+           }); // end each
+         }         
+         // end
+       });
+     }
+     
+     /**
+      * Using REST API to search
+      **/
+     function do_search() {
+       var query = $('#query').val();
+       if (!_.includes(query, '_') && !_.includes(query, '%')) {
+         query = '%' + query + '%';
+       }
+       console.writeline("Searching: " + query);
+       get_jamdol().search(query, show_entries);
+     }
+
+     function ping_server() {
+       get_jamdol().version(function(json){
+         console.writeline("Product: " + json.product + " " + json.version);
+         console.writeline("Server:  " + json.server);
+       });
+     }
+    </script>
+    <!-- Document ready -->
+    <script>
+     
+     $(document).ready(function(){       
+       initialise();   
+     });
+
+     function initialise(){
+       // Console support
+       console = new Console("console", 220, ".:: Jamdol REST Client - Version 0.1 ::.<br/>");
+       $("#btnClear").click(function() { console.clear(); });
+       $(window).on('resize', function() { console.resize(); });
+       $('#consoletoggle').change(function(){ console.toggle(); });
+       console.clear().resize();
+
+       $('#servers').on('click' ,'li a', function(){
+         var server = $(this).text();
+         if (server == 'Django'){
+           $('#jamdol_url').val('http://127.0.0.1:8000/jamdol/');
+         }
+         else if (server == 'Flask'){
+           $('#jamdol_url').val('http://127.0.0.1:5002/yawol/');
+         }
+       });
+       // Press enter to search
+       $('#query').keydown(function(e) {
+         if (e.keyCode == 13) {
+           do_search();
+           return false;
+         }
+       });
+       $('#txtKanji').click(function(){ $('#query').val($(this).text()); });
+       $('#txtKana').click(function(){ $('#query').val($(this).text()); });
+       $('#txtEID').click(function(){ $('#query').val($(this).text()); });
+       
+       // Synset related features
+       $("#btnReset").click(function(){clear_entries();});
+       $("#btnSearch").click(function(){do_search();});
+       $('#btnPing').click(function(){ping_server();});
+     }     
+    </script>
+  </body>
+</html>
