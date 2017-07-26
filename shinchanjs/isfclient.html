@@ -46,6 +46,18 @@
       <form>
         <div class="input-group input-group-lg">
           <input class="form-control input-lg" name="input_sentence" id="input_sentence" placeholder="Some dogs bark." value="Some dogs barked." type="text">
+          <span class="input-group-addon">Grammar</span>
+          <select id="input_parser" name="input_parser" class="form-control input-small" title="Processor">
+            <option value="ERG">ERG</option>
+            <option value="JACYMC">JACY/MeCab</option>
+            <option value="VRG">Virgo</option>
+          </select>
+          <span class="input-group-addon">WSD</span>
+          <select id="input_tagger" name="input_tagger" class="form-control input-small" title="Tagger">
+            <option value="lelesk">LeLesk</option>
+            <option value="mfs">MFS</option>
+            <option value="n/a">None</option>
+          </select>          
           <span class="input-group-addon">Parse Count</span>
           <select id="input_results" name="input_results" class="form-control input-small" title="Maximum parses">
             <option value="1">1</option>
@@ -63,7 +75,7 @@
       </form>
 
       <div class="dmrs_sentence_text">Parse count: <span id="parse_count">0</span></div>
-      <div id="sentence_text" class="dmrs_sentence_text"></div>
+      <div class="dmrs_sentence_text">&nbsp;<span id="sentence_text"></span></div>
 
       <!-- Synset Information -->
       <div id="synsets"></div>
@@ -81,6 +93,7 @@
           <div style="overflow-y: auto; height: 600px;">
             <!-- DMRSes container -->
 	    <div id="dmrses"></div>
+            <div style="padding: 40px;"></div>
           </div>
         </div>
         <div id="delviz" class="tab-pane">
@@ -313,9 +326,11 @@
      $("#btnParse").button('loading');
      var sent = $('#input_sentence').val();
      var parse_count = $('#input_results').val();
+     var grm = $('#input_parser').val();
+     var wsd = $('#input_tagger').val();
      console.header("Sentence: " + sent);
      // call parse async
-     get_isf().parse(sent, parse_count, 'lelesk', 'ERG', success, fail);
+     get_isf().parse(sent, parse_count, wsd, grm, success, fail);
      console.writeline("Server is processing. Please wait ...");
    }
 
