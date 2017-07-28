@@ -340,7 +340,7 @@ VisualKopasu.DMRSCanvas = function(dmrs, canvas, text_holder, theme){
                 visual_node.getElements()[0].attr(theme.GPRED_NODE_BOX_STYLE);  
                 visual_node.getElements()[1].attr(theme.GPRED_NODE_TEXT_STYLE);             
             }
-            else if(current_node.type == "carg"){
+            else if(current_node.type == "gpred+carg"){
                 visual_node.getElements()[0].attr(theme.CARG_NODE_BOX_STYLE);   
                 visual_node.getElements()[1].attr(theme.CARG_NODE_TEXT_STYLE);
             }
@@ -584,7 +584,11 @@ function json2visko(json, synset_link_builder){
     // Visko nodes require -> text, from, to, type, pos, linkcount
     // convert nodes
     $(json.nodes).each(function(idx, elem){
-        var node = {'text': elem.predicate, 'from': elem.lnk.from, 'to': elem.lnk.to, 'type': elem.type, 'pos': elem.pos, linkcount: 0, 'nodeid': elem.nodeid, 'tooltip': [], 'senses': []};
+        var node_text = (elem.carg && elem.carg.length > 0) ? elem.carg : elem.predicate;
+        var node_type = (elem.carg && elem.carg.length > 0) ? "gpred+carg" : elem.type;
+        console.writeline("nodeid: " + elem.nodeid + " txt: " + node_text + " type: " + node_type);
+        console.writeline("CARG: " + elem.carg);
+        var node = {'text': node_text, 'from': elem.lnk.from, 'to': elem.lnk.to, 'type': node_type, 'pos': elem.pos, linkcount: 0, 'nodeid': elem.nodeid, 'tooltip': [], 'senses': []};
         
         // build tooltip
         max_length = 3;
