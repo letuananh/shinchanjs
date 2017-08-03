@@ -31,11 +31,45 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
+            <li><a href="#" data-toggle="modal" data-target="#yawolModal">Yawol Popup</a></li>
             <li><a href="index.html">Home</a></li>
           </ul>
         </div><!--/.navbar-collapse -->
       </div>
     </nav>
+
+    <!-- To add Yawol modal to your website
+         1. Add a trigger (See the link Yawol popup above)
+         2. Copy this modal code below
+         3. Copy yawol modal script block below
+         4. Call ym_init in document.ready()
+       -->
+    <!-- Yawol modal -->
+    <div class="modal fade" id="yawolModal" tabindex="-1" role="dialog" aria-labelledby="yawolModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="yawolModalLabel">Search Wordnet</h4>
+          </div>
+          <div class="modal-body">
+            <!-- Search box -->
+            <div class="input-group input-group-lg" style="padding-bottom: 5px;">
+              <input class="form-control input-lg" name="ym_query" id="ym_query" placeholder="01775164-v or love or love%2:37:00::" value="01775164-v" type="text">
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default btn-lg" name="btnYMReset" id="btnYMReset" value="parse">Reset</button>
+                <button type="button" class="btn btn-primary btn-lg" name="btnYMSearch" id="btnYMSearch" value="parse">Search</button>
+              </span>
+            </div>
+            <!-- Display synsets -->
+            <div id="ym_synsets"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div style="padding: 60px 20px;">
       <div class="row">
@@ -173,7 +207,7 @@
        if (yawol == undefined) {
          var root = $('#yawol_url').val();
          console.writeline("Yawol root: " + root);
-         yawol = new Yawol("synsets", root, $("#synsetbox_template").html());
+          yawol = new Yawol("synsets", root, $("#synsetbox_template").html());
        }
        return yawol;
      }
@@ -197,12 +231,38 @@
          console.writeline("Server:  " + json.server);
        });
      }
-    </script>
-    <!-- Document ready -->
+        </script>
+
+    <!-- Yawol modal script -->
     <script>
-     
+     function ym_search() {
+       var query = $('#ym_query').val();
+       get_yawol().search_synset(query, $('#ym_synsets'));
+     }
+
+     function ym_clear() {
+       get_yawol().clear($('#ym_synsets'));
+     }
+
+     function ym_init() {
+       $('#btnYMSearch').click(function(){ ym_search(); });
+       $('#btnYMReset').click(function(){ ym_clear(); });
+       $('#ym_query').keydown(function(e) {
+         if (e.keyCode == 13) {
+           ym_search();
+           return false;
+         }
+       });
+     }
+    </script>
+    
+    <!-- Document ready -->
+    <script> 
      $(document).ready(function(){       
-       initialise();   
+       initialise();
+       get_yawol().version(undefined, function() {
+         $('#yawol_url').val('http://127.0.0.1:8000/yawol/');
+       });
      });
 
      function initialise(){
@@ -229,6 +289,9 @@
            return false;
          }
        });
+       // Modal search
+       ym_init();
+       
        $('#txtSynsetID').click(function(){ $('#query').val($(this).text()); });
        $('#txtLemma').click(function(){ $('#query').val($(this).text()); });
        $('#txtSensekey').click(function(){ $('#query').val($(this).text()); });
