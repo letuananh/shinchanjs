@@ -52,7 +52,6 @@ Yawol.prototype = {
             callback = {};
         }
         var url = this._yawol_root + 'version';
-        // console.header("Accessing: " + url);
         $.ajax({url: url, dataType: 'jsonp'})
             .done(callback)
             .fail(callback_error);
@@ -71,27 +70,24 @@ Yawol.prototype = {
 
     
     display_synsets: function(synsets, container) {
-	var self = this;
         container = (container == undefined) ? this._container : container;
-	self.clear(container);
-	// console.writeline("Synsets received: " + synsets.length);
-	$.each(synsets, function(idx, synset){
-            self.display_synset(synset, container);
-        });
+	this.clear(container);
+	$.each(synsets, $.proxy(function(idx, synset){
+            this.display_synset(synset, container);
+        }, this));
     },
     
     /** Search synset (remote or local) **/
     search_synset: function(query, container, success) {
         var url = this._yawol_root + 'search/' + query;
-	var self = this;
         container = (container == undefined) ? this._container : container;
 	if (success == undefined) { success = this.display_synsets;  }
         $.ajax({
 	    url: url,
 	    dataType: 'jsonp',
-	    success: function(json){
-		success.call(self, json, container);
-	    },
+	    success: $.proxy(function(json){
+                this.display_synsets(json, container);
+            }, this),
 	    fail: log_error,
 	    error: log_error
 	});

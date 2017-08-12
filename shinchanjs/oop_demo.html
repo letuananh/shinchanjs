@@ -2,7 +2,9 @@
                     "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <title>Layers demo</title>
+  <title>OOP Demo</title>
+  <meta charset="UTF-8">
+  
   <script src="js/jquery-3.2.1.min.js"></script>
   <script src="js/raphael-2.2.1.min.js"></script>
   <script src="js/kajika.js"></script>
@@ -22,6 +24,7 @@
 	
    $(document).ready(function(){		
      initialise();
+     testThisBinding();
      testConstructor();
      testTable();
      testGeometryLib();
@@ -131,6 +134,8 @@
      console.writeline(ChibiJS.IDGenerator.generate());
      console.writeline(ChibiJS.IDGenerator.generate());
      console.writeline(ChibiJS.IDGenerator.generate());
+     console.writeline(ChibiJS.newid()); // <-- Helper Method
+     console.writeline(ちび.newid()); // <-- Helper Method
      console.setColor();
    }	
    
@@ -256,6 +261,31 @@
      }
      
      return this;
+   }
+
+   Worker = function(name){
+     this._name = name;
+   }
+
+   Worker.prototype = {
+     say: function(msg) {
+       console.writeline(this._name + " says: " + msg);
+     },
+     work: function(task, data, boss) {
+       this.say(boss + " requested " + task);
+       this.say("I did " + task);
+       this.say("My data " + JSON.stringify(data));
+     },
+     process: function(boss) {
+       $.getJSON('ajax/02084071-n.json', $.proxy(function(data){
+         this.work('get_ajax', data, boss);
+       }, this));  
+     }
+   }
+   
+   function testThisBinding(){
+     var worker = new Worker("Wokah");
+     worker.process("Bosu");
    }
   </script>
 </head>

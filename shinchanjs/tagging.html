@@ -8,14 +8,17 @@
     <meta name="author" content="Le Tuan Anh <tuananh.ke@gmail.com">
     <link rel="icon" href="../../favicon.ico">
     <!-- Title and styles -->
-    <title>ShinchanJS/Bootstrap Demo</title>
+    <title>Tagged Sentence demo</title>
     
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="modules/bootstrap/3.3.7/css/bootstrap.min.css" />
     <link rel="stylesheet" href="modules/bootstrap-toggle/css/bootstrap-toggle.min.css" />
+    <link rel="stylesheet" href="modules/bootstrap/3.3.7/css/bootstrap.min.css" />
     <link rel="stylesheet" href="modules/viz/demo.css" />
+    <!-- This caused tooltip trouble -->
     <!-- <link rel="stylesheet" href="modules/viz/delphin-viz.css" /> -->
     <link rel="stylesheet" href="modules/highlight.js/styles/github.css" />
+    <!-- TaggedSentence support -->
+    <link rel="stylesheet" href="css/tagging.css" />
     <!-- Demo CSS -->
     <link rel="stylesheet" href="css/visko2.css" />    
     
@@ -30,15 +33,6 @@
      *+html #toolbar {
        display: inline;
      }
-     .TaggedSentence .TaggedToken {
-       color: darkblue;
-       font-weight: bold;
-     }
-
-     .TaggedSentence .MWE {
-       color: darkgreen;
-       font-weight: bold;
-     }
     </style>
     
   </head>
@@ -52,7 +46,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="bootstrap_demo.html">ShinchanJS/Bootstrap Demo</a>
+          <a class="navbar-brand" href="tagging.html">Tagged Sentence Demo</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -76,16 +70,30 @@
             </div>
 	  </form>
 
-          <div id="box1"></div>
-          Lorem ipsum dolor sit amet.
-          <div id="main_canvas"></div>
-          Lorem ipsum <span data-toggle="tooltip" data-title="dolor sit" style="font-weight: bold">dolor sit</span> amet.
-          <div class="TaggedSentence">
-            <span>This</span>
-            <span class="TaggedToken" data-toggle="popover" data-placement="top" data-content="be.v.1">is</span>
-            <span>an</span>
-            <span class="TaggedToken" data-toggle="popover" data-placement="top" data-content="annotate.v.1">annotated</span>
-            <span>sentence.</span>
+          <div id="manual">
+            <h1>Tagged Sentences</h1>
+            <div class="TaggedSentence">
+              <span>This</span>
+              <span class="TaggedToken" data-toggle="popover" data-placement="top" data-content="be.v.1">is</span>
+              <span>an</span>
+              <span class="TaggedToken" data-toggle="popover" data-placement="top" data-content="annotate.v.1">annotated</span>
+              <span>sentence.</span>
+            </div>
+            <div class="TaggedSentence">
+              <span>I</span>
+              <span class="TaggedToken" data-toggle="popover" data-placement="top" data-content="have.v.1">had</span>
+              <span>three</span>
+              <span class="MWE" data-mweid="g1" data-toggle="popover" data-placement="top" data-content="guard.v.1">guard</span>
+              <span class="MWE" data-mweid="g1" data-toggle="popover" data-placement="top" data-content="dog.v.1<br/>MWE: guard-dog: 12345678-n<br/><a onclick='show_boo()' href='#'>Learn more</a>">dogs</span>
+              <script>
+               function show_boo(){
+                 console.writeline("Boo!");
+               }
+              </script>
+            </div>
+          </div>
+          <h1>From JSON</h1>
+          <div id="sentences">
           </div>
           <!-- End left pane -->
         </div>
@@ -123,9 +131,10 @@
   <script src="js/shinchan.js"></script>
   <script src="js/shinchan.debug.js"></script>
   <script src="js/visko-2.0.js"></script>
+  <!-- TaggedSentence support (this script requires css/tagging.css) -->
+  <script src="js/tagging.js"></script>
 
   <script>
-
    function gen_button(id) {
      btn = $("<button class='btn btn-default btn-sm'><span class='glyphicon glyphicon-remove'></span> Remove</button>");
      if (id == undefined) { id = "btn_" + ChibiJS.IDGenerator.generate(); }
@@ -147,29 +156,59 @@
      console.writeline("You wrote: " + input);
    }
   </script>
-  
+ 
   <!-- Document ready -->
   <script>
    var canvas;
    var console;
+
+   Visko.find_tag = function(tag){
+     console.writeline("Searching for synset " + tag);
+   }
    
    function initialise(){
      // Console support
-     console = new Console("console", 220, ".:: ShinchanJS/Bootstrap Demo ::.<br/>");
+     console = new Console("console", 220, ".:: Tagged Sentence Demo ::.<br/>");
      $("#btnClear").click(function() { console.clear(); });
      $(window).on('resize', function() { console.resize(); });
      $('#consoletoggle').change(function(){ console.toggle(); });
      console.clear().resize();
-     
-     // Init canvas
-     canvas = new Canvas("main_canvas", 320, 240, "MainCanvas");
-     
+         
      // Bind events
      $("#btnDebug").click(debug);
      $("#btnProcess").click(process);
 
-     $("[data-toggle='popover']").popover();
-     $("[data-toggle='tooltip']").tooltip();
+     var sent = {text: "Sausages are hot-dogs",
+                 tokens: [{label: "Sausages", lemma: "sausage", pos: "n"},
+                          {label: "are", lemma: "be", pos: "v"},
+                          {label: "hot"},
+                          {label: "dogs", lemma: "dog", pos: "n"}
+                 ],
+                 concepts: [{clemma: 'hotdog', tag: '11112222-n', words:[0]},
+                            {clemma: 'be', tag: '12345678-v', words:[1]},
+                            {clemma: 'hotdog', tag: '11112222-n', words:[2,3]}
+                 ]
+     };
+     Visko.Tagged.show(sent);
+     var sent2 = {text: "I looked the words up",
+                  tokens: [{label: "I"},
+                           {label: "looked", lemma: "look", pos: "v"},
+                           {label: "the"},
+                           {label: "words", lemma: "word", pos: "n"},
+                           {label: "up"}
+                  ],
+                  concepts: [{clemma: 'I', tag: '11112222-n', words:[0]},
+                             {clemma: 'word', tag: '12345678-n', words:[3]},
+                             {clemma: 'look', tag: '11111112-v', words:[1]},
+                             {clemma: 'look-up', tag: '11111111-v', words:[1,4]}
+                  ]
+     };
+     Visko.Tagged.show(sent2);
+     sent3 = {'tokens': [{'cfrom': 0, 'cto': 1, 'lemma': 'おんな', 'label': '女'}, {'cfrom': 1, 'cto': 2, 'label': 'の'}, {'cfrom': 2, 'cto': 3, 'lemma': 'こ', 'label': '子'}, {'cfrom': 3, 'cto': 4, 'label': 'は'}, {'pos': '名詞-一般', 'cfrom': 4, 'cto': 5, 'lemma': 'ねこ', 'label': '猫', 'comment': 'Say neh-koh'}, {'cfrom': 5, 'cto': 6, 'label': 'が'}, {'pos': '名詞-形容動詞語幹', 'cfrom': 6, 'cto': 8, 'lemma': 'すき', 'label': '好き'}, {'cfrom': 8, 'cto': 10, 'label': 'です'}, {'cfrom': 10, 'cto': 11, 'label': '。'}], 'text': '女の子は猫が好きです。', 'concepts': [{'tag': ' 10084295-n', 'words': [0, 1, 2], 'clemma': '女の子', 'comment': '若々しい女の人'}, {'tag': '02121620-n', 'words': [4], 'clemma': '猫'}, {'tag': '01292683-a', 'words': [6], 'clemma': '好き'}]};
+     Visko.Tagged.show(sent3).show_concepts();
+     
+     // Enable tagged sentence
+     $('[data-toggle="popover"]').popover({html: true});
    }
 
    $(document).ready(function(){       
