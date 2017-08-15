@@ -78,18 +78,23 @@ Yawol.prototype = {
     },
     
     /** Search synset (remote or local) **/
-    search_synset: function(query, container, success) {
+    search_synset: function(query, container, success, error) {
         var url = this._yawol_root + 'search/' + query;
         container = (container == undefined) ? this._container : container;
-	if (success == undefined) { success = this.display_synsets;  }
+	if (success == undefined) { success = this.display_synsets; }
+        if (error == undefined) { error = log_error; }
         $.ajax({
 	    url: url,
 	    dataType: 'jsonp',
 	    success: $.proxy(function(json){
                 this.display_synsets(json, container);
             }, this),
-	    fail: log_error,
-	    error: log_error
+	    fail: function(jqxhr) {
+                error(jqxhr, query);
+            },
+	    error: function(jqxhr) {
+                error(jqxhr, query);
+            }
 	});
     }    
 }
@@ -97,8 +102,9 @@ Yawol.prototype = {
 /**
  * Log error msg 
  **/
-function log_error(jqxhr) {
+function log_error(jqxhr, query) {
     if (console != undefined && console.writeline != undefined) {
-        console.writeline( "Request Failed: " + jqxhr.statusText + " | code = " + jqxhr.status);
+        console.writeline("Query: " + query);
+        console.writeline( "Request Failed: " + jqxhr.statusText + " | Error code = " + jqxhr.status);
     }
 }   

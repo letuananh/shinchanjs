@@ -78,6 +78,14 @@
 
           <div id="box1"></div>
           Lorem ipsum dolor sit amet.
+          <div id="messages"></div>
+          <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+          </div>
+          
           <div id="main_canvas"></div>
           Lorem ipsum <span data-toggle="tooltip" data-title="dolor sit" style="font-weight: bold">dolor sit</span> amet.
           <div class="TaggedSentence">
@@ -140,6 +148,8 @@
        console.writeline($(this).data('bid') + " has been clicked");
      });
      $('#box1').append(btn);
+     
+     show_alert("You were right, this is new!", "#messages");
    }
    
    function process() {

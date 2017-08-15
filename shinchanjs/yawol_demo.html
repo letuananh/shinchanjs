@@ -61,6 +61,7 @@
                 <button type="button" class="btn btn-primary btn-lg" name="btnYMSearch" id="btnYMSearch" value="parse">Search</button>
               </span>
             </div>
+            <div id="messages"></div>
             <!-- Display synsets -->
             <div id="ym_synsets"></div>
           </div>
@@ -91,6 +92,7 @@
               <a href="#" id="txtSensekey">love%2:37:00::</a>
             </div>
           </form>
+          <div id="message_box"></div>
           <!-- Synset Information -->
           <div id="synsets"></div>
           <!-- End DMRS column -->
@@ -222,7 +224,11 @@
       **/
      function do_search() {
        var synsetid = $('#query').val();
-       get_yawol().search_synset(synsetid);
+       get_yawol().search_synset(synsetid, undefined, undefined, find_synset_error);
+     }
+
+     function find_synset_error(jqxhr) {
+       show_alert("Cannot query: " + $("#query").val());
      }
 
      function ping_server() {

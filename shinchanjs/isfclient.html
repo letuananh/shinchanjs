@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="modules/highlight.js/styles/github.css" />
     <!-- Demo CSS -->
     <link rel="stylesheet" href="css/visko2.css" />
+    <!-- TaggedSentence support -->
+    <link rel="stylesheet" href="css/tagging.css" />
   </head>
   
   <body>
@@ -49,7 +51,9 @@
           <span class="input-group-addon">Grammar</span>
           <select id="input_parser" name="input_parser" class="form-control input-small" title="Processor">
             <option value="ERG">ERG</option>
+            <option value="ERG_NLTK">ERG/NLTK</option>
             <option value="JACYMC">JACY/MeCab</option>
+            <option value="JACYDK">JACY/Deko</option>
             <option value="VRG">Virgo</option>
           </select>
           <span class="input-group-addon">WSD</span>
@@ -76,6 +80,7 @@
 
       <div class="dmrs_sentence_text">Parse count: <span id="parse_count">0</span></div>
       <div class="dmrs_sentence_text">&nbsp;<span id="sentence_text"></span></div>
+      <div id="sentences"></div>
 
       <!-- Synset Information -->
       <div id="synsets"></div>
@@ -86,6 +91,7 @@
         <li><a data-toggle="tab" href="#raw">pyDelphin</a></li>
         <li><a data-toggle="tab" href="#xml">XML</a></li>
         <li><a data-toggle="tab" href="#json">JSON</a></li>
+        <li><a data-toggle="tab" href="#latex">LaTeX</a></li>
         <li><a data-toggle="tab" href="#debug">Debug</a></li>
       </ul>
       <div class="tab-content">
@@ -109,6 +115,9 @@
         <div id="json" class="tab-pane">
           <div id="jsons"></div>
         </div>
+        <div id="latex" class="tab-pane">
+          <pre><code id="latexes"></code></pre>
+        </div>
         <div id="debug" class="tab-pane">
           <!-- Control Panel and Console -->
           <div id="toolbar" class="input-group" style="padding: 10px 0px;">
@@ -130,7 +139,7 @@
       </footer>
     </div> <!-- /container -->
   </body>
-    
+  
   <!-- Bootstrap -->
   <script src="js/jquery-3.2.1.min.js"></script>
   <script src="modules/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -152,6 +161,8 @@
   <script type="text/javascript" src="modules/viz/tree.js"></script>
   <script type="text/javascript" src="modules/viz/mrs.js"></script>
   <script type="text/javascript" src="modules/viz/dmrs.js"></script>
+  <!-- TaggedSentence support (this script requires css/tagging.css) -->
+  <script src="js/tagging.js"></script>
   
   <!-- Yawol client -->
   <script src="js/yawol.js"></script>
@@ -224,7 +235,7 @@
      };
    }
   </script>
-    
+  
   <!-- Delphin-viz support -->
   <script>
    // delphin-viz visualisation
@@ -265,6 +276,8 @@
      $('#dmrses').empty();
      $('#jsons').empty();
      $('#dvizes').empty();
+     $('#latexes').empty();
+     $('#sentences').empty();
      response = undefined;
    }
    
@@ -317,6 +330,17 @@
          display_json(parse, pid);
        });
        highlight('#jsons');
+     }
+     // LaTeX
+     else if ($('#latexes').is(':empty') && active_tab() == '#latex') {
+       console.writeline("Displaying Latex");
+       display_latex(response.latex);
+       highlight('#latex');
+     }
+     // Visualize IMI
+     if ($("#sentences").is(':empty') && response.shallow && response.shallow.tokens && response.shallow.concepts) {
+       console.writeline("There is shallow");
+       Visko.Tagged.show(response.shallow).show_concepts();
      }
      // end if
    }

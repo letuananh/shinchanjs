@@ -92,7 +92,24 @@ Visko.Tagged.Sentence.prototype = {
         // add concepts
         _.forEach(this._conceptObjs, function(c){
             var span = c.to_span();
-            span.addClass("label label-default");
+            if (c.flag() == "E"){
+                span.addClass("label label-danger");
+            }
+            else if (c.flag() == "W"){
+                span.addClass("label label-warning");
+            }
+            else if (c.flag() == "I"){
+                span.addClass("label label-info");
+            }
+            else if (c.flag() == "S"){
+                span.addClass("label label-success");
+            }
+            else if (c.flag() == "P"){
+                span.addClass("label label-primary");
+            }
+            else {
+                span.addClass("label label-default");
+            }
             mother.append(span);
         });
         return mother;
@@ -195,6 +212,12 @@ Visko.Tagged.Concept = function(concept){
 Visko.Tagged.Concept.prototype = {
     isMWE: function() {
         return this._concept.words.length > 1;
+    },
+    flag: function(){
+        if ('flag' in this._concept){
+            return this._concept['flag'];
+        }
+        return undefined;
     },
     data: function() {
         return this._concept;
