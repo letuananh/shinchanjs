@@ -13,6 +13,7 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="modules/bootstrap/3.3.7/css/bootstrap.min.css" />
     <link rel="stylesheet" href="modules/bootstrap-toggle/css/bootstrap-toggle.min.css" />
+    <link rel="stylesheet" href="modules/bootstrap-editable/css/bootstrap-editable.css">
     <link rel="stylesheet" href="modules/viz/demo.css" />
     <!-- <link rel="stylesheet" href="modules/viz/delphin-viz.css" /> -->
     <link rel="stylesheet" href="modules/highlight.js/styles/github.css" />
@@ -77,7 +78,7 @@
 	  </form>
 
           <div id="box1"></div>
-          Lorem ipsum dolor sit amet.
+          <a id="comments" data-url="/post/" data-pk="2" data-type="textarea" data-rows="5" data-placeholder="Please share your thoughts..." data-title="Enter comments" class="editable editable-pre-wrapped editable-click" href="#">Lorem ipsum dolor sit amet</a>
           <div id="messages"></div>
           <div class="alert alert-warning alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -123,6 +124,8 @@
   <script src="js/jquery-3.2.1.min.js"></script>
   <script src="modules/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="modules/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
+  <!-- To support inline editing (bootstrap-editable.css is also required) -->
+  <script src="modules/bootstrap-editable/js/bootstrap-editable.min.js"></script>
   <!-- Others -->
   <script src="js/lodash-4.17.4.min.js"></script>
   <!-- ShinchanJS scripts -->
@@ -154,7 +157,9 @@
    
    function process() {
      var input = $("#userinput").val();
+     var txtComments = $("#comments");
      console.writeline("You wrote: " + input);
+     console.writeline("Comments: " + txtComments.text());
    }
   </script>
   
@@ -180,6 +185,14 @@
 
      $("[data-toggle='popover']").popover();
      $("[data-toggle='tooltip']").tooltip();
+
+     // Editable
+     $.fn.editable.defaults.mode = 'inline';
+     $("#comments").editable({
+       error: function(){
+         return "Eh sorry I could not save your stuff, lol (Use Flask server for this feature)";
+       }
+     });
    }
 
    $(document).ready(function(){       
