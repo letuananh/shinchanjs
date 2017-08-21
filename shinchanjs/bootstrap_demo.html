@@ -78,7 +78,15 @@
 	  </form>
 
           <div id="box1"></div>
-          <a id="comments" data-url="/post/" data-pk="2" data-type="textarea" data-rows="5" data-placeholder="Please share your thoughts..." data-title="Enter comments" class="editable editable-pre-wrapped editable-click" href="#">Lorem ipsum dolor sit amet</a>
+          <!-- Control box -->
+          <button type="button" id="controlbox" class="btn btn-default btn-sm" data-toggle="popover" title="Control Panel" data-placement="bottom">
+            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+          </button>
+          Lorem ipsum dolor sit amet.<br/>
+          <div id="controlbox_html" class="hide">
+            <button class="btn btn-default" id="btnDelete">Delete</button>
+          </div>
+          <span class="label label-default">Comments</span>&nbsp;<a id="comments" data-url="/post/" data-pk="2" data-type="textarea" data-rows="5" data-placeholder="Please share your thoughts..." data-title="Enter comments" class="editable editable-pre-wrapped editable-click" href="#">What does this mean?</a>
           <div id="messages"></div>
           <div class="alert alert-warning alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -183,9 +191,12 @@
      $("#btnDebug").click(debug);
      $("#btnProcess").click(process);
 
-     $("[data-toggle='popover']").popover();
-     $("[data-toggle='tooltip']").tooltip();
-
+     // controlbox
+     $("#controlbox").popover({html: true,
+                               content: function(){
+                                 return $("#controlbox_html").html();
+                               }
+     });
      // Editable
      $.fn.editable.defaults.mode = 'inline';
      $("#comments").editable({
@@ -193,6 +204,10 @@
          return "Eh sorry I could not save your stuff, lol (Use Flask server for this feature)";
        }
      });
+
+     // Other init
+     $("[data-toggle='popover']").popover();
+     $("[data-toggle='tooltip']").tooltip();
    }
 
    $(document).ready(function(){       
