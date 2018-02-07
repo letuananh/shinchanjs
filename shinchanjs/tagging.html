@@ -184,9 +184,9 @@
                           {label: "hot"},
                           {label: "dogs", lemma: "dog", pos: "n"}
                  ],
-                 concepts: [{clemma: 'hotdog', tag: '11112222-n', words:[0]},
-                            {clemma: 'be', tag: '12345678-v', words:[1]},
-                            {clemma: 'hotdog', tag: '11112222-n', words:[2,3]}
+                 concepts: [{clemma: 'hotdog', tag: '11112222-n', tokens:[0]},
+                            {clemma: 'be', tag: '12345678-v', tokens:[1]},
+                            {clemma: 'hotdog', tag: '11112222-n', tokens:[2,3]}
                  ]
      };
      Visko.Tagged.show(sent);
@@ -197,14 +197,14 @@
                            {label: "words", lemma: "word", pos: "n"},
                            {label: "up"}
                   ],
-                  concepts: [{clemma: 'I', tag: '11112222-n', words:[0]},
-                             {clemma: 'word', tag: '12345678-n', words:[3]},
-                             {clemma: 'look', tag: '11111112-v', words:[1]},
-                             {clemma: 'look-up', tag: '11111111-v', words:[1,4]}
+                  concepts: [{clemma: 'I', tag: '11112222-n', tokens:[0]},
+                             {clemma: 'word', tag: '12345678-n', tokens:[3]},
+                             {clemma: 'look', tag: '11111112-v', tokens:[1]},
+                             {clemma: 'look-up', tag: '11111111-v', tokens:[1,4]}
                   ]
      };
      Visko.Tagged.show(sent2);
-     sent3 = {'tokens': [{'cfrom': 0, 'cto': 1, 'lemma': 'おんな', 'label': '女'}, {'cfrom': 1, 'cto': 2, 'label': 'の'}, {'cfrom': 2, 'cto': 3, 'lemma': 'こ', 'label': '子'}, {'cfrom': 3, 'cto': 4, 'label': 'は'}, {'pos': '名詞-一般', 'cfrom': 4, 'cto': 5, 'lemma': 'ねこ', 'label': '猫', 'comment': 'Say neh-koh'}, {'cfrom': 5, 'cto': 6, 'label': 'が'}, {'pos': '名詞-形容動詞語幹', 'cfrom': 6, 'cto': 8, 'lemma': 'すき', 'label': '好き'}, {'cfrom': 8, 'cto': 10, 'label': 'です'}, {'cfrom': 10, 'cto': 11, 'label': '。'}], 'text': '女の子は猫が好きです。', 'concepts': [{'tag': ' 10084295-n', 'words': [0, 1, 2], 'clemma': '女の子', 'comment': '若々しい女の人'}, {'tag': '02121620-n', 'words': [4], 'clemma': '猫', 'flag': 'E'}, {'tag': '01292683-a', 'words': [6], 'clemma': '好き', 'flag': 'S'}]};
+     sent3 = {'tokens': [{'cfrom': 0, 'cto': 1, 'lemma': 'おんな', 'text': '女'}, {'cfrom': 1, 'cto': 2, 'text': 'の'}, {'cfrom': 2, 'cto': 3, 'lemma': 'こ', 'text': '子'}, {'cfrom': 3, 'cto': 4, 'text': 'は'}, {'pos': '名詞-一般', 'cfrom': 4, 'cto': 5, 'lemma': 'ねこ', 'text': '猫', 'comment': 'Say neh-koh'}, {'cfrom': 5, 'cto': 6, 'text': 'が'}, {'pos': '名詞-形容動詞語幹', 'cfrom': 6, 'cto': 8, 'lemma': 'すき', 'text': '好き'}, {'cfrom': 8, 'cto': 10, 'text': 'です'}, {'cfrom': 10, 'cto': 11, 'text': '。'}], 'text': '女の子は猫が好きです。', 'concepts': [{'tag': ' 10084295-n', 'tokens': [0, 1, 2], 'clemma': '女の子', 'comment': '若々しい女の人'}, {'tag': '02121620-n', 'tokens': [4], 'clemma': '猫', 'flag': 'E'}, {'tag': '01292683-a', 'tokens': [6], 'clemma': '好き', 'flag': 'S'}]};
      Visko.Tagged.show(sent3).show_concepts();
      
      // Enable tagged sentence
