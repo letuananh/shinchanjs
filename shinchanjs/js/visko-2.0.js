@@ -793,6 +793,15 @@ function visualise(response, visko_parse_header, dviz_parse_header){
         });
         highlight('#jsons');
     }
+    // LaTeX
+    else if ($('#latexes').is(':empty') && active_tab() == '#latex') {
+        display_latex(response.latex);
+        highlight('#latex');
+    }    
+    // Visualize TTL
+    if ($("#sentences").is(':empty') && response.shallow && response.shallow.tokens && response.shallow.concepts) {
+        Visko.Tagged.show(response.shallow).show_concepts($("#concept_list"));
+    }
     // end if
 }
 
