@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+          "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Canvas demo</title>
+  </head>
+  <body>
+    <h1>ShinchanJS demo</h1>
+    <div id="main_canvas"></div>
+    <div style="padding: 15px 0px;">
+      <input type="button" id="btnInfo" name="btnInfo" value="Information"/>
+      <input type="button" id="btnUpdate" name="btnUpdate" value="Move"/>
+      <input type="button" id="btnAuto" name="btnAuto" value="Start"/>
+      <input type="button" id="btnClear" name="btnClear" value="Clear"/>
+    </div>
+    <div id="console" style="overflow: auto; max-height: 300px;"></div>
+  </body>
+
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="js/raphael-2.2.1.min.js"></script>
+  <script src="js/kajika.js"></script>
+  <script src="js/console.js"></script>
+  <script src="js/shinchan.js"></script>
+  <script src="js/shinchan.debug.js"></script>
+  <script src="js/jikan.js"></script>
+  <script src="js/rarrow_demo.js"></script>
+  <script>
+   var console;
+   var canvas;
+   var rarrow;
+   
+   function initialise(){
+     // Create a console
+     console = new Console("console");
+     console.writeline("- Test Console -");
+     
+     $("#btnInfo").click(function(){
+       show_info();
+     });
+     $("#btnUpdate").click(function(){
+       rarrow.transform();
+     });
+     $("#btnAuto").click(function(){
+       auto();
+     });
+     $("#btnClear").click(function(){
+       console.clear("- Cleared -");
+     });
+   }
+   
+   $(document).ready(function(){		
+     initialise();
+     canvas = new Canvas("main_canvas", 320, 240, "MainCanvas");
+     rarrow = new RotateArrow(canvas);
+     rarrow.draw_stuff();
+   });
+
+   var timer1 = new JiTimer(30, function(){
+     rarrow.transform();
+   });   
+
+   function auto() {
+     if (timer1.state) {
+       timer1.stop();
+       $('#btnAuto').prop('value', 'Start');
+     }
+     else{
+       timer1.start();
+       $('#btnAuto').prop('value', 'Stop');
+     }
+   }
+   
+   function show_info(){
+     console.writeline("Today is a good day ...");
+     console.writeline(arrow.getObject().attr('path'));
+   }
+  </script>
+</html>

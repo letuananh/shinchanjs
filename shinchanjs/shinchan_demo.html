@@ -204,8 +204,8 @@
        arrow_length = 20;
        arrow_count = 36;
        for(i = 1; i <= arrow_count; i++){
-	 new_to = ChibiJS.Geometry.rotate(i*360 / arrow_count, to, from);
-	 arr_layer.draw_arrow(from.x, from.y, new_to.x, new_to.y, "ARRRR", 20, 10);
+	     new_to = ChibiJS.Geometry.rotate(i*360 / arrow_count, to, from);
+	     arr_layer.draw_arrow(from.x, from.y, new_to.x, new_to.y, "ARRRR", 20, 10);
        }
        
        canvas.pack(20);
