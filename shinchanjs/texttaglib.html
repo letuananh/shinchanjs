@@ -17,7 +17,7 @@
     <!-- This caused tooltip trouble -->
     <!-- <link rel="stylesheet" href="modules/viz/delphin-viz.css" /> -->
     <link rel="stylesheet" href="modules/highlight.js/styles/github.css" />
-    <!-- TaggedSentence support -->
+    <!-- TTL support -->
     <link rel="stylesheet" href="css/texttaglib.css" />
     <!-- Demo CSS -->
     <link rel="stylesheet" href="css/visko2.css" />
@@ -36,8 +36,8 @@
      .monotext {
        font-family: monospace;
      }
-     #sentences {
-       line-height: 200%;
+     #ttl_sentences {
+       line-height: 160%;
      }
     </style>
     
@@ -81,7 +81,7 @@
             <li><span class="monotext">texttaglib.js</span></li>
             <li><span class="monotext">texttaglib.css</span></li>
           </ol>
-          <p>You then can either create a <code>&lt;div id="ttl_sentences"&gt;&lt;/div&gt;</code> to display all the sentences or pass the container's ID into the <code>show()</code> function: <code>Visko.Tagged.show(sent_json_obj, "sent_div_id")</code>.</p>
+          <p>You then can either create a <code>&lt;div id="ttl_sentences"&gt;&lt;/div&gt;</code> to display all the sentences or pass the container's ID into the <code>show()</code> function: <code>Visko.Tagged.show(sent_json_obj, "#sent_div_id")</code>.</p>
           <p>To generate TTL JSON, please use <a href="https://pypi.org/project/texttaglib/">https://pypi.org/project/texttaglib/</a></p>
             <h2>Constructed Manually</h2>
           <div id="manual">
@@ -108,16 +108,19 @@
           <h2>From JSON</h2>
           <div id="ttl_sentences">
           </div>
+          <h2>From AJAX</h2>
+          <div id="ttl_sentences_ajax">
+          </div>
           <!-- End left pane -->
         </div>
         <div class="col-md-6">
           <!-- Control Panel and Console -->
           <div id="toolbar" class="input-group" style="padding: 10px 0px;">
-	    <div class="input-group-btn">
+	        <div class="input-group-btn">
               <input type="button" class="btn btn-primary" id="btnDebug" name="btnDebug" value="Debug"/>
               <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
               <input type="checkbox" id="consoletoggle" checked data-toggle="toggle" data-on="Console" data-off="Console"></input>
-	    </div>
+	        </div>
           </div>
           <div id="console" style="overflow: auto; max-height: 80vh;"></div>
           <!-- End console UI -->
@@ -144,7 +147,7 @@
   <script src="js/shinchan.debug.js"></script>
   <script src="js/visko-2.0.js"></script>
   <script src="js/console.js"></script>
-  <!-- TaggedSentence support (this script requires css/texttaglib.css) -->
+  <!-- TTL support (this script requires css/texttaglib.css and a ttl_sentences div) -->
   <script src="js/texttaglib.js"></script>
 
   <script>
@@ -169,7 +172,7 @@
      console.writeline("You wrote: " + input);
    }
   </script>
- 
+  
   <!-- Document ready -->
   <script>
    var canvas;
@@ -223,8 +226,17 @@
      sent4 = {"text": "They wanted to touch the mystery.", "tokens": [{"cfrom": 0, "cto": 4, "text": "They", "pos": "PRP", "tags": [{"label": "ignore", "type": "cmd"}]}, {"cfrom": 5, "cto": 11, "text": "wanted", "lemma": "want", "pos": "VB", "tags": [{"label": "done", "type": "cmd"}, {"label": "2:37:00::", "type": "lexsn"}, {"label": "1", "type": "wnsn"}]}, {"cfrom": 12, "cto": 14, "text": "to", "pos": "VB", "tags": [{"label": "done", "type": "cmd"}, {"label": "notag", "type": "ot"}]}, {"cfrom": 15, "cto": 20, "text": "touch", "lemma": "touch", "pos": "VB", "tags": [{"label": "done", "type": "cmd"}, {"label": "2:39:00::", "type": "lexsn"}, {"label": "2", "type": "wnsn"}]}, {"cfrom": 21, "cto": 24, "text": "the", "pos": "DT", "tags": [{"label": "ignore", "type": "cmd"}]}, {"cfrom": 25, "cto": 32, "text": "mystery", "lemma": "mystery", "pos": "NN", "tags": [{"label": "done", "type": "cmd"}, {"label": "1:09:00::", "type": "lexsn"}, {"label": "1", "type": "wnsn"}]}, {"cfrom": 32, "cto": 33, "text": ".", "tags": [{"label": "punc", "type": "tag"}]}], "concepts": [{"clemma": "want", "tag": "01825237-v", "tokens": [1]}, {"clemma": "touch", "tag": "02127358-v", "tokens": [3]}, {"clemma": "mystery", "tag": "05685538-n", "tokens": [5]}], "tags": [{"label": "br-r07-1-4", "type": "origid"}]}
      Visko.Tagged.show(sent4).show_concepts();
 
-     sent5 = {"text": "Owls are night birds.", "tokens": [{"cfrom": 0, "cto": 4, "text": "Owls", "lemma": "owl"}, {"cfrom": 5, "cto": 8, "text": "are", "lemma": "be"}, {"cfrom": 9, "cto": 14, "text": "night"}, {"cfrom": 15, "cto": 20, "text": "birds", "lemma": "bird"}, {"cfrom": 20, "cto": 21, "text": "."}], "concepts": [{"clemma": "owl", "tag": "01621127-n", "tokens": [0], "comment": "nocturnal bird of prey with hawk-like beak and claws and large head with front-facing eyes"}, {"clemma": "night bird", "tag": "01515078-n", "tokens": [2, 3], "flag": "S", "comment": "any bird associated with night: owl"}, {"clemma": "be", "tag": "02604760-v", "tokens": [1], "flag": "E", "comment": "have the quality of being"}]};
-     Visko.Tagged.show(sent5).show_concepts();
+     // Demo load from AJAX
+     console.writeline("Loading TTL sentence from AJAX ...");
+     $.getJSON("ajax/ttl.json")
+      .done(function(json) {
+        // Do something
+        console.writeline("Sentence loaded. Rendering now ...");
+        Visko.Tagged.show(json, "#ttl_sentences_ajax").show_concepts();
+      })
+      .fail(function( jqxhr, textStatus, error ) {
+        console.log( "Request Failed: " + err );
+      });
      
      // Enable tagged sentence
      $('[data-toggle="popover"]').popover({html: true});

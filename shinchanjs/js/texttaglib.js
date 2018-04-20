@@ -13,6 +13,11 @@
  * along with ChibiJS. If not, see http://www.gnu.org/licenses/.
  **/
 
+/* used bootstrap labels 
+label label-*
+(danger warning info success primary default)
+*/
+
 var Visko;
 
 if (Visko == undefined) {

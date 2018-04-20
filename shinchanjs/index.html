@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="modules/bootstrap/3.3.7/css/bootstrap.min.css" />
     <!-- Demo CSS -->
     <link rel="stylesheet" href="css/visko2.css" />
+    <!-- TTL support -->
+    <link rel="stylesheet" href="css/texttaglib.css" />
   </head>
 
   <body>
@@ -48,30 +50,37 @@
           <div id="dmrs1_text_holder" class="dmrs_sentence_text"></div>
           <p><a class="btn btn-default" href="visko-2.0-demo.html" role="button">View details &raquo;</a></p>
         </div>
-        <div class="col-md-6">
-          <h2>ShinchanJS Library</h2>
-          <p>Shinchan is a graphic engine which supports multiple layers drawing and elements manipulation.</p>
-          <p><a class="btn btn-default" href="shinchan_demo.html" role="button">View details &raquo;</a></p>
+        <div class="row">
+          <div class="col-md-6">
+            <h2>TTL Visualiser</h2>
+            <p>TTL (TextTagLib) is a text annotation tool and corpus management format</p>
+            <div id="ttl_sentences"></div>
+            <p><a class="btn btn-default" href="texttaglib.html" role="button">View details &raquo;</a></p>
+          </div>
+          <div class="col-md-6">
+            <h2>ShinchanJS Library</h2>
+            <p>Shinchan is a graphic engine which supports multiple layers drawing and elements manipulation.</p>
+            <p><a class="btn btn-default" href="shinchan_demo.html" role="button">View details &raquo;</a></p>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <h2>Yawol Client</h2>
-          <p>A REST client for accessing Yawol (REST server for querying various Wordnets data)</p>
-          <p><a class="btn btn-default" href="yawol_demo.html" role="button">View details &raquo;</a></p>
+        <div class="row">
+          <div class="col-md-6">
+            <h2>Yawol Client</h2>
+            <p>A REST client for accessing Yawol (REST server for querying various Wordnets data)</p>
+            <p><a class="btn btn-default" href="yawol_demo.html" role="button">View details &raquo;</a></p>
+          </div>
+          <div class="col-md-6">
+            <h2>Coolisf Client</h2>
+            <p>A REST client for accessing CoolISF (Integrated Semantic Framework) REST API</p>
+            <p><a class="btn btn-default" href="isfclient.html" role="button">View details &raquo;</a></p>
+          </div>
         </div>
-        <div class="col-md-6">
-          <h2>Coolisf Client</h2>
-          <p>A REST client for accessing CoolISF (Integrated Semantic Framework) REST API</p>
-          <p><a class="btn btn-default" href="isfclient.html" role="button">View details &raquo;</a></p>
-        </div>
-      </div>
-    </div> <!-- /container -->
+      </div> <!-- /container -->
 
-    <hr>
-    <footer>
-      <p>&copy; 2012-2017 <a href="https://github.com/letuananh">Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</a></p>
-    </footer>
+      <hr>
+      <footer>
+        <p>&copy; 2012-2017 <a href="https://github.com/letuananh">Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</a></p>
+      </footer>
   </body>
 
   <!-- Bootstrap core JavaScript
@@ -86,14 +95,30 @@
   <script src="js/raphael-2.2.1.min.js"></script>
   <script src="js/shinchan.js"></script>
   <script src="js/visko-2.0.js"></script>
-
+  <!-- TTL support (this script requires css/texttaglib.css and a ttl_sentences div) -->
+  <script src="js/texttaglib.js"></script>
+  <style>
+   #ttl_sentences {
+     margin-bottom: 10px;
+   }
+  </style>
   <script>
    var visual_dmrs1;
    $(document).ready(function(){
+     // Display DMRS
      $.getJSON("ajax/dmrs_love.json")
       .done(function(json) {
         // Do something
         dmrs_canvas = json2canvas(json, "dmrs1").visualise();
+      })
+      .fail(function( jqxhr, textStatus, error ) {
+        console.log( "Request Failed: " + err );
+      });
+     // Display TTL
+     $.getJSON("ajax/ttl.json")
+      .done(function(json) {
+        // Do something
+        Visko.Tagged.show(json).show_concepts();
       })
       .fail(function( jqxhr, textStatus, error ) {
         console.log( "Request Failed: " + err );
