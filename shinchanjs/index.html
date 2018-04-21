@@ -50,32 +50,36 @@
           <div id="dmrs1_text_holder" class="dmrs_sentence_text"></div>
           <p><a class="btn btn-default" href="visko-2.0-demo.html" role="button">View details &raquo;</a></p>
         </div>
-        <div class="row">
-          <div class="col-md-6">
-            <h2>TTL Visualiser</h2>
-            <p>TTL (TextTagLib) is a text annotation tool and corpus management format</p>
-            <div id="ttl_sentences"></div>
-            <p><a class="btn btn-default" href="texttaglib.html" role="button">View details &raquo;</a></p>
-          </div>
-          <div class="col-md-6">
-            <h2>ShinchanJS Library</h2>
-            <p>Shinchan is a graphic engine which supports multiple layers drawing and elements manipulation.</p>
-            <p><a class="btn btn-default" href="shinchan_demo.html" role="button">View details &raquo;</a></p>
-          </div>
+        <div class="col-md-6">
+          <h2>ShinchanJS Library</h2>
+          <p>Shinchan is a graphic engine which supports multiple layers drawing and elements manipulation.</p>
+          <div id="rarrow_canvas"></div>
+          <input type="button" class="btn btn-default btn-lg" name="btnAuto" id="btnAuto" value="Start"/>
+          <input type="button" class="btn btn-default btn-lg" name="btnStep" id="btnStep" value="Step"/>
+          <p><a class="btn btn-default" href="shinchan_demo.html" role="button">View details &raquo;</a></p>
         </div>
-        <div class="row">
-          <div class="col-md-6">
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <h2>TTL Visualiser</h2>
+          <p>TTL (TextTagLib) is a text annotation tool and corpus management format</p>
+          <div id="ttl_sentences"></div>
+          <p><a class="btn btn-default" href="texttaglib.html" role="button">View details &raquo;</a></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
             <h2>Yawol Client</h2>
             <p>A REST client for accessing Yawol (REST server for querying various Wordnets data)</p>
             <p><a class="btn btn-default" href="yawol_demo.html" role="button">View details &raquo;</a></p>
           </div>
-          <div class="col-md-6">
+        <div class="col-md-6">
             <h2>Coolisf Client</h2>
             <p>A REST client for accessing CoolISF (Integrated Semantic Framework) REST API</p>
             <p><a class="btn btn-default" href="isfclient.html" role="button">View details &raquo;</a></p>
           </div>
-        </div>
-      </div> <!-- /container -->
+      </div>
+    </div> <!-- /container -->
 
       <hr>
       <footer>
@@ -97,6 +101,8 @@
   <script src="js/visko-2.0.js"></script>
   <!-- TTL support (this script requires css/texttaglib.css and a ttl_sentences div) -->
   <script src="js/texttaglib.js"></script>
+  <script src="js/jikan.js"></script>
+  <script src="js/rarrow_demo.js"></script>
   <style>
    #ttl_sentences {
      margin-bottom: 10px;
@@ -123,6 +129,35 @@
       .fail(function( jqxhr, textStatus, error ) {
         console.log( "Request Failed: " + err );
       });
+     // Show ShinchanJS Demo
+     canvas = new Canvas("rarrow_canvas", 320, 240, "RArrowCanvas");
+     rarrow = new RotateArrow(canvas);
+     rarrow.draw_stuff();
+     $("#btnAuto").click(function(){
+       toggle_anim();
+     });
+     $("#btnStep").click(function(){
+       rarrow.transform();
+     });
+     timer1.start();
    });
+
+   var canvas;
+   var rarrow;
+   var timer1 = new JiTimer(30, function(){
+     rarrow.transform();
+   });   
+
+   function toggle_anim() {
+     if (timer1.state) {
+       timer1.stop();
+       $('#btnAuto').prop('value', 'Start');
+     }
+     else{
+       timer1.start();
+       $('#btnAuto').prop('value', 'Stop');
+     }
+   }
+   
   </script>
 </html>
