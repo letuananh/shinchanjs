@@ -54,9 +54,11 @@
           <h2>ShinchanJS Library</h2>
           <p>Shinchan is a graphic engine which supports multiple layers drawing and elements manipulation.</p>
           <div id="rarrow_canvas"></div>
-          <input type="button" class="btn btn-default btn-lg" name="btnAuto" id="btnAuto" value="Start"/>
-          <input type="button" class="btn btn-default btn-lg" name="btnStep" id="btnStep" value="Step"/>
-          <p><a class="btn btn-default" href="shinchan_demo.html" role="button">View details &raquo;</a></p>
+          <p>
+            <input type="button" class="btn btn-default" name="btnAuto" id="btnAuto" value="Stop"/>
+            <input type="button" class="btn btn-default" name="btnStep" id="btnStep" value="Step"/>
+            <a class="btn btn-default" href="shinchan_demo.html" role="button">View details &raquo;</a>
+          </p>
         </div>
       </div>
       <div class="row">
@@ -66,13 +68,13 @@
           <div id="ttl_sentences"></div>
           <p><a class="btn btn-default" href="texttaglib.html" role="button">View details &raquo;</a></p>
         </div>
+        <div class="col-md-6">
+          <h2>Yawol Client</h2>
+          <p>A REST client for accessing Yawol (REST server for querying various Wordnets data)</p>
+          <p><a class="btn btn-default" href="yawol_demo.html" role="button">View details &raquo;</a></p>
+        </div>
       </div>
       <div class="row">
-        <div class="col-md-6">
-            <h2>Yawol Client</h2>
-            <p>A REST client for accessing Yawol (REST server for querying various Wordnets data)</p>
-            <p><a class="btn btn-default" href="yawol_demo.html" role="button">View details &raquo;</a></p>
-          </div>
         <div class="col-md-6">
             <h2>Coolisf Client</h2>
             <p>A REST client for accessing CoolISF (Integrated Semantic Framework) REST API</p>
@@ -83,7 +85,7 @@
 
       <hr>
       <footer>
-        <p>&copy; 2012-2017 <a href="https://github.com/letuananh">Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</a></p>
+        <p>&copy; 2012-2018 <a href="https://github.com/letuananh">Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</a></p>
       </footer>
   </body>
 
@@ -146,6 +148,10 @@
    var rarrow;
    var timer1 = new JiTimer(30, function(){
      rarrow.transform();
+   }, function(){
+     $('#btnAuto').prop('value', 'Start');
+   }, function() {
+     $('#btnAuto').prop('value', 'Stop');
    });   
 
    function toggle_anim() {
