@@ -9,7 +9,7 @@
     <link rel="icon" href="../../favicon.ico">
     <!-- Title and styles -->
     <title>Console demo</title>
-
+    
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="modules/bootstrap/3.3.7/css/bootstrap.min.css" />
     <link rel="stylesheet" href="modules/bootstrap-toggle/css/bootstrap-toggle.min.css" />
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="modules/highlight.js/styles/github.css" />
     <!-- Demo CSS -->
     <link rel="stylesheet" href="css/visko2.css" />    
-
+    
     <style>
      #toolbar {
        /* T-R-B-L */
@@ -56,7 +56,7 @@
     <div style="padding: 60px 20px;">
       <div class="row">
         <div class="col-md-6">
-	  <!-- Parsing Form -->
+	      <!-- Parsing Form -->
           <form style="padding: 20px 3px;">
             <div class="input-group input-group-lg">
               <span class="input-group-addon">Input</span>
@@ -65,31 +65,31 @@
                 <button type="button" class="btn btn-default btn-lg" name="btnProcess" id="btnProcess" value="parse">Process</button>
               </span>
             </div>
-	  </form>
-
+	      </form>
+          
           Lorem ipsum dolor sit amet.
         </div>
         <div class="col-md-6">
           <!-- Control Panel and Console -->          <divf id="toolbar" class="input-group" style="padding: 10px 0px;">
-	    <div class="input-group-btn">
-              <input type="button" class="btn btn-primary" id="btnDebug" name="btnDebug" value="Debug"/>
-              <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
-              <input type="checkbox" id="consoletoggle" data-width="100" checked data-toggle="toggle" data-on="Console" data-off="Console"></input>
-	    </div>
+	      <div class="input-group-btn">
+            <input type="button" class="btn btn-primary" id="btnDebug" name="btnDebug" value="Debug"/>
+            <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
+            <input type="checkbox" id="consoletoggle" data-width="100" checked data-toggle="toggle" data-on="Console" data-off="Console"></input>
+	      </div>
           </div>
           <div id="console" style="overflow: auto; max-height: 80vh;"></div>
           <!-- End console UI -->
         </div>
       </div>
-
+      
       <hr>
-
+      
       <footer>
         <p>&copy; 2012-2017 Le Tuan Anh &lt;tuananh.ke@gmail.com&gt;</p>
       </footer>
     </div> <!-- /container -->
   </body>
-
+  
   <!-- Bootstrap -->
   <script src="js/jquery-3.2.1.min.js"></script>
   <script src="modules/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -102,7 +102,7 @@
   <script src="js/shinchan.js"></script>
   <script src="js/shinchan.debug.js"></script>
   <script src="js/visko-2.0.js"></script>
-
+  
   <!-- Demo console features -->
   <script>
    function debug(){
@@ -120,14 +120,14 @@
      console.exec("doSomething()", " | ");
      obj = new function(){ 
        this.str = function(){
-	 return "This content is from AN OBJECT";
+	     return "This content is from AN OBJECT";
        }
      };
      console.write(obj, "green");
      console.write(" | ", "red");
      console.writeline(obj);
    }
-
+   
    function process() {
      var input = $("#userinput").val();
      console.writeline("You wrote: " + input);
@@ -144,7 +144,7 @@
    $(document).ready(function(){       
      initialise();
    });
-
+   
    function initialise(){
      // Console support
      console = new Console("console", 220, ".:: Console Demo ::.<br/>");
