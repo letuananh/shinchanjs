@@ -58,16 +58,18 @@
 
    var timer1 = new JiTimer(30, function(){
      rarrow.transform();
+   }, function(){
+     $('#btnAuto').prop('value', 'Start');
+   }, function() {
+     $('#btnAuto').prop('value', 'Stop');
    });   
-
+   
    function auto() {
      if (timer1.state) {
        timer1.stop();
-       $('#btnAuto').prop('value', 'Start');
      }
      else{
        timer1.start();
-       $('#btnAuto').prop('value', 'Stop');
      }
    }
    
