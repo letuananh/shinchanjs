@@ -15,7 +15,7 @@
 
 /* used bootstrap labels 
 label label-*
-(danger warning info success primary default)
+(danger warning info success primary default) flag=[EWISP ]
 */
 
 var Visko;
