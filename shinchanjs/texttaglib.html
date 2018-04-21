@@ -151,20 +151,7 @@
   <script src="js/texttaglib.js"></script>
 
   <script>
-   function gen_button(id) {
-     btn = $("<button class='btn btn-default btn-sm'><span class='glyphicon glyphicon-remove'></span> Remove</button>");
-     if (id == undefined) { id = "btn_" + ChibiJS.IDGenerator.generate(); }
-     btn.data('bid', '#' + id);
-     btn.attr('id', id);
-     return btn;
-   }
-
    function debug(){
-     btn = gen_button();
-     btn.click(function(){
-       console.writeline($(this).data('bid') + " has been clicked");
-     });
-     $('#box1').append(btn);
    }
    
    function process() {
