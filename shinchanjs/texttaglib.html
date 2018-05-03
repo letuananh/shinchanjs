@@ -81,7 +81,14 @@
             <li><span class="monotext">texttaglib.js</span></li>
             <li><span class="monotext">texttaglib.css</span></li>
           </ol>
+          And the following libraries:
+          <ol>
+            <li>jQuery</li>
+            <li>shinchan.js [IDGenerator]</li>
+            <li>bootstrap (labels, tooltips, etc.)</li>
+          </ol>
           <p>You then can either create a <code>&lt;div id="ttl_sentences"&gt;&lt;/div&gt;</code> to display all the sentences or pass the container's ID into the <code>show()</code> function: <code>Visko.Tagged.show(sent_json_obj, "#sent_div_id")</code>.</p>
+          <p>To make synsets click-able, override <code>Visko.find_tag()</code>. See the example code below.</p>
           <p>To generate TTL JSON, please use <a href="https://pypi.org/project/texttaglib/">https://pypi.org/project/texttaglib/</a></p>
             <h2>Constructed Manually</h2>
           <div id="manual">

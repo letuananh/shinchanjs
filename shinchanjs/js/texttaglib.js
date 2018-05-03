@@ -62,19 +62,19 @@ Visko.Tagged.Sentence.prototype = {
         var self = this;
         self._div = $("<div class='TaggedSentence'>");
         // Create tokens
-        self._tokenObjs = _.map(self._tokens, function(t){ return new Visko.Tagged.Token(t);});
+        self._tokenObjs = $.map(self._tokens, function(t){ return new Visko.Tagged.Token(t); });
         self._conceptObjs = [];
         // Create concepts
-        _.forEach(self._concepts, function(concept){
+        $.each(self._concepts, function(cidx, concept){
             conceptObj = new Visko.Tagged.Concept(concept);
             self._conceptObjs.push(conceptObj);
-            _.forEach(concept.tokens, function(widx){
+            $.each(concept.tokens, function(tidx, widx){
                 self._tokenObjs[widx].add_concept(conceptObj);
             }); // foreach word
         }); // foreach concept
         
         // add tokens to sentence
-        _.forEach(self._tokenObjs, function(tokenObj){
+        $.each(self._tokenObjs, function(tidx, tokenObj){
             self._div.append(tokenObj.to_span());
             self._div.append(" ");
         });
@@ -95,7 +95,7 @@ Visko.Tagged.Sentence.prototype = {
             }
         }
         // add concepts
-        _.forEach(this._conceptObjs, function(c){
+        $.each(this._conceptObjs, function(cidx, c){
             var span = c.to_span();
             if (c.flag() == "E"){
                 span.addClass("label label-danger");
@@ -140,7 +140,7 @@ Visko.Tagged.Token = function(token){
         this.add_tooltip("Note: " + this._token.comment);
     }
     if (this._token.tags) {
-        _.forEach(this._token.tags, function(tag){
+        $.each(this._token.tags, function(tidx, tag){
             var tag_label = ('label' in tag) ? tag['label'] : '';
             var tag_type = ('type' in tag) ? tag['type'] : '';
             var tag_text = (tag_type.length > 0) ? tag_type + ': ' + tag_label : tag_label;
@@ -267,7 +267,7 @@ Visko.Tagged.Concept.prototype = {
         // comment?
         if (concept.comment) {
             popdiv.append("<br/>");
-            popdiv.append(concept.comment);
+            popdiv.append(concept.comment.replace('\n', '<br/>'));
         }
         return popdiv;
     },
