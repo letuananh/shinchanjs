@@ -1180,6 +1180,7 @@ ChibiJS.ShinChan.Layer.prototype.draw_label = function(x, y, text, padding_x, pa
  * @return: Return a ChibiJS.ShinChan.Path object
  **/
 ChibiJS.ShinChan.Layer.prototype.build_arrow = function(from_x, from_y, to_x, to_y, arrow_head_length, arrow_head_angle){
+    var delta_x, delta_y, slope;
         if(!arrow_head_length){ arrow_head_length = 10; }
         if(!arrow_head_angle){ arrow_head_angle = 12; }
         if(from_x == to_x){
@@ -1192,13 +1193,13 @@ ChibiJS.ShinChan.Layer.prototype.build_arrow = function(from_x, from_y, to_x, to
             delta_y = Math.abs(slope * delta_x);
         }
         
-        head_tail_x = ChibiJS.ShinChan.CanvasUtil.sign(from_x - to_x) * delta_x + to_x;
-        head_tail_y = ChibiJS.ShinChan.CanvasUtil.sign(from_y - to_y) * delta_y + to_y;
+        var head_tail_x = ChibiJS.ShinChan.CanvasUtil.sign(from_x - to_x) * delta_x + to_x;
+        var head_tail_y = ChibiJS.ShinChan.CanvasUtil.sign(from_y - to_y) * delta_y + to_y;
         
-        head_root = new ChibiJS.ShinChan.Point(head_tail_x, head_tail_y);
-        arrow_head = new ChibiJS.ShinChan.Point(to_x, to_y);
-        head_left = ChibiJS.Geometry.rotate(-arrow_head_angle, head_root, arrow_head);
-        head_right = ChibiJS.Geometry.rotate(arrow_head_angle, head_root, arrow_head);
+        var head_root = new ChibiJS.ShinChan.Point(head_tail_x, head_tail_y);
+        var arrow_head = new ChibiJS.ShinChan.Point(to_x, to_y);
+        var head_left = ChibiJS.Geometry.rotate(-arrow_head_angle, head_root, arrow_head);
+        var head_right = ChibiJS.Geometry.rotate(arrow_head_angle, head_root, arrow_head);
         /*
         aline = this.draw_circle(from_x, from_y, 5, "arrow_from").fill("none");
         aline = this.draw_circle(to_x, to_y, 5, "arrow_to").fill("cyan");

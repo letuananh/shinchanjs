@@ -27,7 +27,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="yawol_demo.html">Jamdol client - Version 0.1</a>
+          <a class="navbar-brand" href="jamdol_client.html">Jamdol client - Version 0.1</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -44,7 +44,7 @@
           <form style="padding: 20px 3px;" action="#">
             <div class="row">
               <div class="input-group input-group-lg">
-                <input class="form-control input-lg" name="query" id="query" placeholder="げんき" value="" type="text">
+                <input class="form-control input-lg" name="query" id="query" placeholder="げんき" value="" type="text"></input>
                 <span class="input-group-btn">
                   <button type="button" class="btn btn-default btn-lg" name="btnSearch" id="btnSearch" value="parse">Search</button>
                 </span>
@@ -55,6 +55,8 @@
               <a href="#" id="txtKana">げんき</a> | 
               <a href="#" id="txtKanji">元気</a> | 
               <a href="#" id="txtEID">1260720</a>
+              <span class="label label-default">Exact matching</span>
+              <input type="checkbox" name="chk_exact" id="chk_exact"></input>
             </div>
           </form>
           <!-- Entry Information -->
@@ -130,8 +132,10 @@
        jamdol_container.empty();
      }
 
-     function show_entries(entries) {
+     function show_entries(results) {
        clear_entries();
+       // results contains entries and chars
+       entries = results.entries;
        $(entries).each(function(idx, e){
          console.writeline(JSON.stringify(e));
          // Entry header
@@ -184,7 +188,8 @@
       **/
      function do_search() {
        var query = $('#query').val();
-       if (!_.includes(query, '_') && !_.includes(query, '%')) {
+       var exact = $("#chk_exact").is(":checked");
+       if (!exact && !_.includes(query, '_') && !_.includes(query, '%')) {
          query = '%' + query + '%';
        }
        console.writeline("Searching: " + query);

@@ -8,7 +8,7 @@
     <meta name="author" content="Le Tuan Anh <tuananh.ke@gmail.com">
     <link rel="icon" href="../../favicon.ico">
     <!-- Title and styles -->
-    <title>Tagged Sentence demo</title>
+    <title>TextTagLib visualisation demo</title>
     
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="modules/bootstrap-toggle/css/bootstrap-toggle.min.css" />
@@ -17,8 +17,8 @@
     <!-- This caused tooltip trouble -->
     <!-- <link rel="stylesheet" href="modules/viz/delphin-viz.css" /> -->
     <link rel="stylesheet" href="modules/highlight.js/styles/github.css" />
-    <!-- TaggedSentence support -->
-    <link rel="stylesheet" href="css/tagging.css" />
+    <!-- TTL support -->
+    <link rel="stylesheet" href="css/texttaglib.css" />
     <!-- Demo CSS -->
     <link rel="stylesheet" href="css/visko2.css" />
     
@@ -33,6 +33,12 @@
      *+html #toolbar {
        display: inline;
      }
+     .monotext {
+       font-family: monospace;
+     }
+     #ttl_sentences {
+       line-height: 160%;
+     }
     </style>
     
   </head>
@@ -46,7 +52,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="tagging.html">Tagged Sentence Demo</a>
+          <a class="navbar-brand" href="texttaglib.html">TextTagLib (TTL) Visualisation Demo</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -68,10 +74,17 @@
                 <button type="button" class="btn btn-default btn-lg" name="btnProcess" id="btnProcess" value="parse">Process</button>
               </span>
             </div>
-	  </form>
-
+	      </form>
+          <h1>TextTagLib Demo</h1>
+          This module requires two files:
+          <ol>
+            <li><span class="monotext">texttaglib.js</span></li>
+            <li><span class="monotext">texttaglib.css</span></li>
+          </ol>
+          <p>You then can either create a <code>&lt;div id="ttl_sentences"&gt;&lt;/div&gt;</code> to display all the sentences or pass the container's ID into the <code>show()</code> function: <code>Visko.Tagged.show(sent_json_obj, "#sent_div_id")</code>.</p>
+          <p>To generate TTL JSON, please use <a href="https://pypi.org/project/texttaglib/">https://pypi.org/project/texttaglib/</a></p>
+            <h2>Constructed Manually</h2>
           <div id="manual">
-            <h1>Tagged Sentences</h1>
             <div class="TaggedSentence">
               <span>This</span>
               <span class="TaggedToken" data-toggle="popover" data-placement="top" data-content="be.v.1">is</span>
@@ -92,19 +105,22 @@
               </script>
             </div>
           </div>
-          <h1>From JSON</h1>
-          <div id="sentences">
+          <h2>From JSON</h2>
+          <div id="ttl_sentences">
+          </div>
+          <h2>From AJAX</h2>
+          <div id="ttl_sentences_ajax">
           </div>
           <!-- End left pane -->
         </div>
         <div class="col-md-6">
           <!-- Control Panel and Console -->
           <div id="toolbar" class="input-group" style="padding: 10px 0px;">
-	    <div class="input-group-btn">
+	        <div class="input-group-btn">
               <input type="button" class="btn btn-primary" id="btnDebug" name="btnDebug" value="Debug"/>
               <button type="button" id="btnClear" name="btnClear" class="btn btn-default">Clear Console</button>
               <input type="checkbox" id="consoletoggle" checked data-toggle="toggle" data-on="Console" data-off="Console"></input>
-	    </div>
+	        </div>
           </div>
           <div id="console" style="overflow: auto; max-height: 80vh;"></div>
           <!-- End console UI -->
@@ -127,28 +143,15 @@
   <script src="js/lodash-4.17.4.min.js"></script>
   <!-- ShinchanJS scripts -->
   <script src="js/raphael-2.2.1.min.js"></script>
-  <script src="js/console.js"></script>
   <script src="js/shinchan.js"></script>
   <script src="js/shinchan.debug.js"></script>
   <script src="js/visko-2.0.js"></script>
-  <!-- TaggedSentence support (this script requires css/tagging.css) -->
-  <script src="js/tagging.js"></script>
+  <script src="js/console.js"></script>
+  <!-- TTL support (this script requires css/texttaglib.css and a ttl_sentences div) -->
+  <script src="js/texttaglib.js"></script>
 
   <script>
-   function gen_button(id) {
-     btn = $("<button class='btn btn-default btn-sm'><span class='glyphicon glyphicon-remove'></span> Remove</button>");
-     if (id == undefined) { id = "btn_" + ChibiJS.IDGenerator.generate(); }
-     btn.data('bid', '#' + id);
-     btn.attr('id', id);
-     return btn;
-   }
-
    function debug(){
-     btn = gen_button();
-     btn.click(function(){
-       console.writeline($(this).data('bid') + " has been clicked");
-     });
-     $('#box1').append(btn);
    }
    
    function process() {
@@ -156,7 +159,7 @@
      console.writeline("You wrote: " + input);
    }
   </script>
- 
+  
   <!-- Document ready -->
   <script>
    var canvas;
@@ -168,12 +171,12 @@
    
    function initialise(){
      // Console support
-     console = new Console("console", 220, ".:: Tagged Sentence Demo ::.<br/>");
+     console = new Console("console", 220, ".:: TextTagLib (TTL) Demo ::.<br/>");
      $("#btnClear").click(function() { console.clear(); });
      $(window).on('resize', function() { console.resize(); });
      $('#consoletoggle').change(function(){ console.toggle(); });
      console.clear().resize();
-         
+     
      // Bind events
      $("#btnDebug").click(debug);
      $("#btnProcess").click(process);
@@ -184,9 +187,9 @@
                           {label: "hot"},
                           {label: "dogs", lemma: "dog", pos: "n"}
                  ],
-                 concepts: [{clemma: 'hotdog', tag: '11112222-n', words:[0]},
-                            {clemma: 'be', tag: '12345678-v', words:[1]},
-                            {clemma: 'hotdog', tag: '11112222-n', words:[2,3]}
+                 concepts: [{clemma: 'hotdog', tag: '11112222-n', tokens:[0]},
+                            {clemma: 'be', tag: '12345678-v', tokens:[1]},
+                            {clemma: 'hotdog', tag: '11112222-n', tokens:[2,3]}
                  ]
      };
      Visko.Tagged.show(sent);
@@ -197,15 +200,30 @@
                            {label: "words", lemma: "word", pos: "n"},
                            {label: "up"}
                   ],
-                  concepts: [{clemma: 'I', tag: '11112222-n', words:[0]},
-                             {clemma: 'word', tag: '12345678-n', words:[3]},
-                             {clemma: 'look', tag: '11111112-v', words:[1]},
-                             {clemma: 'look-up', tag: '11111111-v', words:[1,4]}
+                  concepts: [{clemma: 'I', tag: '11112222-n', tokens:[0]},
+                             {clemma: 'word', tag: '12345678-n', tokens:[3]},
+                             {clemma: 'look', tag: '11111112-v', tokens:[1]},
+                             {clemma: 'look-up', tag: '11111111-v', tokens:[1,4]}
                   ]
      };
      Visko.Tagged.show(sent2);
-     sent3 = {'tokens': [{'cfrom': 0, 'cto': 1, 'lemma': 'おんな', 'label': '女'}, {'cfrom': 1, 'cto': 2, 'label': 'の'}, {'cfrom': 2, 'cto': 3, 'lemma': 'こ', 'label': '子'}, {'cfrom': 3, 'cto': 4, 'label': 'は'}, {'pos': '名詞-一般', 'cfrom': 4, 'cto': 5, 'lemma': 'ねこ', 'label': '猫', 'comment': 'Say neh-koh'}, {'cfrom': 5, 'cto': 6, 'label': 'が'}, {'pos': '名詞-形容動詞語幹', 'cfrom': 6, 'cto': 8, 'lemma': 'すき', 'label': '好き'}, {'cfrom': 8, 'cto': 10, 'label': 'です'}, {'cfrom': 10, 'cto': 11, 'label': '。'}], 'text': '女の子は猫が好きです。', 'concepts': [{'tag': ' 10084295-n', 'words': [0, 1, 2], 'clemma': '女の子', 'comment': '若々しい女の人'}, {'tag': '02121620-n', 'words': [4], 'clemma': '猫', 'flag': 'E'}, {'tag': '01292683-a', 'words': [6], 'clemma': '好き', 'flag': 'S'}]};
+     sent3 = {'tokens': [{'cfrom': 0, 'cto': 1, 'lemma': 'おんな', 'text': '女'}, {'cfrom': 1, 'cto': 2, 'text': 'の'}, {'cfrom': 2, 'cto': 3, 'lemma': 'こ', 'text': '子'}, {'cfrom': 3, 'cto': 4, 'text': 'は'}, {'pos': '名詞-一般', 'cfrom': 4, 'cto': 5, 'lemma': 'ねこ', 'text': '猫', 'comment': 'Say neh-koh'}, {'cfrom': 5, 'cto': 6, 'text': 'が'}, {'pos': '名詞-形容動詞語幹', 'cfrom': 6, 'cto': 8, 'lemma': 'すき', 'text': '好き'}, {'cfrom': 8, 'cto': 10, 'text': 'です'}, {'cfrom': 10, 'cto': 11, 'text': '。'}], 'text': '女の子は猫が好きです。', 'concepts': [{'tag': ' 10084295-n', 'tokens': [0, 1, 2], 'clemma': '女の子', 'comment': '若々しい女の人'}, {'tag': '02121620-n', 'tokens': [4], 'clemma': '猫', 'flag': 'E'}, {'tag': '01292683-a', 'tokens': [6], 'clemma': '好き', 'flag': 'S'}]};
      Visko.Tagged.show(sent3).show_concepts();
+
+     sent4 = {"text": "They wanted to touch the mystery.", "tokens": [{"cfrom": 0, "cto": 4, "text": "They", "pos": "PRP", "tags": [{"label": "ignore", "type": "cmd"}]}, {"cfrom": 5, "cto": 11, "text": "wanted", "lemma": "want", "pos": "VB", "tags": [{"label": "done", "type": "cmd"}, {"label": "2:37:00::", "type": "lexsn"}, {"label": "1", "type": "wnsn"}]}, {"cfrom": 12, "cto": 14, "text": "to", "pos": "VB", "tags": [{"label": "done", "type": "cmd"}, {"label": "notag", "type": "ot"}]}, {"cfrom": 15, "cto": 20, "text": "touch", "lemma": "touch", "pos": "VB", "tags": [{"label": "done", "type": "cmd"}, {"label": "2:39:00::", "type": "lexsn"}, {"label": "2", "type": "wnsn"}]}, {"cfrom": 21, "cto": 24, "text": "the", "pos": "DT", "tags": [{"label": "ignore", "type": "cmd"}]}, {"cfrom": 25, "cto": 32, "text": "mystery", "lemma": "mystery", "pos": "NN", "tags": [{"label": "done", "type": "cmd"}, {"label": "1:09:00::", "type": "lexsn"}, {"label": "1", "type": "wnsn"}]}, {"cfrom": 32, "cto": 33, "text": ".", "tags": [{"label": "punc", "type": "tag"}]}], "concepts": [{"clemma": "want", "tag": "01825237-v", "tokens": [1]}, {"clemma": "touch", "tag": "02127358-v", "tokens": [3]}, {"clemma": "mystery", "tag": "05685538-n", "tokens": [5]}], "tags": [{"label": "br-r07-1-4", "type": "origid"}]}
+     Visko.Tagged.show(sent4).show_concepts();
+
+     // Demo load from AJAX
+     console.writeline("Loading TTL sentence from AJAX ...");
+     $.getJSON("ajax/ttl.json")
+      .done(function(json) {
+        // Do something
+        console.writeline("Sentence loaded. Rendering now ...");
+        Visko.Tagged.show(json, "#ttl_sentences_ajax").show_concepts();
+      })
+      .fail(function( jqxhr, textStatus, error ) {
+        console.log( "Request Failed: " + err );
+      });
      
      // Enable tagged sentence
      $('[data-toggle="popover"]').popover({html: true});

@@ -13,6 +13,11 @@
  * along with ChibiJS. If not, see http://www.gnu.org/licenses/.
  **/
 
+/* used bootstrap labels 
+label label-*
+(danger warning info success primary default) flag=[EWISP ]
+*/
+
 var Visko;
 
 if (Visko == undefined) {
@@ -34,7 +39,7 @@ Visko.Tagged.Sentence = function(surface, tokens, concepts){
 Visko.Tagged.show = function(sent_json, container){
     tsent = new Visko.Tagged.Sentence(sent_json.text, sent_json.tokens, sent_json.concepts);
     if (container == undefined){
-        container = "#sentences";
+        container = "#ttl_sentences";
     }
     tsent.to_div($(container));
     return tsent;
@@ -63,7 +68,7 @@ Visko.Tagged.Sentence.prototype = {
         _.forEach(self._concepts, function(concept){
             conceptObj = new Visko.Tagged.Concept(concept);
             self._conceptObjs.push(conceptObj);
-            _.forEach(concept.words, function(widx){
+            _.forEach(concept.tokens, function(widx){
                 self._tokenObjs[widx].add_concept(conceptObj);
             }); // foreach word
         }); // foreach concept
@@ -124,6 +129,7 @@ Visko.Tagged.Token = function(token){
     this._tooltips = $("<div>");
     this._popover = $("<div>");
     this._concepts = [];
+    var self = this;
     if (this._token.lemma) {
         this.add_tooltip("Lemma: " + this._token.lemma);
     }
@@ -132,6 +138,15 @@ Visko.Tagged.Token = function(token){
     }
     if (this._token.comment) {
         this.add_tooltip("Note: " + this._token.comment);
+    }
+    if (this._token.tags) {
+        _.forEach(this._token.tags, function(tag){
+            var tag_label = ('label' in tag) ? tag['label'] : '';
+            var tag_type = ('type' in tag) ? tag['type'] : '';
+            var tag_text = (tag_type.length > 0) ? tag_type + ': ' + tag_label : tag_label;
+            self.add_tooltip(tag_text);
+            // console.writeline(JSON.stringify(tag) + ' ---> ' + tag_text);
+        });
     }
     this.mweid = undefined;
 }
@@ -165,7 +180,7 @@ Visko.Tagged.Token.prototype = {
     },
     to_span: function(mother) {
         // set label
-        this._span.text(this._token.label);
+        this._span.text(this._token.text);
         this._span.data("tokenid", this.tokenid);
         // analyse concepts
         if (this._concepts.length > 0) {
@@ -211,7 +226,7 @@ Visko.Tagged.Concept = function(concept){
 
 Visko.Tagged.Concept.prototype = {
     isMWE: function() {
-        return this._concept.words.length > 1;
+        return this._concept.tokens.length > 1;
     },
     flag: function(){
         if ('flag' in this._concept){
