@@ -68,18 +68,26 @@
             </div>
 	      </form>
 
+          <h1>Annotator.js</h1>
           <div id="maintext">
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
             </p>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
             </p>
           </div>
           
+          <h1>window.selection()</h1>
+          <div id="maintext2"><p>Lorem ipsum dolor sit amet, <b>consectetur</b> adipiscing elit, <i>sed do eiusmod tempor</i> incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div>
+          
+          <h1>textarea</h1>
+          <textarea id="maintext3" style="width: 100%" rows="7" >Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </textarea>
+
+          <h1>Canvas</h1>
           <div id="main_canvas"></div>
         </div>
         <div class="col-md-6">
@@ -118,6 +126,7 @@
   <script src="js/shinchan.js"></script>
   <script src="js/shinchan.debug.js"></script>
   <script src="js/visko-2.0.js"></script>
+  <script src="js/powerranger.js"></script>
   
   <script>
    function debug(){
@@ -152,8 +161,67 @@
 
      // Load annotator
      $("#maintext").annotator();
+
+     // using div selection
+     $("#maintext2").mouseup(reportSelection);
+     $("#maintext2").mousedown(reportSelection);
+     $("#maintext2").select(reportSelection);
+     $("#maintext2").keyup(reportSelection);
+
+     // use textarea
+     $("#maintext3").select(function(){
+       if(this.textLength > 0){
+         var _cfrom = this.selectionStart;
+         var _cto = this.selectionEnd;
+         var _text = this.value.substring(_cfrom, _cto);
+         console.clear();
+         console.writeline("Selected: " + _text + "&lt;:" + _cfrom + ":" + _cto + "&gt;");
+       }
+     });
    }
 
+   // Adopted from:
+   // https://stackoverflow.com/questions/4811822/get-a-ranges-start-and-end-offsets-relative-to-its-parent-container
+   function getSelectionCharacterOffsetWithin(element) {
+     var start = 0;
+     var end = 0;
+     var doc = element.ownerDocument || element.document;
+     var win = doc.defaultView || doc.parentWindow;
+     var sel;
+     if (typeof win.getSelection != "undefined") {
+       sel = win.getSelection();
+       if (sel.rangeCount > 0) {
+         var range = win.getSelection().getRangeAt(0);
+         var preCaretRange = range.cloneRange();
+         preCaretRange.selectNodeContents(element);
+         preCaretRange.setEnd(range.startContainer, range.startOffset);
+         start = preCaretRange.toString().length;
+         preCaretRange.setEnd(range.endContainer, range.endOffset);
+         end = preCaretRange.toString().length;
+       }
+     } else if ( (sel = doc.selection) && sel.type != "Control") {
+       var textRange = sel.createRange();
+       var preCaretTextRange = doc.body.createTextRange();
+       preCaretTextRange.moveToElementText(element);
+       preCaretTextRange.setEndPoint("EndToStart", textRange);
+       start = preCaretTextRange.text.length;
+       preCaretTextRange.setEndPoint("EndToEnd", textRange);
+       end = preCaretTextRange.text.length;
+     }
+     return { start: start, end: end };
+   }
+
+   function reportSelection() {
+     var selOffsets = getSelectionCharacterOffsetWithin( document.getElementById("maintext2") );
+     msg = "Selection offsets: " + selOffsets.start + ", " + selOffsets.end;
+     var _t = $("#maintext2").text();
+     var selected = _t.substr(selOffsets.start, selOffsets.end);
+     console.clear();
+     console.writeline(msg);
+     console.writeline("Selected: " + selected);
+     console.writeline("All: " + _t);
+   }
+   
    $(document).ready(function(){       
      initialise();
    });
