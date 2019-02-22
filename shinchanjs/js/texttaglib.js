@@ -145,7 +145,6 @@ Visko.Tagged.Token = function(token){
             var tag_type = ('type' in tag) ? tag['type'] : '';
             var tag_text = (tag_type.length > 0) ? tag_type + ': ' + tag_label : tag_label;
             self.add_tooltip(tag_text);
-            // console.writeline(JSON.stringify(tag) + ' ---> ' + tag_text);
         });
     }
     this.mweid = undefined;
@@ -240,7 +239,7 @@ Visko.Tagged.Concept.prototype = {
     tooltip: function(){
         var tt = this._concept.clemma + ": " + this._concept.tag;
         if (this._concept.comment != undefined) {
-            tt += " (" + this._concept.comment + ")";
+            tt += " (" + this._concept.comment.replace(/\n/g, "<br/>") + ")";
         }
         return tt;
     },
@@ -260,14 +259,13 @@ Visko.Tagged.Concept.prototype = {
             }
             else{
                 // do nothing? log it?
-                // console.writeline("Couldn't lookup tag " + concept.tag);
             }
         });
         popdiv.append(lnk);
         // comment?
         if (concept.comment) {
             popdiv.append("<br/>");
-            popdiv.append(concept.comment.replace('\n', '<br/>'));
+            popdiv.append(concept.comment.replace(/\n/g, "<br/>"));
         }
         return popdiv;
     },
