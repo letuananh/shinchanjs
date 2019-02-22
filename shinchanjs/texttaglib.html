@@ -189,28 +189,28 @@
      $("#btnProcess").click(process);
 
      var sent = {text: "Sausages are hot-dogs",
-                 tokens: [{label: "Sausages", lemma: "sausage", pos: "n"},
-                          {label: "are", lemma: "be", pos: "v"},
-                          {label: "hot"},
-                          {label: "dogs", lemma: "dog", pos: "n"}
+                 tokens: [{text: "Sausages", lemma: "sausage", pos: "n"},
+                          {text: "are", lemma: "be", pos: "v"},
+                          {text: "hot"},
+                          {text: "dogs", lemma: "dog", pos: "n"}
                  ],
                  concepts: [{clemma: 'hotdog', tag: '11112222-n', tokens:[0]},
                             {clemma: 'be', tag: '12345678-v', tokens:[1]},
                             {clemma: 'hotdog', tag: '11112222-n', tokens:[2,3]}
                  ]
      };
-     Visko.Tagged.show(sent);
+     Visko.Tagged.show(sent, "#ttl_sentences");
      var sent2 = {text: "I looked the words up",
-                  tokens: [{label: "I"},
-                           {label: "looked", lemma: "look", pos: "v"},
-                           {label: "the"},
-                           {label: "words", lemma: "word", pos: "n"},
-                           {label: "up"}
+                  tokens: [{text: "I"},
+                           {text: "looked", lemma: "look", pos: "v"},
+                           {text: "the"},
+                           {text: "words", lemma: "word", pos: "n"},
+                           {text: "up"}
                   ],
                   concepts: [{clemma: 'I', tag: '11112222-n', tokens:[0]},
                              {clemma: 'word', tag: '12345678-n', tokens:[3]},
                              {clemma: 'look', tag: '11111112-v', tokens:[1]},
-                             {clemma: 'look-up', tag: '11111111-v', tokens:[1,4]}
+                             {clemma: 'look-up', tag: '11111111-v', tokens:[1,4], comment:'multiple lines\ncomment\nhere'}
                   ]
      };
      Visko.Tagged.show(sent2);
