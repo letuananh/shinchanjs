@@ -52,15 +52,19 @@
             </div>
             <div class="row" style="padding: 5px;">
               <span class="label label-default">Try these</span>
+              <a href="#" id="txtPattern">%元気%</a> | 
               <a href="#" id="txtKana">げんき</a> | 
               <a href="#" id="txtKanji">元気</a> | 
-              <a href="#" id="txtEID">1260720</a>
+              <a href="#" id="txtEID">id#1260720</a>
               <span class="label label-default">Exact matching</span>
               <input type="checkbox" name="chk_exact" id="chk_exact"></input>
+              <span class="label label-default">Strict</span>
+              <input type="checkbox" name="chk_strict" id="chk_strict" checked="checked"></input>
             </div>
           </form>
           <!-- Entry Information -->
           <div id="entries"></div>
+          <div id="chars"></div>
         </div>
         <div class="col-md-6">
           <!-- Control Panel and Console -->
@@ -117,7 +121,8 @@
     <!-- Yawol client helper functions -->
     <script>
      var jamdol;
-     var jamdol_container = $('#entries');
+     var entry_container = $('#entries');
+     var char_container = $('#chars');
 
      function get_jamdol() {
        if (jamdol == undefined) {
@@ -129,19 +134,21 @@
      }
 
      function clear_entries() {
-       jamdol_container.empty();
+       entry_container.empty();
+       char_container.empty();
      }
 
      function show_entries(results) {
        clear_entries();
        // results contains entries and chars
-       entries = results.entries;
+       var entries = results.entries;
+       var chars = results.chars;
        $(entries).each(function(idx, e){
          console.writeline(JSON.stringify(e));
          // Entry header
          var eh = $('<h3></h3>');
          // eh.text('#' + e.idseq);
-         jamdol_container.append(eh);
+         entry_container.append(eh);
          // Kana
          if (e.kana.length > 0) {
            var kn_label = $("<span class='label label-default'></span>&nbsp;");
@@ -164,9 +171,8 @@
          }
          // Senses
          if (e.senses.length > 0) {
-           // jamdol_container.append("<span class='label label-default'>Senses </span>");
            var slist = $("<ol>");
-           jamdol_container.append(slist);
+           entry_container.append(slist);
            $(e.senses).each(function(idx, sense){
              sli = $("<li>");
              slist.append(sli);
@@ -177,9 +183,61 @@
                });
                sli.append($("<span>" + _.join(glosses, ', ') + " </span>"));
              }
-           }); // end each
+           }); // end each sense
          }         
-         // end
+       }); // end each entry
+       $(chars).each(function(idx, _c){
+         var ch = $('<h3></h3>');
+         ch.text(_c.literal);
+         char_container.append(ch);
+         // showing skip
+         var skip = null;
+         $(_c.q_codes).each(function(idx, code){
+           if (code.type == 'skip') {
+             skip = code.value;
+             return;
+           }
+         });
+         if (skip != null) {
+           var _label = $("<span class='label label-default'></span>&nbsp;");
+           _label.text("SKIP: " + skip);
+           char_container.append(_label)
+         }
+         // show readings & meanings
+         $(_c.rm).each(function(idx, _rm){
+           // meanings
+           var meanings = [];
+           $(_rm.meanings).each(function(midx, meaning){
+             if (meaning.m_lang == '' || meaning.m_lang == 'en') {
+               if (meaning.m_lang) {
+                 meanings.push(meaning.m_lang + ": " + meaning.value);
+               }
+               else {
+                 meanings.push(meaning.value);
+               }
+             }
+           });
+           if (meanings.length > 0){
+             var _label = $("<span class=''></span>&nbsp;");
+             _label.text(_.join(meanings, ', '));
+             char_container.append(_label)
+           }
+           // readings
+           var readings = [];
+           $(_rm.readings).each(function(ridx, reading){
+             if (['ja_on', 'ja_kun', 'vietnam', 'pinyin'].indexOf(reading.type) >= 0){
+               readings.push(reading.type + ": " + reading.value);
+             }
+           });
+           if (readings.length >= 0){
+             char_container.append("&nbsp;<span class='label label-default'>Readings</span>&nbsp;");
+             var _label = $("<span class=''></span>&nbsp;");
+             _label.text(_.join(readings, ', '));
+             char_container.append(_label)
+           }
+         }); // end each char
+
+         console.writeline("CHAR ---> " + JSON.stringify(_c));
        });
      }
      
@@ -187,10 +245,14 @@
       * Using REST API to search
       **/
      function do_search() {
-       var query = $('#query').val();
+       var query = encodeURIComponent($('#query').val());
        var exact = $("#chk_exact").is(":checked");
+       var strict = $("#chk_strict").is(":checked");
        if (!exact && !_.includes(query, '_') && !_.includes(query, '%')) {
          query = '%' + query + '%';
+       }
+       if (strict){
+         query = 'strict/' + query;
        }
        console.writeline("Searching: " + query);
        get_jamdol().search(query, show_entries);
@@ -234,6 +296,7 @@
            return false;
          }
        });
+       $('#txtPattern').click(function(){ $('#query').val($(this).text()); });
        $('#txtKanji').click(function(){ $('#query').val($(this).text()); });
        $('#txtKana').click(function(){ $('#query').val($(this).text()); });
        $('#txtEID').click(function(){ $('#query').val($(this).text()); });
