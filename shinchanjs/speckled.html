@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+          "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>The Adventure of the Speckled Band</title>
+    <!-- Bootstrap core CSS -->
+    <Link rel="stylesheet" href="modules/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <!-- TTL support -->
+    <link rel="stylesheet" href="css/texttaglib.css" />
+  </head>
+
+  <body>
+    <div style="padding-top: 100px;">
+      <div id="ttl_sentences_ajax"></div>
+    </div>
+  </body>
+  <style>
+   body {
+     margin: 10px;
+     font-size: 200%;
+   }
+   #ttl_sentences_ajax {
+     line-height: 200%;
+   }
+  </style>
+  <!-- Bootstrap -->
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="modules/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <!-- ShinchanJS scripts -->
+  <script src="js/raphael-2.2.1.min.js"></script>
+  <script src="js/console.js"></script>
+  <script src="js/shinchan.js"></script>
+  <!-- TTL support (this script requires css/texttaglib.css and a ttl_sentences div) -->
+  <script src="js/texttaglib.js"></script>
+
+  <script>
+   var console;
+   Visko.find_tag = function(tag){
+     var ss_url = 'http://compling.hss.ntu.edu.sg/omw/cgi-bin/wn-gridx.cgi?synset=' + tag;
+     window.open(ss_url, "synset_window", "height=480,width=640");
+   };
+   
+   $(document).ready(function(){		
+     initialise();
+     load_doc('ajax/doc1');
+   });
+
+   function initialise(){
+     // Create a console
+     console = new Console("console");      
+     console.writeline("- Test Console -");     
+   }
+
+   function load_sent(url, is_title) {
+     if (is_title){
+       $.getJSON(url)
+        .done(function(json) {
+          var sent_obj = Visko.Tagged.show(json, "#ttl_sentences_ajax");
+          sent_obj._div.css({'font-size': '150%'});
+        });
+     } else {
+       $.getJSON(url)
+        .done(function(json) {
+          var sent_obj = Visko.Tagged.show(json, "#ttl_sentences_ajax");
+        });
+     }
+   }
+   
+   function load_doc(url){
+     if (url.slice(-1) != '/') {
+       url = url + '/';
+     }
+     // Load doc metadata
+     $.getJSON(url + 'metadata.json')
+      .done(function(json) {
+        // see how many sentences are there
+        for (var i = 1; i <= json["length"]; i++) {
+          load_sent(url + i + '.json');
+        }
+      });
+   }
+  </script>
+</html>
